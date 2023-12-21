@@ -1,0 +1,96 @@
+.myBackground {
+    background-color: #f0f9f9;
+    text-align: center;
+}
+
+img {
+    width: 440px;
+}
+
+img.nav {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+img.logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+}
+
+a {
+    color: #f49881;
+}
+
+a.recipe {
+    color: #f49819;
+    text-underline-position: under;
+}
+
+.nav-background {
+    background-color: #f49881;
+}
+
+.nav-button {
+    font-weight: bold;
+}
+
+.box {
+    box-sizing: border-box;
+
+    /* Auto layout */
+    /* display: flex;
+    flex-direction: row; */
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    /* gap: 59px; */
+
+    
+    width: 550px;
+    height: 64px;
+    /* left: 685px;
+    top: 400px; */
+
+    border: 1px solid #01BFBF;
+    border-radius: 4px;
+}
+
+ul {
+    text-align: left;
+    padding: 0;
+    margin-top: -0px;
+    margin-left: 16px;
+}
+
+
+
+h5 {
+    color: #01BFBF;
+}
+
+.line {
+    width: 480px;
+    height: 0px;
+    border: 1px solid #000000;
+}
+
+.item {
+    color: #01BFBF;
+}
+
+button.tambah-resep {
+    width: 200;
+}
+
+hr {
+    border-top: 1px solid #787885;
+}
+
+a.nav-link {
+    color: #ffffff;
+}
