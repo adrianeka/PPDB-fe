@@ -18,7 +18,7 @@ import {
   Star,
   StarOutline,
 } from "@mui/icons-material";
-import { PropTypes } from "@mui/material";
+import { PropTypes } from "prop-types";
 
 const RecipeCard = ({
   resep,
