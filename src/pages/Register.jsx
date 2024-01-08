@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { RegisterInput } from "../components/register-input";
+import AuthWrapper from "../components/AuthWrapper";
 
 const cssReset = `
   * {
@@ -85,27 +86,6 @@ const Register = () => {
     fontWeight: "700" // font-bold
   }
 
-  const formWrapper = {
-    maxWidth: "32rem",
-    marginLeft: "auto",
-    marginRight: "auto",
-    borderRadius: "calc(0.5rem - 2px)",
-    width: "100%",
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-    paddingBottom: "0.5rem",
-    backgroundColor: "white"
-  }
-
-  const formTitleWrapper = {
-    backgroundColor: "#f49881",
-    paddingTop: "0.5rem", // py-2
-    paddingBottom: "0.5rem",
-    fontSize: "1.125rem", // text-lg
-    lineHeight: "1.75rem",
-    color: "white",
-    textAlign: "center"
-  }
-
   const formContentWrapper = {
     backgroundColor: "white",
     paddingLeft: "2rem",
@@ -131,14 +111,6 @@ const Register = () => {
     },
   }
 
-  const linkStyle = {
-    color: "#f49881", 
-    fontSize: "0.875rem", 
-    lineHeight: "1.25rem", 
-    textDecoration: "none",
-    textAlign: "center",
-  }
-
   return (
     <div style={wrapper}>
       <style>{cssReset}</style>
@@ -151,10 +123,11 @@ const Register = () => {
           height={50}
         />
       </div>
-      <div style={formWrapper}>
-        <div style={formTitleWrapper}>
-          Daftar
-        </div>
+      <AuthWrapper
+        title="Daftar"
+        linkText="Batal Kembali ke Halaman Login"
+        url="/login"
+      >
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
           <RegisterInput 
             label="Username"
@@ -186,12 +159,7 @@ const Register = () => {
           />
           <button style={buttonStyle} type="submit">Daftar</button>
         </form>
-        <div style={{ width: "100%", paddingBottom: "0.25rem", display: "inline-flex", justifyContent: "center"}}>
-          <a href="/login" style={linkStyle}>
-            Batal, Kembali ke Halaman Login
-          </a>
-        </div>
-      </div>
+      </AuthWrapper>
     </div>
   );
 };
