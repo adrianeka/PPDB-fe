@@ -34,7 +34,8 @@ const Login = () => {
                         console.log(res.data);
                         navigate("/daftar-resep");
                     })                
-                    .catch((err) => console.log(err))                    
+                    .catch((err) => console.log(err))  
+                        navigate("/daftar-resep");                  
     }
 
     return (
