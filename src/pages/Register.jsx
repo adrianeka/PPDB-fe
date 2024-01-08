@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { RegisterInput } from "../components/register-input";
+import { RegisterInput } from "../components/RegisterInput";
 import AuthWrapper from "../components/AuthWrapper";
 
 const cssReset = `
@@ -149,6 +149,7 @@ const Register = () => {
             type="password"
             register={register}
             errors={errors}
+            showEye={true}
           />
           <RegisterInput 
             label="Konfirmasi Kata Sandi"
@@ -156,6 +157,7 @@ const Register = () => {
             type="password"
             register={register}
             errors={errors}
+            showEye={true}
           />
           <button style={buttonStyle} type="submit">Daftar</button>
         </form>

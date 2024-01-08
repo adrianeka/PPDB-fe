@@ -1,11 +1,13 @@
-import React from "react";
+import { Eye, EyeOff } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 export const RegisterInput = ({
   label,
   registerName,
   type,
   register,
-  errors
+  errors,
+  showEye
 }) => {
   const FieldWrapper = {
     display: "flex",
@@ -35,7 +37,28 @@ export const RegisterInput = ({
 
   const inputWrapper = {
     backgroundColor: "white",
+    position: "relative",
   }
+
+  const showButton = {
+    position: "absolute",
+    right: "0.5rem",
+    top: "0",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+  }
+
+  const [show, setShow] = useState(false);
+  const [currentType, setCurrentType] = useState("text");
+
+  useEffect(() => {
+    if (type === "password" && show === true) {
+      setCurrentType("text");
+    } else if (type === "password" && show === false) {
+      setCurrentType("password");
+    }
+  }, [show, type]);
 
   return (
     <div style={FieldWrapper}>
@@ -45,11 +68,20 @@ export const RegisterInput = ({
       </label>
       <div style={inputWrapper}>
         <input
-          type={type}
+          type={currentType}
           {...register(registerName)}
           style={inputStyle}
           placeholder={label}
         />
+        {showEye && (
+          <div style={showButton} onClick={() => setShow(prev => !prev)}>
+            {show ? (
+              <Eye />
+            ): (
+              <EyeOff />
+            )}
+          </div>
+        )}
       </div>
       {errors[registerName] && (
         <p style={errorColor}>
