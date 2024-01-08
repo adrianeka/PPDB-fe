@@ -5,7 +5,7 @@ import { Padding } from '@mui/icons-material';
 
 export function Logo() {
     return (
-        <div className='center-box' style={{margin:'30px'}}>
+        <div className='center-box logo'>
             <Typography sx={{fontSize:'25px', fontWeight: 700, lineHeight:' 28px'}}>
                 Buku Resep 79
             </Typography>

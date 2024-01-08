@@ -1,46 +1,67 @@
-
-import React, { useState } from 'react';
-import { z, ZodError } from 'zod';
-import Box from '@mui/material/Box';
+import React from "react";
 import IconButton from '@mui/material/IconButton';
-import Input from '@mui/material/Input';
-import FilledInput from '@mui/material/FilledInput';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import TextField from '@mui/material/TextField';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Typography from '@mui/material/Typography';
 
-export function TextInput({ label, id, customStyle, schema }) {
-    const helperTextId = `${id}-helper-text`;
-    const labelRequired = `${label} *`;
-    const helperText = `kolom ${label} tidak boleh kosong`;
+export const TextInput = ({
+    label,
+    fieldName,
+    field,
+    errors
+}) => {
+    const FieldWrapper = {
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        gap: "0.25rem",
+        backgroundColor: "white",
+        fontSize: "0.875rem",
+        lineHeight: "1.25rem",
+    }
+
+    const errorColor = {
+        color: "#ff0000"
+    }
+
+    const inputStyle = {
+        borderColor: errors[fieldName] ? "#ff0000" : "#b4b4bb",
+    }
+
+    const inputWrapper = {
+        backgroundColor: "white",
+    }
 
     return (
-        <FormControl variant="outlined" style={customStyle}>
-            <Typography variant="body1" sx={{ color: '#787885', fontSize:'14px' }}>
-                {labelRequired}
+        <div style={FieldWrapper}>
+            <Typography sx={{ color: errors[fieldName] ? "#ff0000" : "#7f7f7f", fontSize: "0.875rem", lineHeight: "1.25rem", }}>
+                {label}{" "}
+                <span style={errorColor}>*</span>
             </Typography>
             <OutlinedInput
-                required
-                id={id}
-                aria-describedby={helperTextId}
-                inputProps={{
-                    'aria-label': { label },
-                }}
-                placeholder={label}
+                {...field(fieldName)}
+                style={inputStyle}
                 className='field-input-text'
+                placeholder={label}
             />
-            <FormHelperText id={helperTextId} sx={{ color: 'red' }}>{helperText}</FormHelperText>
-        </FormControl>
-    );
+            {errors[fieldName] && (
+                <FormHelperText sx={errorColor}>{errors[fieldName].message}</FormHelperText>
+            )}
+
+        </div>
+    )
 }
 
-export function PasswordInput({ label, id, customStyle }) {
+export const PasswordInput = ({
+    label,
+    fieldName,
+    field,
+    errors
+}) => {
+
     const [showPassword, setShowPassword] = React.useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -49,21 +70,36 @@ export function PasswordInput({ label, id, customStyle }) {
         event.preventDefault();
     };
 
-    const helperTextId = `${id}-helper-text`;
-    const labelRequired = `${label} *`;
-    const helperText = `kolom ${label} tidak boleh kosong`;
+    const FieldWrapper = {
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        gap: "0.25rem",
+        backgroundColor: "white",
+        fontSize: "0.875rem",
+        lineHeight: "1.25rem",
+    }
+
+    const errorColor = {
+        color: "#ff0000"
+    }
+
+    const inputStyle = {
+        borderColor: errors[fieldName] ? "#ff0000" : "#b4b4bb",
+    }
+
+    const inputWrapper = {
+        backgroundColor: "white",
+    }
+
     return (
-        <FormControl variant="outlined" style={customStyle}>
-            <Typography variant="body1" sx={{ color: '#787885' , fontSize:'14px'}}>
-                {labelRequired}
+        <div style={FieldWrapper}>
+            <Typography sx={{ color: errors[fieldName] ? "#ff0000" : "#7f7f7f", fontSize: "0.875rem", lineHeight: "1.25rem", }}>
+                {label}{" "}
+                <span style={errorColor}>*</span>
             </Typography>
             <OutlinedInput
-                required
-                id={id}
-                aria-describedby={helperTextId}
-                inputProps={{
-                    'aria-label': { label },
-                }}
+                {...field(fieldName)}
                 type={showPassword ? 'text' : 'password'}
                 endAdornment={
                     <InputAdornment position="end">
@@ -78,10 +114,13 @@ export function PasswordInput({ label, id, customStyle }) {
                     </InputAdornment>
                 }
                 placeholder={label}
-                sx={{ height: '5ch' }}
+                style={inputStyle}
+                className='field-input-text'
             />
-            <FormHelperText id={helperTextId} sx={{ color: 'red' }}>{helperText}</FormHelperText>
-        </FormControl>
+            {errors[fieldName] && (
+                <FormHelperText sx={errorColor}>{errors[fieldName].message}</FormHelperText>
+            )}
+
+        </div>
     )
 }
-

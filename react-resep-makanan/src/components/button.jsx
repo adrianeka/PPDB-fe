@@ -5,7 +5,8 @@ export function BlueButton({ text, customStyle }) {
     return (
         <Button 
         style = {customStyle}
-        sx={{customStyle,fontSize: '14px', backgroundColor: '#01BFBF', textTransform: 'none'}}
+        sx={{fontSize: '14px', backgroundColor: '#01BFBF', textTransform: 'none'}}
+        type='submit'
         variant="contained">{text}</Button>
     );
 }
