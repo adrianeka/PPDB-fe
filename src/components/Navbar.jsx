@@ -1,0 +1,225 @@
+import { useState } from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import { Button, Drawer, Hidden, Link } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDrawer = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  return (
+    <AppBar
+      position="static"
+      style={{ background: "#F49881", boxShadow: "none" }}>
+      <Toolbar>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          width={{ xs: "100%", md: "75%" }}
+          marginX="auto">
+          <Link
+            href="#"
+            sx={{
+              color: "inherit",
+              textDecoration: "none",
+            }}>
+            <Box display="flex" gap={1}>
+              <Hidden mdUp>
+                <img src="/svg/logo.svg" alt="logo" style={{ width: "35px" }} />
+              </Hidden>
+              <Hidden mdDown>
+                <img src="/svg/logo.svg" alt="logo" style={{ width: "48px" }} />
+              </Hidden>
+              <Typography
+                sx={{
+                  marginY: "auto",
+                  fontSize: { xs: "16px", md: "24px" },
+                  fontWeight: 700,
+                }}>
+                Buku Resep 79
+              </Typography>
+            </Box>
+          </Link>
+          <Box component="div" display={{ xs: "flex", md: "none" }}>
+            <IconButton onClick={toggleDrawer} color="inherit">
+              <Box sx={{ display: "flex", gap: "5px" }}>
+                <MenuIcon />
+              </Box>
+            </IconButton>
+            <Drawer
+              anchor="right"
+              open={isOpen}
+              onClose={toggleDrawer}
+              sx={{
+                "& .MuiDrawer-paper": {
+                  width: "75%",
+                },
+                display: { xs: "block", md: "none" },
+              }}>
+              <Box
+                sx={{
+                  backgroundColor: "#F49881",
+                  padding: "10px",
+                  height: "100vh",
+                }}>
+                <Box
+                  sx={{
+                    display: { xs: "flex", md: "none" },
+                    justifyContent: "flex-end",
+                  }}>
+                  <IconButton open={isOpen} onClick={toggleDrawer}>
+                    <CloseIcon sx={{ color: "white" }} />
+                  </IconButton>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 3,
+                    marginTop: 3,
+                  }}>
+                  <Button
+                    sx={{
+                      textTransform: "none",
+                      color: "white",
+                      fontSize: "14px",
+                      fontWeight: "700",
+                    }}>
+                    <img
+                      src="/svg/DaftarResepMakanan.svg"
+                      alt="Daftar Resep Makanan"
+                      style={{ marginRight: 5 }}
+                    />
+                    Daftar Resep Makanan
+                  </Button>
+                  <Button
+                    sx={{
+                      textTransform: "none",
+                      color: "white",
+                      fontSize: "14px",
+                      fontWeight: "700",
+                    }}>
+                    <img
+                      src="/svg/ResepSaya.svg"
+                      alt="Resep Saya"
+                      style={{ marginRight: 5 }}
+                    />
+                    Resep Saya
+                  </Button>
+                  <Button
+                    sx={{
+                      textTransform: "none",
+                      color: "white",
+                      fontSize: "14px",
+                      fontWeight: "700",
+                    }}>
+                    <img
+                      src="/svg/ResepFavorit.svg"
+                      alt="Resep Favorit"
+                      style={{ marginRight: 5 }}
+                    />
+                    Resep Favorit
+                  </Button>
+                  <Button
+                    sx={{
+                      textTransform: "none",
+                      color: "white",
+                      fontSize: "14px",
+                      fontWeight: "700",
+                    }}>
+                    <img
+                      src="/svg/SignOut.svg"
+                      alt="Sign Out"
+                      style={{ marginRight: 5 }}
+                    />
+                    Sign Out
+                  </Button>
+                </Box>
+              </Box>
+            </Drawer>
+          </Box>
+          <Box display={{ xs: "none", md: "flex" }} gap={{ xs: 0, md: 5 }}>
+            <Link
+              href="#"
+              sx={{
+                color: "inherit",
+                textDecoration: "none",
+                marginY: "auto",
+              }}>
+              <Typography sx={{ fontWeight: "700" }}>
+                Daftar Resep Masakan
+              </Typography>
+            </Link>
+            <Link
+              href="#"
+              sx={{
+                color: "inherit",
+                textDecoration: "none",
+                marginY: "auto",
+              }}>
+              <Typography sx={{ fontWeight: "700" }}>Resep Saya</Typography>
+            </Link>
+            <Link
+              href="#"
+              sx={{
+                color: "inherit",
+                textDecoration: "none",
+                marginY: "auto",
+              }}>
+              <Typography sx={{ fontWeight: "700" }}>Resep Favorit</Typography>
+            </Link>
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu}>
+                  <AccountCircleIcon
+                    sx={{ fontSize: "40px", color: "white" }}
+                  />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">Sign Out</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Box>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
+};
+
+export default Navbar;
