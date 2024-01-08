@@ -2,8 +2,11 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { RegisterInput } from "../components/RegisterInput";
 import AuthWrapper from "../components/AuthWrapper";
+import {BlueButton} from "../components/Button"
+import { Logo } from '../components/Logo';
+import { TextInput, PasswordInput } from "../components/TextField";
+
 
 const cssReset = `
   * {
@@ -112,54 +115,40 @@ const Register = () => {
   }
 
   return (
-    <div style={wrapper}>
+    <div style={wrapper} >
       <style>{cssReset}</style>
-      <div style={titleWrapper}>
-        <div style={titleStyle}>Buku Resep 79</div>
-        <img 
-          src="/logo.svg"
-          alt="Logo"
-          width={50}
-          height={50}
-        />
-      </div>
+      <Logo />
       <AuthWrapper
         title="Daftar"
-        linkText="Batal Kembali ke Halaman Login"
+        linkText="Batal, kembali ke Halaman Login"
         url="/login"
       >
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
-          <RegisterInput 
+          <TextInput 
             label="Username"
-            registerName="username"
-            type="text"
-            register={register}
+            fieldName="username"
+            field={register}
             errors={errors}
           />
-          <RegisterInput 
+          <TextInput 
             label="Nama Lengkap"
-            registerName="fullName"
-            type="text"
-            register={register}
+            fieldName="fullName"
+            field={register}
             errors={errors}
           />
-          <RegisterInput 
+          <PasswordInput 
             label="Kata Sandi"
-            registerName="password"
-            type="password"
-            register={register}
+            fieldName="password"
+            field={register}
             errors={errors}
-            showEye={true}
           />
-          <RegisterInput 
+          <PasswordInput 
             label="Konfirmasi Kata Sandi"
-            registerName="confirmPassword"
-            type="password"
-            register={register}
+            fieldName="confirmPassword"
+            field={register}
             errors={errors}
-            showEye={true}
           />
-          <button style={buttonStyle} type="submit">Daftar</button>
+          <BlueButton text="Daftar" customStyle={{width: '100%'}} />
         </form>
       </AuthWrapper>
     </div>
