@@ -1,0 +1,111 @@
+.large-button {
+    width: 20px;
+    color: 'red';
+    font-size: 16px
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #F0F9F9;
+    font-family: 'Mulish';
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+.box-form {
+    background-color: white;
+    width: 40%;
+    padding: 20px 0 20px 0;
+
+}
+
+
+
+.center-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-link{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    width: 45%;
+    padding: 5px 0 5px 0;
+}
+
+.font-robot{
+    font-family: 'Roboto', sans-serif;
+}
+
+@media (max-width: 600px) {
+    .box-title {
+        text-align: center;
+        padding: 3px 0 3px 0;
+        width: 85%;
+        font-size: 12px;
+    }
+  }
+  
+  /* Media query untuk perangkat dengan lebar antara 600px dan 900px (tablet) */
+  @media (min-width: 601px) and (max-width: 900px) {
+    .box-title {
+        text-align: center;
+        padding: 3px 0 3px 0;
+        width: 35%;
+        font-size: 12px;
+    }
+  }
+  
+  /* Media query untuk perangkat dengan lebar lebih dari 900px (desktop) */
+  @media (min-width: 901px) {
+    .box-title {
+        text-align: center;
+        padding: 3px 0 3px 0;
+        width: 30%;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .box-form {
+        background-color: white;
+        width: 30%;
+        padding: 20px 0 20px 0;
+    
+    }
+
+    .footer-link{
+        display: flex;
+        justify-content:space-between;
+        align-items: center;
+        padding: 30px 0 5px 0;
+    }
+    
+  }
+
+  .field-input-text{
+    height: 35px;
+  }
+
+  
+
+  .font-pink{
+    color: #F49881;
+  }
+
+  .font-white{
+    color: white;
+  }
+
+  .bg-pink{
+    background-color: #F49881;
+  }

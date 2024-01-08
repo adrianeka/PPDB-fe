@@ -1,6 +1,5 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import Home from './pages/Home'
-import Test from './pages/Test'
+import LoginPage from './pages/Login'
 
 function App() {
 
@@ -8,8 +7,7 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route exact path='/' element={<Home />}/>
-          <Route path='/test' element={<Test />}/>
+          <Route exact path='/' element={<LoginPage />}/>
         </Routes>
       </Router>
     </div>
