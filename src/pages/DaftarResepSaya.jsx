@@ -1,15 +1,10 @@
 import {
   Box,
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
   Container,
   FormControl,
   Grid,
   Hidden,
-  IconButton,
   InputAdornment,
   Menu,
   MenuItem,
@@ -23,12 +18,6 @@ import { Link } from "react-router-dom";
 import {
   FilterList,
   Search,
-  AccessTime,
-  Star,
-  StarOutline,
-  MoreHoriz,
-  DeleteSweep,
-  Edit,
 } from "@mui/icons-material";
 import { useState } from "react";
 import Navigation from "../components/Navigation";
@@ -40,6 +29,7 @@ import OldFashionedPancake from "./Resources/Imgs/oldfashionedpanckae.jpg";
 import Pancake from "./Resources/Imgs/Fluffy-Pancakes-New-CMS.jpg";
 import Sashimi from "./Resources/Imgs/sashimi.jpg";
 import SugarCake from "./Resources/Imgs/sugarcake.jpg";
+import RecipeCard from "../components/RecipeCard";
 
 const DaftarResepSaya = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -615,118 +605,13 @@ const DaftarResepSaya = () => {
               marginBottom={3}
             >
               {ResepSaya().map((resep) => (
-                <Grid item key={resep.id}>
-                  <Card sx={{ width: 250, position: "relative" }}>
-                    <IconButton
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        color: "white",
-                        backgroundColor: "rgba(0, 0, 0, 0)",
-                        "&:hover": {
-                          backgroundColor: "rgba(0, 0, 0, 0.1)",
-                        },
-                      }}
-                      onClick={(event) => handleOpenOptions(event, resep.id)}
-                    >
-                      <MoreHoriz />
-                    </IconButton>
-                    <Menu
-                      anchorEl={
-                        option === resep.id ? document.activeElement : null
-                      }
-                      open={option === resep.id}
-                      onClose={handleCloseOptions}
-                    >
-                      <MenuItem>
-                        <Edit sx={{ color: "#01BFBF" }} />
-                        <Typography sx={{ color: "#01BFBF" }}>Edit</Typography>
-                      </MenuItem>
-                      <MenuItem>
-                        <DeleteSweep sx={{ color: "red" }} />
-                        <Typography sx={{ color: "red" }}>Hapus</Typography>
-                      </MenuItem>
-                    </Menu>
-                    <CardMedia
-                      component="img"
-                      height="142"
-                      image={resep.image}
-                      alt={resep.image}
-                    />
-                    <CardContent sx={{ padding: 1 }}>
-                      <Box display={"flex"} justifyContent={"space-between"}>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          textAlign={"left"}
-                          sx={{ color: "#01BFBF" }}
-                        >
-                          {resep.kategori}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          textAlign={"left"}
-                          sx={{ color: "#01BFBF" }}
-                        >
-                          {resep.difficulty}
-                        </Typography>
-                      </Box>
-                      <Typography
-                        gutterBottom
-                        variant="body1"
-                        component="div"
-                        textAlign={"left"}
-                      >
-                        {resep.nama}
-                      </Typography>
-                    </CardContent>
-                    <CardActions sx={{ padding: 1 }}>
-                      <Grid container direction="column" marginBottom={1}>
-                        <Grid
-                          container
-                          direction="row"
-                          justifyContent="space-between"
-                          alignItems="center"
-                          sx={{ color: "black" }}
-                        >
-                          <Grid item>
-                            <IconButton
-                              aria-label="add to favorites"
-                              disabled
-                              sx={{ padding: 0 }}
-                            >
-                              <AccessTime sx={{ color: "#01BFBF" }} />
-                              <Typography
-                                variant="body2"
-                                sx={{ color: "#01BFBF" }}
-                              >
-                                &nbsp;{resep.waktu} Menit
-                              </Typography>
-                            </IconButton>
-                          </Grid>
-                          <Grid
-                            item
-                            display={"flex"}
-                            alignItems={"center"}
-                            sx={{ "&:hover": { cursor: "pointer" } }}
-                          >
-                            {resep.isFavorite ? (
-                              <Star sx={{ color: "#01BFBF" }} />
-                            ) : (
-                              <StarOutline sx={{ color: "#01BFBF" }} />
-                            )}
-                            &nbsp;
-                            <Typography variant="body2" color={"#01BFBF"}>
-                              Favorit
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </CardActions>
-                  </Card>
-                </Grid>
+                <RecipeCard
+                  key={resep.id}
+                  resep={resep}
+                  handleOpenOptions={handleOpenOptions}
+                  option={option}
+                  handleCloseOptions={handleCloseOptions}
+                />
               ))}
             </Grid>
             <Pagination
