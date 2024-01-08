@@ -8,6 +8,7 @@ import {
   Container,
   FormControl,
   Grid,
+  Hidden,
   IconButton,
   InputAdornment,
   Menu,
@@ -169,197 +170,441 @@ const DaftarResepSaya = () => {
           alignItems="center"
           paddingTop={7}
         >
-          <Grid item>
-            <Grid
-              container
-              spacing={4}
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid item>
-                <Link to={"/tambah-resep"}>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    sx={{
-                      textTransform: "capitalize",
-                      backgroundColor: "#01BFBF",
-                      boxShadow: "none",
-                      "&:hover": {
-                        backgroundColor: "#01A0A0",
+          <Hidden smDown>
+            <Grid item>
+              <Grid
+                container
+                spacing={4}
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Grid item>
+                  <Link to={"/tambah-resep"}>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      sx={{
+                        textTransform: "capitalize",
+                        backgroundColor: "#01BFBF",
                         boxShadow: "none",
-                      },
-                    }}
-                  >
-                    Tambah Resep
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item>
-                <TextField
-                  id="filled-basic"
-                  placeholder="Cari Resep"
-                  type="search"
-                  size="small"
-                  sx={{ width: "500px", background: "white" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Grid>
-              <Grid item>
-                <Button
-                  className="filter-button"
-                  sx={{
-                    padding: "7px 10px",
-                    border: "1px solid rgba(0, 0, 0, 0.23)",
-                    textTransform: "capitalize",
-                  }}
-                  onClick={handleClick}
-                >
-                  <Box display={"flex"}>
-                    <Typography
-                      color={"black"}
-                      display={"flex"}
-                      alignItems={"center"}
-                      marginRight={3}
-                    >
-                      Filter
-                    </Typography>
-                    <FilterList sx={{ color: "black" }} />
-                  </Box>
-                </Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <Grid
-                    container
-                    rowSpacing={1}
-                    columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                  >
-                    <Grid item xs={6}>
-                      <Typography fontSize={16}>Tingkat Kesulitan</Typography>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
-                        <Select
-                          value={difficulty}
-                          onChange={handleChangeDifficulty}
-                          displayEmpty
-                          inputProps={{ "aria-label": "Without label" }}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={"Easy"}>Easy</MenuItem>
-                          <MenuItem value={"Medium"}>Medium</MenuItem>
-                          <MenuItem value={"Hard"}>Hard</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography fontSize={16}>Kategori</Typography>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
-                        <Select
-                          value={category}
-                          onChange={handleChangeCategory}
-                          displayEmpty
-                          inputProps={{ "aria-label": "Without label" }}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={"Breakfast"}>Breakfast</MenuItem>
-                          <MenuItem value={"Lunch"}>Lunch</MenuItem>
-                          <MenuItem value={"Dinner"}>Dinner</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography fontSize={16}>Waktu Memasak</Typography>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
-                        <Select
-                          value={cookTIme}
-                          onChange={handleChangeCookTime}
-                          displayEmpty
-                          inputProps={{ "aria-label": "Without label" }}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={"0-30 Menit"}>0-30 Menit</MenuItem>
-                          <MenuItem value={"30-60 Menit"}>30-60 Menit</MenuItem>
-                          <MenuItem value={"+60 Menit"}>+60 Menit</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography fontSize={16}>Sortir</Typography>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
-                        <Select
-                          value={sort}
-                          onChange={handleChangeSort}
-                          displayEmpty
-                          inputProps={{ "aria-label": "Without label" }}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={"Nama Resep A-Z"}>Nama Resep A-Z</MenuItem>
-                          <MenuItem value={"Nama Resep Z-A"}>Nama Resep Z-A</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography fontSize={16} sx={{ color: "#EA4335" }}>
-                        Bersihkan Filter
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          color: "#01BFBF",
-                          textTransform: "capitalize",
-                          backgroundColor: "white",
+                        "&:hover": {
+                          backgroundColor: "#01A0A0",
                           boxShadow: "none",
-                          border: "1px solid #01BFBF",
-                          "&:hover": {
+                        },
+                      }}
+                    >
+                      Tambah Resep
+                    </Button>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id="filled-basic"
+                    placeholder="Cari Resep"
+                    type="search"
+                    size="small"
+                    sx={{ width: "500px", background: "white" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Search />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Button
+                    className="filter-button"
+                    sx={{
+                      padding: "7px 10px",
+                      border: "1px solid rgba(0, 0, 0, 0.23)",
+                      textTransform: "capitalize",
+                    }}
+                    onClick={handleClick}
+                  >
+                    <Box display={"flex"}>
+                      <Typography
+                        color={"black"}
+                        display={"flex"}
+                        alignItems={"center"}
+                        marginRight={3}
+                      >
+                        Filter
+                      </Typography>
+                      <FilterList sx={{ color: "black" }} />
+                    </Box>
+                  </Button>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <Grid
+                      className="filter-grid"
+                      container
+                      rowSpacing={1}
+                      columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                      sx={{
+                        maxWidth: "445px",
+                        height: "250px",
+                        padding: "10px",
+                      }}
+                    >
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Tingkat Kesulitan</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={difficulty}
+                            onChange={handleChangeDifficulty}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={"Easy"}>Easy</MenuItem>
+                            <MenuItem value={"Medium"}>Medium</MenuItem>
+                            <MenuItem value={"Hard"}>Hard</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Kategori</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={category}
+                            onChange={handleChangeCategory}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={"Breakfast"}>Breakfast</MenuItem>
+                            <MenuItem value={"Lunch"}>Lunch</MenuItem>
+                            <MenuItem value={"Dinner"}>Dinner</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Waktu Memasak</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={cookTIme}
+                            onChange={handleChangeCookTime}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={"0-30 Menit"}>0-30 Menit</MenuItem>
+                            <MenuItem value={"30-60 Menit"}>
+                              30-60 Menit
+                            </MenuItem>
+                            <MenuItem value={"+60 Menit"}>+60 Menit</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Sortir</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={sort}
+                            onChange={handleChangeSort}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={"Nama Resep A-Z"}>
+                              Nama Resep A-Z
+                            </MenuItem>
+                            <MenuItem value={"Nama Resep Z-A"}>
+                              Nama Resep Z-A
+                            </MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6} display={"flex"}>
+                        <Typography
+                          fontSize={16}
+                          sx={{
+                            color: "#EA4335",
+                            "&:hover": { cursor: "pointer" },
+                          }}
+                        >
+                          Bersihkan Filter
+                        </Typography>
+                      </Grid>
+                      <Grid display={"flex"} item xs={6} gap={1}>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            color: "#01BFBF",
+                            textTransform: "capitalize",
                             backgroundColor: "white",
                             boxShadow: "none",
-                          },
-                        }}
-                      >
-                        Batal
-                      </Button>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          textTransform: "capitalize",
-                          backgroundColor: "#01BFBF",
-                          boxShadow: "none",
-                          "&:hover": {
-                            backgroundColor: "#01A0A0",
+                            border: "1px solid #01BFBF",
+                            width: "85px",
+                            height: "40px",
+                            "&:hover": {
+                              backgroundColor: "white",
+                              boxShadow: "none",
+                            },
+                          }}
+                        >
+                          Batal
+                        </Button>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            textTransform: "capitalize",
+                            backgroundColor: "#01BFBF",
                             boxShadow: "none",
-                          },
-                        }}
-                      >
-                        Terapkan
-                      </Button>
+                            width: "85px",
+                            height: "40px",
+                            "&:hover": {
+                              backgroundColor: "#01A0A0",
+                              boxShadow: "none",
+                            },
+                          }}
+                        >
+                          Terapkan
+                        </Button>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Menu>
+                  </Menu>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item>
-            <Typography variant="h4">Resep Saya</Typography>
-          </Grid>
+            <Grid item>
+              <Typography variant="h4">Resep Saya</Typography>
+            </Grid>
+          </Hidden>
+
+          <Hidden smUp>
+            <Typography sx={{ fontWeight: "bold", fontSize: "22px" }}>
+              Resep Saya
+            </Typography>
+            <Grid item>
+              <TextField
+                id="filled-basic"
+                placeholder="Cari Resep"
+                type="search"
+                size="small"
+                sx={{ maxWidth: "100%", background: "white" }}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid item>
+              <Button
+                className="filter-button"
+                sx={{
+                  padding: "7px 10px",
+                  border: "1px solid rgba(0, 0, 0, 0.23)",
+                  textTransform: "capitalize",
+                }}
+                onClick={handleClick}
+              >
+                <Box display={"flex"}>
+                  <Typography
+                    color={"black"}
+                    display={"flex"}
+                    alignItems={"center"}
+                    marginRight={3}
+                  >
+                    Filter
+                  </Typography>
+                  <FilterList sx={{ color: "black" }} />
+                </Box>
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <Grid
+                  className="filter-grid"
+                  container
+                  rowSpacing={1}
+                  columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                  sx={{
+                    maxWidth: "445px",
+                    height: "250px",
+                    padding: "10px",
+                  }}
+                >
+                  <Grid item>
+                    <Typography fontSize={16}>Tingkat Kesulitan</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={difficulty}
+                        onChange={handleChangeDifficulty}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={"Easy"}>Easy</MenuItem>
+                        <MenuItem value={"Medium"}>Medium</MenuItem>
+                        <MenuItem value={"Hard"}>Hard</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <Typography fontSize={16}>Kategori</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={category}
+                        onChange={handleChangeCategory}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={"Breakfast"}>Breakfast</MenuItem>
+                        <MenuItem value={"Lunch"}>Lunch</MenuItem>
+                        <MenuItem value={"Dinner"}>Dinner</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <Typography fontSize={16}>Waktu Memasak</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={cookTIme}
+                        onChange={handleChangeCookTime}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={"0-30 Menit"}>0-30 Menit</MenuItem>
+                        <MenuItem value={"30-60 Menit"}>30-60 Menit</MenuItem>
+                        <MenuItem value={"+60 Menit"}>+60 Menit</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <Typography fontSize={16}>Sortir</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={sort}
+                        onChange={handleChangeSort}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={"Nama Resep A-Z"}>
+                          Nama Resep A-Z
+                        </MenuItem>
+                        <MenuItem value={"Nama Resep Z-A"}>
+                          Nama Resep Z-A
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={6} display={"flex"}>
+                    <Typography
+                      fontSize={16}
+                      sx={{
+                        color: "#EA4335",
+                        "&:hover": { cursor: "pointer" },
+                      }}
+                    >
+                      Bersihkan Filter
+                    </Typography>
+                  </Grid>
+                  <Grid display={"flex"} item gap={1}>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        color: "#01BFBF",
+                        textTransform: "capitalize",
+                        backgroundColor: "white",
+                        boxShadow: "none",
+                        border: "1px solid #01BFBF",
+                        width: "85px",
+                        height: "40px",
+                        "&:hover": {
+                          backgroundColor: "white",
+                          boxShadow: "none",
+                        },
+                      }}
+                    >
+                      Batal
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        textTransform: "capitalize",
+                        backgroundColor: "#01BFBF",
+                        boxShadow: "none",
+                        width: "85px",
+                        height: "40px",
+                        "&:hover": {
+                          backgroundColor: "#01A0A0",
+                          boxShadow: "none",
+                        },
+                      }}
+                    >
+                      Terapkan
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Menu>
+            </Grid>
+            <Grid item>
+              <Link to={"/tambah-resep"}>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  sx={{
+                    textTransform: "capitalize",
+                    backgroundColor: "#01BFBF",
+                    boxShadow: "none",
+                    "&:hover": {
+                      backgroundColor: "#01A0A0",
+                      boxShadow: "none",
+                    },
+                  }}
+                >
+                  Tambah Resep
+                </Button>
+              </Link>
+            </Grid>
+          </Hidden>
           <Grid item>
             <Grid
               container
