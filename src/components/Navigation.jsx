@@ -1,8 +1,10 @@
-import { AccountCircle } from "@mui/icons-material";
+import { AccountCircle, Close } from "@mui/icons-material";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
   Box,
   Button,
+  Drawer,
   IconButton,
   Menu,
   MenuItem,
@@ -29,17 +31,25 @@ const Navigation = () => {
     localStorage.clear();
   };
 
+  //drawer mobile
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setOpenDrawer(!openDrawer);
+  };
+
   return (
-    <Box margin={0}>
+    <Box margin={0} sx={{ display: "flex" }}>
       <AppBar
         position="static"
         style={{
           background: "#f49881",
-          paddingLeft: "64px",
-          paddingRight: "64px",
+          paddingLeft: "352px",
+          paddingRight: "352px",
+          boxShadow: "none",
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography
             variant="h6"
             component="div"
@@ -56,19 +66,43 @@ const Navigation = () => {
           >
             Buku Resep 79
           </Typography>
-          <Stack className="stack" direction="row" spacing={4} justifyContent="flex-end" display="contents">
+          <Stack
+            className="stack"
+            direction="row"
+            spacing={4}
+            justifyContent="flex-end"
+            display="contents"
+          >
             <Link to={"/daftar-resep"}>
-              <Button sx={{ fontWeight: "bold", color: "#FFFFFF", textTransform: "capitalize" }}>
+              <Button
+                sx={{
+                  fontWeight: "bold",
+                  color: "#FFFFFF",
+                  textTransform: "capitalize",
+                }}
+              >
                 Daftar Resep
               </Button>
             </Link>
             <Link to={"/resep-saya"}>
-              <Button sx={{ fontWeight: "bold", color: "#FFFFFF", textTransform: "capitalize" }}>
+              <Button
+                sx={{
+                  fontWeight: "bold",
+                  color: "#FFFFFF",
+                  textTransform: "capitalize",
+                }}
+              >
                 Resep Saya
               </Button>
             </Link>
             <Link to={"/resep-favorit"}>
-              <Button sx={{ fontWeight: "bold", color: "#FFFFFF", textTransform: "capitalize" }}>
+              <Button
+                sx={{
+                  fontWeight: "bold",
+                  color: "#FFFFFF",
+                  textTransform: "capitalize",
+                }}
+              >
                 Resep Favorit
               </Button>
             </Link>
