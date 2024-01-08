@@ -76,19 +76,6 @@ const Register = () => {
     paddingBottom: "2.5rem",
   };
 
-  const titleWrapper = {
-    display: "flex", // flex
-    flexDirection: "column", // flex-col
-    alignItems: "center", // items-center
-    marginBottom: "1rem"
-  };
-
-  const titleStyle = {
-    fontSize: "1.125rem", // text-lg
-    lineHeight: "1.75rem",
-    fontWeight: "700" // font-bold
-  }
-
   const formContentWrapper = {
     backgroundColor: "white",
     paddingLeft: "2rem",
@@ -99,19 +86,6 @@ const Register = () => {
     flexDirection: "column",
     gap: "1rem",
     alignItems: "center",
-  }
-
-  const buttonStyle = {
-    backgroundColor: "#01bfbf",
-    color: "white",
-    border: "transparent",
-    width: "100%",
-    paddingTop: "0.5rem",
-    paddingBottom: "0.5rem",
-    borderRadius: "calc(0.5rem - 4px)",
-    "&:hover": {
-      backgroundColor: "#01acac",
-    },
   }
 
   return (
