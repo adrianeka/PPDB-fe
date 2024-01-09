@@ -59,6 +59,11 @@ const DaftarResepMasakan = () => {
     setFilterMenuMobile(null);
   };
 
+  const [recipeName, setRecipeName] = useState("");
+  const handleChangeRecipeName = (event) => {
+    setRecipeName(event.target.value);
+  };
+
   const [foodLevel, setFoodLevel] = useState("");
   const handleChangeFoodLevel = (event) => {
     setFoodLevel(event.target.value);
@@ -88,6 +93,17 @@ const DaftarResepMasakan = () => {
 
   const [entries, setEntries] = useState(8);
   const [page, setPage] = useState(1);
+
+  const handleClickEntries = (value) => {
+    if (value === entries) {
+      return;
+    }
+    setEntries(value);
+  };
+
+  const handlePaginationChange = (event, value) => {
+    setPage(value);
+  };
 
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.only("xs"));
@@ -130,6 +146,8 @@ const DaftarResepMasakan = () => {
                   variant="outlined"
                   size="small"
                   placeholder="Cari Resep"
+                  value={recipeName}
+                  onChange={handleChangeRecipeName}
                   InputProps={{
                     startAdornment: (
                       <IconButton>
@@ -215,12 +233,11 @@ const DaftarResepMasakan = () => {
                               id="level"
                               value={foodLevel}
                               onChange={handleChangeFoodLevel}>
-                              <MenuItem value="Easy">Easy</MenuItem>
-                              <MenuItem value="Medium">Medium</MenuItem>
-                              <MenuItem value="Hard">Hard</MenuItem>
-                              <MenuItem value="Master Chef">
-                                Master Chef
-                              </MenuItem>
+                              <MenuItem value="">ALL</MenuItem>
+                              <MenuItem value="3">Easy</MenuItem>
+                              <MenuItem value="2">Medium</MenuItem>
+                              <MenuItem value="1">Hard</MenuItem>
+                              <MenuItem value="0">Master Chef</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -238,10 +255,11 @@ const DaftarResepMasakan = () => {
                               id="foodCategory"
                               value={foodCategory}
                               onChange={handleChangeFoodCategory}>
-                              <MenuItem value="Breakfast">Breakfast</MenuItem>
-                              <MenuItem value="Lunch">Lunch</MenuItem>
-                              <MenuItem value="Dinner">Dinner</MenuItem>
-                              <MenuItem value="Snack">Snack</MenuItem>
+                              <MenuItem value="">ALL</MenuItem>
+                              <MenuItem value="1">Breakfast</MenuItem>
+                              <MenuItem value="0">Lunch</MenuItem>
+                              <MenuItem value="2">Dinner</MenuItem>
+                              <MenuItem value="3">Snack</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -261,9 +279,10 @@ const DaftarResepMasakan = () => {
                               id="cookingTime"
                               value={cookingTime}
                               onChange={handleChangeCookingTime}>
+                              <MenuItem value="">ALL</MenuItem>
                               <MenuItem value="0-30">0-30 Menit</MenuItem>
-                              <MenuItem value="1-2">1-2 jam</MenuItem>
-                              <MenuItem value="2+">2+ jam</MenuItem>
+                              <MenuItem value="30-60">30-60 Menit</MenuItem>
+                              <MenuItem value="60">{">"}60 Menit</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -395,6 +414,8 @@ const DaftarResepMasakan = () => {
             variant="outlined"
             size="small"
             placeholder="Cari Resep"
+            value={recipeName}
+            onChange={handleChangeRecipeName}
             InputProps={{
               startAdornment: (
                 <IconButton>
@@ -466,10 +487,11 @@ const DaftarResepMasakan = () => {
                           id="level"
                           value={foodLevel}
                           onChange={handleChangeFoodLevel}>
-                          <MenuItem value="Easy">Easy</MenuItem>
-                          <MenuItem value="Medium">Medium</MenuItem>
-                          <MenuItem value="Hard">Hard</MenuItem>
-                          <MenuItem value="Master Chef">Master Chef</MenuItem>
+                          <MenuItem value="">ALL</MenuItem>
+                          <MenuItem value="3">Easy</MenuItem>
+                          <MenuItem value="2">Medium</MenuItem>
+                          <MenuItem value="1">Hard</MenuItem>
+                          <MenuItem value="0">Master Chef</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -485,10 +507,11 @@ const DaftarResepMasakan = () => {
                           id="foodCategory"
                           value={foodCategory}
                           onChange={handleChangeFoodCategory}>
-                          <MenuItem value="Breakfast">Breakfast</MenuItem>
-                          <MenuItem value="Lunch">Lunch</MenuItem>
-                          <MenuItem value="Dinner">Dinner</MenuItem>
-                          <MenuItem value="Snack">Snack</MenuItem>
+                          <MenuItem value="">ALL</MenuItem>
+                          <MenuItem value="1">Breakfast</MenuItem>
+                          <MenuItem value="0">Lunch</MenuItem>
+                          <MenuItem value="2">Dinner</MenuItem>
+                          <MenuItem value="3">Snack</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -506,9 +529,10 @@ const DaftarResepMasakan = () => {
                           id="cookingTime"
                           value={cookingTime}
                           onChange={handleChangeCookingTime}>
+                          <MenuItem value="">ALL</MenuItem>
                           <MenuItem value="0-30">0-30 Menit</MenuItem>
-                          <MenuItem value="1-2">1-2 jam</MenuItem>
-                          <MenuItem value="2+">2+ jam</MenuItem>
+                          <MenuItem value="30-60">30-60 Menit</MenuItem>
+                          <MenuItem value="60">{">"}60 Menit</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -614,33 +638,56 @@ const DaftarResepMasakan = () => {
                     }}>
                     Entries
                   </Typography>
-                  <IconButton aria-label="entries" size="small">
+                  <IconButton
+                    aria-label="entries"
+                    size="small"
+                    onClick={() => {
+                      handleClickEntries(8);
+                    }}>
                     <Typography
                       sx={{
-                        backgroundColor: "#01BFBF",
+                        backgroundColor: entries === 8 ? "#01BFBF" : "initial",
                         fontSize: { xs: "14px", md: "16px" },
-                        color: "white",
+                        color: entries === 8 ? "white" : "#787885",
                         paddingY: 0.5,
                         paddingX: 1,
-                        borderRadius: "4px",
+                        borderRadius: entries === 8 ? "4px" : "initial",
                       }}>
                       8
                     </Typography>
                   </IconButton>
-                  <IconButton aria-label="entries" size="small">
+                  <IconButton
+                    aria-label="entries"
+                    size="small"
+                    onClick={() => {
+                      handleClickEntries(16);
+                    }}>
                     <Typography
                       sx={{
+                        backgroundColor: entries === 16 ? "#01BFBF" : "initial",
                         fontSize: { xs: "14px", md: "16px" },
-                        borderRadius: "4px",
+                        color: entries === 16 ? "white" : "#787885",
+                        paddingY: 0.5,
+                        paddingX: 1,
+                        borderRadius: entries === 16 ? "4px" : "initial",
                       }}>
                       16
                     </Typography>
                   </IconButton>
-                  <IconButton aria-label="entries" size="small">
+                  <IconButton
+                    aria-label="entries"
+                    size="small"
+                    onClick={() => {
+                      handleClickEntries(48);
+                    }}>
                     <Typography
                       sx={{
+                        backgroundColor: entries === 48 ? "#01BFBF" : "initial",
                         fontSize: { xs: "14px", md: "16px" },
-                        borderRadius: "4px",
+                        color: entries === 48 ? "white" : "#787885",
+                        paddingY: 0.5,
+                        paddingX: 1,
+                        borderRadius: entries === 48 ? "4px" : "initial",
                       }}>
                       48
                     </Typography>
@@ -655,6 +702,8 @@ const DaftarResepMasakan = () => {
                 justifyContent={{ xs: "center", md: "right" }}>
                 <MyPagination
                   count={10}
+                  onChange={handlePaginationChange}
+                  page={page}
                   color="primary"
                   size={smallScreen ? "small" : "medium"}
                 />
