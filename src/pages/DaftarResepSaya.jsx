@@ -15,10 +15,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
-import {
-  FilterList,
-  Search,
-} from "@mui/icons-material";
+import { FilterList, Search } from "@mui/icons-material";
 import { useState } from "react";
 import Navigation from "../components/Navigation";
 import ChocolateChip from "./Resources/Imgs/cookies_pastries_chocolate_chips_187114_1600x900.jpg";
@@ -37,7 +34,7 @@ const DaftarResepSaya = () => {
   const [difficulty, setDifficulty] = useState(null);
   const [category, setCategory] = useState(null);
   const [cookTIme, setCookTime] = useState(null);
-  const [sort, setSort] = useState(null);
+  const [sort, setSort] = useState("");
 
   const handleChangeDifficulty = (event) => {
     setDifficulty(event.target.value);
@@ -152,15 +149,13 @@ const DaftarResepSaya = () => {
     <>
       <Navigation />
       <Container>
-        <Grid
-          container
-          spacing={4}
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          paddingTop={7}
-        >
-          <Hidden smDown>
+        <Hidden smDown>
+          <Box
+            display="flex"
+            flexDirection="Column"
+            alignItems={"center"}
+            paddingTop={5}
+          >
             <Grid item>
               <Grid
                 container
@@ -307,7 +302,7 @@ const DaftarResepSaya = () => {
                           </Select>
                         </FormControl>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item>
                         <Typography fontSize={16}>Sortir</Typography>
                         <FormControl
                           sx={{ m: 1, minWidth: 120, margin: "0px" }}
@@ -383,42 +378,47 @@ const DaftarResepSaya = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item>
+            <Grid item paddingBlock={3}>
               <Typography variant="h4">Resep Saya</Typography>
             </Grid>
-          </Hidden>
+          </Box>
+        </Hidden>
 
-          <Hidden smUp>
+        <Hidden smUp>
+          <Box>
             <Typography sx={{ fontWeight: "bold", fontSize: "22px" }}>
               Resep Saya
             </Typography>
-            <Grid item>
-              <TextField
-                id="filled-basic"
-                placeholder="Cari Resep"
-                type="search"
-                size="small"
-                sx={{ maxWidth: "100%", background: "white" }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item>
+            <TextField
+              id="filled-basic"
+              placeholder="Cari Resep"
+              type="search"
+              size="small"
+              sx={{ width: "320px", background: "white" }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Box
+              item
+              className="grid-filter"
+              style={{ paddingTop: "10px", display: "flex", gap: "20px" }}
+            >
               <Button
                 className="filter-button"
                 sx={{
                   padding: "7px 10px",
                   border: "1px solid rgba(0, 0, 0, 0.23)",
                   textTransform: "capitalize",
+                  width: "150px",
                 }}
                 onClick={handleClick}
               >
-                <Box display={"flex"}>
+                <Box display={"flex"} gap={5}>
                   <Typography
                     color={"black"}
                     display={"flex"}
@@ -441,7 +441,7 @@ const DaftarResepSaya = () => {
                   rowSpacing={1}
                   columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                   sx={{
-                    maxWidth: "445px",
+                    maxWidth: "257px",
                     height: "250px",
                     padding: "10px",
                   }}
@@ -503,28 +503,7 @@ const DaftarResepSaya = () => {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item>
-                    <Typography fontSize={16}>Sortir</Typography>
-                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
-                      <Select
-                        value={sort}
-                        onChange={handleChangeSort}
-                        displayEmpty
-                        inputProps={{ "aria-label": "Without label" }}
-                        sx={{ width: "180px", height: "36px" }}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={"Nama Resep A-Z"}>
-                          Nama Resep A-Z
-                        </MenuItem>
-                        <MenuItem value={"Nama Resep Z-A"}>
-                          Nama Resep Z-A
-                        </MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
+
                   <Grid item xs={6} display={"flex"}>
                     <Typography
                       fontSize={16}
@@ -574,13 +553,39 @@ const DaftarResepSaya = () => {
                   </Grid>
                 </Grid>
               </Menu>
-            </Grid>
-            <Grid item>
+              <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                <Select
+                  value={sort}
+                  onChange={handleChangeSort}
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
+                  sx={{ width: "150px", height: "40px", fontSize: "14px" }}
+                  renderValue={(selected) => {
+                    if (selected === "") {
+                      return <em>Sort By</em>;
+                    }
+                    return selected;
+                  }}
+                >
+                  <MenuItem sx={{ fontSize: "14px" }} value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"Nama Resep A-Z"}>
+                    Nama Resep A-Z
+                  </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"Nama Resep Z-A"}>
+                    Nama Resep Z-A
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            <Box paddingBlock={1}>
               <Link to={"/tambah-resep"}>
                 <Button
                   variant="contained"
                   startIcon={<AddIcon />}
                   sx={{
+                    width: "320px",
                     textTransform: "capitalize",
                     backgroundColor: "#01BFBF",
                     boxShadow: "none",
@@ -593,44 +598,44 @@ const DaftarResepSaya = () => {
                   Tambah Resep
                 </Button>
               </Link>
-            </Grid>
-          </Hidden>
-          <Grid item>
-            <Grid
-              container
-              spacing={6}
-              direction="row"
-              justifyContent="flex-start"
-              alignItems="flex-start"
-              marginBottom={3}
-            >
-              {ResepSaya().map((resep) => (
-                <RecipeCard
-                  key={resep.id}
-                  resep={resep}
-                  handleOpenOptions={handleOpenOptions}
-                  option={option}
-                  handleCloseOptions={handleCloseOptions}
-                />
-              ))}
-            </Grid>
-            <Pagination
-              className="pagination"
-              count={10}
-              size="small"
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                "& .Mui-selected": {
-                  color: "white", // Change the color for the selected page
-                  backgroundColor: "#01BFBF", // Change the background color for the selected page
-                },
-                "& .MuiPaginationItem-root": {
-                  color: "black", // Change the color for other pages
-                },
-              }}
-            />
+            </Box>
+          </Box>
+        </Hidden>
+        <Grid item>
+          <Grid
+            container
+            spacing={6}
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            marginBottom={3}
+          >
+            {ResepSaya().map((resep) => (
+              <RecipeCard
+                key={resep.id}
+                resep={resep}
+                handleOpenOptions={handleOpenOptions}
+                option={option}
+                handleCloseOptions={handleCloseOptions}
+              />
+            ))}
           </Grid>
+          <Pagination
+            className="pagination"
+            count={10}
+            size="small"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              "& .Mui-selected": {
+                color: "white", // Change the color for the selected page
+                backgroundColor: "#01BFBF", // Change the background color for the selected page
+              },
+              "& .MuiPaginationItem-root": {
+                color: "black", // Change the color for other pages
+              },
+            }}
+          />
         </Grid>
       </Container>
     </>

@@ -13,6 +13,7 @@ import {
   Stack,
   Toolbar,
   Typography,
+  styled,
 } from "@mui/material";
 import {
   AccountCircle,
@@ -22,6 +23,21 @@ import {
 } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../pages/Resources/Imgs/logo.png"; // Update with the path to your logo
+
+const ResponsiveAppBar = styled(AppBar)(({ theme }) => ({
+  background: "#f49881",
+  paddingLeft: theme.spacing(0), // Adjust as needed
+  paddingRight: theme.spacing(0), // Adjust as needed
+  boxShadow: "none",
+  [theme.breakpoints.up('sm')]: {
+    paddingLeft: theme.spacing(2), // Adjust as needed
+    paddingRight: theme.spacing(2), // Adjust as needed
+  },
+  [theme.breakpoints.up('md')]: {
+    paddingLeft: theme.spacing(8), // Adjust as needed
+    paddingRight: theme.spacing(8), // Adjust as needed
+  },
+}));
 
 const Navigation = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -52,14 +68,8 @@ const Navigation = () => {
 
   return (
     <Box margin={0} sx={{ display: "flex" }}>
-      <AppBar
+      <ResponsiveAppBar
         position="static"
-        style={{
-          background: "#f49881",
-          paddingLeft: "12px",
-          paddingRight: "12px",
-          boxShadow: "none",
-        }}
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <img
@@ -166,7 +176,7 @@ const Navigation = () => {
             <MenuIcon />
           </IconButton>
         </Toolbar>
-      </AppBar>
+      </ResponsiveAppBar>
       {/* Drawer for mobile view */}
       <Drawer
         anchor="right"
