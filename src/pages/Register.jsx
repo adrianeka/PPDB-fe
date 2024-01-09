@@ -6,7 +6,9 @@ import AuthWrapper from "../components/AuthWrapper";
 import {BlueButton} from "../components/Button"
 import { Logo } from '../components/Logo';
 import { TextInput, PasswordInput } from "../components/TextField";
-
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const cssReset = `
   * {
@@ -31,7 +33,7 @@ export const registerSchema = z.object({
     .refine((value) => !/\s/.test(value), {
       message: "Format username belum sesuai."
     }),
-  fullName: z
+  fullname: z
     .string()
     .min(1, {
       message: "Kolom nama lengkap tidak boleh kosong."
@@ -45,7 +47,7 @@ export const registerSchema = z.object({
       message: "Kata sandi tidak boleh kurang dari 6 karakter."
     })
     .max(50),
-  confirmPassword: z
+  retypePassword: z
     .string()
     .min(1, {
       message: "Kolom Konfirmasi Kata Sandi tidak boleh kosong"
@@ -56,9 +58,17 @@ const Register = () => {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(registerSchema),
   });
+  const navigate = useNavigate();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post("http://localhost:8080/user-management/users/sign-up", data);
+      toast.success('Berhasil daftar!');
+      console.log(response);
+      navigate('/login');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const wrapper = {
@@ -106,7 +116,7 @@ const Register = () => {
           />
           <TextInput 
             label="Nama Lengkap"
-            fieldName="fullName"
+            fieldName="fullname"
             field={register}
             errors={errors}
           />
@@ -118,7 +128,7 @@ const Register = () => {
           />
           <PasswordInput 
             label="Konfirmasi Kata Sandi"
-            fieldName="confirmPassword"
+            fieldName="retypePassword"
             field={register}
             errors={errors}
           />
