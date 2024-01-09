@@ -4,16 +4,17 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardMedia,
   Checkbox,
   Divider,
   FormControlLabel,
+  FormGroup,
   Grid,
   IconButton,
   Link,
   Menu,
   Typography,
 } from "@mui/material";
+import cardImage from "../../public/img/image.png";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
@@ -38,22 +39,41 @@ const ResepMakananCard = () => {
   };
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardMedia
-        component="img"
-        alt="food"
-        height="140"
-        image="./img/image.png"
-      />
+      <Box
+        className="cardImage"
+        style={{
+          backgroundImage: `url(${cardImage})`,
+          backgroundSize: "cover",
+          height: "140px",
+        }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "right",
+          }}>
+          <IconButton
+            aria-label="more"
+            id="more-button"
+            aria-controls={open ? "more-menu" : undefined}
+            aria-expanded={open ? "true" : undefined}
+            aria-haspopup="true"
+            onClick={handleClick}
+            size="small"
+            sx={{
+              color: "white",
+              backgroundColor: "rgba(0,0,0,0.10)",
+              "&:hover": {
+                backgroundColor: "rgba(0,0,0,0.10)",
+              },
+              zIndex: 2,
+              padding: 0,
+              margin: 0,
+            }}>
+            <MoreHorizIcon />
+          </IconButton>
+        </Box>
+      </Box>
 
-      <IconButton
-        aria-label="more"
-        id="more-button"
-        aria-controls={open ? "more-menu" : undefined}
-        aria-expanded={open ? "true" : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}>
-        <MoreHorizIcon />
-      </IconButton>
       <Menu
         id="more-menu"
         MenuListProps={{
@@ -126,24 +146,37 @@ const ResepMakananCard = () => {
             <AccessTimeIcon />
             25 Menit
           </Typography>
-          <FormControlLabel
-            control={
-              <Checkbox icon={<StarBorderIcon />} checkedIcon={<StarIcon />} />
-            }
-            checked={favoriteCheck}
-            onChange={handleChange}
-            value="favorite"
-            label={
-              <Typography
-                sx={{
-                  fontSize: "12px",
-                  fontWeight: "400",
-                  color: "#01BFBF",
-                }}>
-                Favorit
-              </Typography>
-            }
-          />
+          <FormGroup
+            sx={{
+              "&.MuiFormGroup-root": {
+                display: "flex",
+                justifyContent: "right",
+                position: "relative",
+                right: -17,
+              },
+            }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  icon={<StarBorderIcon />}
+                  checkedIcon={<StarIcon />}
+                />
+              }
+              checked={favoriteCheck}
+              onChange={handleChange}
+              value="favorite"
+              label={
+                <Typography
+                  sx={{
+                    fontSize: "12px",
+                    fontWeight: "400",
+                    color: "#01BFBF",
+                  }}>
+                  Favorit
+                </Typography>
+              }
+            />
+          </FormGroup>
         </Box>
       </CardContent>
       <CardActions>
@@ -163,7 +196,7 @@ const ResepMakananCard = () => {
                 flexItem
                 sx={{
                   backgroundColor: "#01BFBF",
-                  width: "40%",
+                  width: { xs: "25%", md: "40%" },
                   marginX: "auto",
                 }}
               />

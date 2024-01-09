@@ -11,6 +11,8 @@ import { Button, Drawer, Hidden, Link } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +28,9 @@ const Navbar = () => {
     setAnchorElUser(null);
   };
 
+  const location = useLocation();
+  const isOnDaftarResep = location.pathname === "/daftar-resep";
+
   return (
     <AppBar
       position="static"
@@ -37,7 +42,7 @@ const Navbar = () => {
           width={{ xs: "100%", md: "75%" }}
           marginX="auto">
           <Link
-            href="#"
+            href="/daftar-resep"
             sx={{
               color: "inherit",
               textDecoration: "none",
@@ -59,6 +64,7 @@ const Navbar = () => {
               </Typography>
             </Box>
           </Link>
+          {/* Drawer Navbar Mobile */}
           <Box component="div" display={{ xs: "flex", md: "none" }}>
             <IconButton onClick={toggleDrawer} color="inherit">
               <Box sx={{ display: "flex", gap: "5px" }}>
@@ -98,9 +104,10 @@ const Navbar = () => {
                     marginTop: 3,
                   }}>
                   <Button
+                    href="/daftar-resep"
                     sx={{
                       textTransform: "none",
-                      color: "white",
+                      color: isOnDaftarResep ? "#01BFBF" : "white",
                       fontSize: "14px",
                       fontWeight: "700",
                     }}>
@@ -112,6 +119,7 @@ const Navbar = () => {
                     Daftar Resep Makanan
                   </Button>
                   <Button
+                    href="#"
                     sx={{
                       textTransform: "none",
                       color: "white",
@@ -126,6 +134,7 @@ const Navbar = () => {
                     Resep Saya
                   </Button>
                   <Button
+                    href="#"
                     sx={{
                       textTransform: "none",
                       color: "white",
@@ -157,15 +166,22 @@ const Navbar = () => {
               </Box>
             </Drawer>
           </Box>
+          {/* End of Drawer Navbar Mobile */}
+
+          {/* List Menu Desktop */}
           <Box display={{ xs: "none", md: "flex" }} gap={{ xs: 0, md: 5 }}>
             <Link
-              href="#"
+              href="/daftar-resep"
               sx={{
                 color: "inherit",
                 textDecoration: "none",
                 marginY: "auto",
               }}>
-              <Typography sx={{ fontWeight: "700" }}>
+              <Typography
+                sx={{
+                  fontWeight: "700",
+                  color: isOnDaftarResep ? "#01BFBF" : "white",
+                }}>
                 Daftar Resep Masakan
               </Typography>
             </Link>
@@ -211,11 +227,15 @@ const Navbar = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}>
                 <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">Sign Out</Typography>
+                  <Box display="flex" gap={1}>
+                    <ExitToAppIcon />
+                    <Typography textAlign="center">Sign Out</Typography>
+                  </Box>
                 </MenuItem>
               </Menu>
             </Box>
           </Box>
+          {/* End of List Menu Desktop */}
         </Box>
       </Toolbar>
     </AppBar>

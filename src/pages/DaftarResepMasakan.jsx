@@ -1,5 +1,5 @@
-import Typography from "@mui/material/Typography";
 import Navbar from "../components/Navbar";
+import ResepMakananCard from "../components/ResepMakananCard";
 import { useEffect, useState } from "react";
 import {
   Box,
@@ -15,11 +15,30 @@ import {
   Select,
   Stack,
   TextField,
+  useMediaQuery,
+  Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { styled } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import ResepMakananCard from "../components/ResepMakananCard";
+
+const MyPagination = styled(Pagination)({
+  "&.MuiPagination-root": {
+    "& .Mui-selected": {
+      backgroundColor: "#01BFBF",
+      color: "white",
+      "&:hover": {
+        backgroundColor: "#01BFBF",
+        color: "white",
+      },
+    },
+  },
+  "& .MuiPaginationItem-root": {
+    color: "#01BFBF",
+  },
+});
 
 const DaftarResepMasakan = () => {
   const [filterMenu, setFilterMenu] = useState(null);
@@ -29,6 +48,15 @@ const DaftarResepMasakan = () => {
   };
   const handleCloseFilterMenu = () => {
     setFilterMenu(null);
+  };
+
+  const [filterMenuMobile, setFilterMenuMobile] = useState(null);
+  const openFilterMenuMobile = Boolean(filterMenuMobile);
+  const handleClickFilterMenuMobile = (event) => {
+    setFilterMenuMobile(event.currentTarget);
+  };
+  const handleCloseFilterMenuMobile = () => {
+    setFilterMenuMobile(null);
   };
 
   const [foodLevel, setFoodLevel] = useState("");
@@ -58,7 +86,20 @@ const DaftarResepMasakan = () => {
     setSortBy("");
   };
 
+  const [entries, setEntries] = useState(8);
+  const [page, setPage] = useState(1);
+
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.only("xs"));
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const handleScroll = () => {
+    const scrollPosition = window.scrollY;
+    setScrollPosition(scrollPosition);
+  };
+
   useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
     document.title = "Daftar Resep Masakan";
   });
   return (
@@ -101,12 +142,14 @@ const DaftarResepMasakan = () => {
               <Grid item xs={6}>
                 <Button
                   size="large"
-                  id="filter"
+                  id="filterMobile"
                   variant="outlined"
-                  aria-controls={openFilterMenu ? "filter" : undefined}
+                  aria-controls={
+                    openFilterMenuMobile ? "filterMobile" : undefined
+                  }
                   aria-haspopup="true"
-                  aria-expanded={openFilterMenu ? "true" : undefined}
-                  onClick={handleClickFilterMenu}
+                  aria-expanded={openFilterMenuMobile ? "true" : undefined}
+                  onClick={handleClickFilterMenuMobile}
                   sx={{
                     textTransform: "none",
                     color: "black",
@@ -121,13 +164,14 @@ const DaftarResepMasakan = () => {
                   <Typography>Filter</Typography>
                   <FilterListIcon />
                 </Button>
+
                 <Menu
                   id="basic-menu"
-                  anchorEl={filterMenu}
-                  open={openFilterMenu}
-                  onClose={handleCloseFilterMenu}
+                  anchorEl={filterMenuMobile}
+                  open={openFilterMenuMobile}
+                  onClose={handleCloseFilterMenuMobile}
                   MenuListProps={{
-                    "aria-labelledby": "filter",
+                    "aria-labelledby": "filterMobile",
                   }}
                   PaperProps={{
                     elevation: 0,
@@ -136,7 +180,7 @@ const DaftarResepMasakan = () => {
                       filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                       mt: 1.5,
                       "&::before": {
-                        content: '""',
+                        content: scrollPosition >= 115 && '""',
                         display: "block",
                         position: "absolute",
                         top: 0,
@@ -158,7 +202,7 @@ const DaftarResepMasakan = () => {
                     justifyContent="space-between"
                     gap={3}>
                     <Grid container spacing={2}>
-                      <Grid item xs={6}>
+                      <Grid item xs={12}>
                         <Stack spacing={1}>
                           <Typography sx={{ fontWeight: "700" }}>
                             Tingkat Kesulitan
@@ -181,7 +225,7 @@ const DaftarResepMasakan = () => {
                           </FormControl>
                         </Stack>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item xs={12}>
                         <Stack spacing={1}>
                           <Typography sx={{ fontWeight: "700" }}>
                             Kategori
@@ -204,7 +248,7 @@ const DaftarResepMasakan = () => {
                       </Grid>
                     </Grid>
                     <Grid container spacing={2}>
-                      <Grid item xs={6}>
+                      <Grid item xs={12}>
                         <Stack spacing={1}>
                           <Typography sx={{ fontWeight: "700" }}>
                             Waktu Memasak
@@ -226,7 +270,7 @@ const DaftarResepMasakan = () => {
                       </Grid>
                     </Grid>
                     <Grid container spacing={2}>
-                      <Grid item xs={6}>
+                      <Grid item xs={12}>
                         <Button
                           onClick={handleClickResetFilter}
                           variant="text"
@@ -234,11 +278,12 @@ const DaftarResepMasakan = () => {
                           <Typography>Bersihkan filter</Typography>
                         </Button>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid item xs={12}>
                         <Box display="flex" gap={1}>
                           <Button
+                            fullWidth
                             variant="outlined"
-                            onClick={handleCloseFilterMenu}
+                            onClick={handleCloseFilterMenuMobile}
                             sx={{
                               color: "#01BFBF",
                               textTransform: "none",
@@ -247,6 +292,7 @@ const DaftarResepMasakan = () => {
                             Batal
                           </Button>
                           <Button
+                            fullWidth
                             variant="container"
                             disableElevation
                             sx={{
@@ -549,51 +595,70 @@ const DaftarResepMasakan = () => {
             }}>
             Daftar Resep Makanan
           </Typography>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{ marginBottom: 3 }}>
             {Array.from({ length: 8 }).map((_, index) => (
               <Grid item xs={12} sm={6} md={3} key={index}>
                 <ResepMakananCard />
               </Grid>
             ))}
-            <Grid item xs={12}>
-              {/* Mobile Pagination */}
-              <Box display={{ xs: "flex", md: "none" }} justifyContent="center">
-                <Pagination
-                  count={10}
-                  color="primary"
-                  size="small"
-                  sx={{
-                    "& .Mui-selected": {
-                      backgroundColor: "#01BFBF",
-                      color: "white",
-                      "&:hover": {
+          </Grid>
+          <Grid container spacing={1}>
+            <Grid item xs={12} md={6}>
+              <Box display="flex" justifyContent={{ xs: "center", md: "left" }}>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Typography
+                    sx={{
+                      color: "#787885",
+                      fontWeight: "400",
+                      fontSize: { xs: "14px", md: "16px" },
+                    }}>
+                    Entries
+                  </Typography>
+                  <IconButton aria-label="entries" size="small">
+                    <Typography
+                      sx={{
                         backgroundColor: "#01BFBF",
+                        fontSize: { xs: "14px", md: "16px" },
                         color: "white",
-                      },
-                    },
-                  }}
-                />
+                        paddingY: 0.5,
+                        paddingX: 1,
+                        borderRadius: "4px",
+                      }}>
+                      8
+                    </Typography>
+                  </IconButton>
+                  <IconButton aria-label="entries" size="small">
+                    <Typography
+                      sx={{
+                        fontSize: { xs: "14px", md: "16px" },
+                        borderRadius: "4px",
+                      }}>
+                      16
+                    </Typography>
+                  </IconButton>
+                  <IconButton aria-label="entries" size="small">
+                    <Typography
+                      sx={{
+                        fontSize: { xs: "14px", md: "16px" },
+                        borderRadius: "4px",
+                      }}>
+                      48
+                    </Typography>
+                  </IconButton>
+                </Box>
               </Box>
-              {/* End of Mobile Pagination */}
+            </Grid>
 
-              {/* Desktop Pagination */}
-              <Box display={{ xs: "none", md: "flex" }} justifyContent="center">
-                <Pagination
+            <Grid item xs={12} md={6}>
+              <Box
+                display="flex"
+                justifyContent={{ xs: "center", md: "right" }}>
+                <MyPagination
                   count={10}
                   color="primary"
-                  sx={{
-                    "& .Mui-selected": {
-                      backgroundColor: "#01BFBF",
-                      color: "white",
-                      "&:hover": {
-                        backgroundColor: "#01BFBF",
-                        color: "white",
-                      },
-                    },
-                  }}
+                  size={smallScreen ? "small" : "medium"}
                 />
               </Box>
-              {/* End of Desktop Pagination */}
             </Grid>
           </Grid>
         </Box>
