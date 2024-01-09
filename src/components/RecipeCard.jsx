@@ -54,7 +54,7 @@ const RecipeCard = ({
   return (
     <>
       <Hidden smDown>
-        <Grid item key={resep.id}>
+        <Grid item key={resep.recipeId}>
           <Card sx={{ width: 250, position: "relative" }}>
             <IconButton
               sx={{
@@ -67,13 +67,13 @@ const RecipeCard = ({
                   backgroundColor: "rgba(0, 0, 0, 0.1)",
                 },
               }}
-              onClick={(event) => handleOpenOptions(event, resep.id)}
+              onClick={(event) => handleOpenOptions(event, resep.recipeId)}
             >
               <MoreHoriz />
             </IconButton>
             <Menu
-              anchorEl={option === resep.id ? document.activeElement : null}
-              open={option === resep.id}
+              anchorEl={option === resep.recipeId ? document.activeElement : null}
+              open={option === resep.recipeId}
               onClose={handleCloseOptions}
             >
               <MenuItem>
@@ -98,7 +98,7 @@ const RecipeCard = ({
               </DialogTitle>
               <DialogContent sx={{ textAlign: "center" }}>
                 <Typography variant="body1">
-                  Apakah anda yakin akan menghapus resep {resep.nama}?
+                  Apakah anda yakin akan menghapus resep {resep.recipeName}?
                 </Typography>
               </DialogContent>
               <DialogActions sx={{ justifyContent: "space-between" }}>
@@ -137,7 +137,7 @@ const RecipeCard = ({
             <CardMedia
               component="img"
               height="142"
-              image={resep.image}
+              image="https://i.ytimg.com/vi/CLfLetvF96E/maxresdefault.jpg"
               alt={resep.image}
             />
             <CardContent sx={{ padding: 1 }}>
@@ -148,7 +148,7 @@ const RecipeCard = ({
                   textAlign={"left"}
                   sx={{ color: "#01BFBF" }}
                 >
-                  {resep.kategori}
+                  {resep.categories.categoryName}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -156,7 +156,7 @@ const RecipeCard = ({
                   textAlign={"left"}
                   sx={{ color: "#01BFBF" }}
                 >
-                  {resep.difficulty}
+                  {resep.levels.levelName}
                 </Typography>
               </Box>
               <Typography
@@ -165,7 +165,7 @@ const RecipeCard = ({
                 component="div"
                 textAlign={"left"}
               >
-                {resep.nama}
+                {resep.recipeName}
               </Typography>
             </CardContent>
             <CardActions sx={{ padding: 1 }}>
@@ -185,7 +185,7 @@ const RecipeCard = ({
                     >
                       <AccessTime sx={{ color: "#01BFBF" }} />
                       <Typography variant="body2" sx={{ color: "#01BFBF" }}>
-                        &nbsp;{resep.waktu} Menit
+                        &nbsp;{resep.time} Menit
                       </Typography>
                     </IconButton>
                   </Grid>
@@ -208,7 +208,7 @@ const RecipeCard = ({
                 </Grid>
                 <br />
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <Link to={`/your-page-path/${resep.id}`}>
+                  <Link to={`/your-page-path/${resep.recipeId}`}>
                     <Typography variant="body2" color={"#01BFBF"}>
                       Lihat Detil Resep
                     </Typography>
@@ -220,7 +220,7 @@ const RecipeCard = ({
         </Grid>
       </Hidden>
       <Hidden smUp>
-        <Grid item key={resep.id}>
+        <Grid item key={resep.recipeId}>
           <Card sx={{ width: 330, position: "relative"}}>
             <IconButton
               sx={{
@@ -233,13 +233,13 @@ const RecipeCard = ({
                   backgroundColor: "rgba(0, 0, 0, 0.1)",
                 },
               }}
-              onClick={(event) => handleOpenOptions(event, resep.id)}
+              onClick={(event) => handleOpenOptions(event, resep.recipeId)}
             >
               <MoreHoriz />
             </IconButton>
             <Menu
-              anchorEl={option === resep.id ? document.activeElement : null}
-              open={option === resep.id}
+              anchorEl={option === resep.recipeId ? document.activeElement : null}
+              open={option === resep.recipeId}
               onClose={handleCloseOptions}
             >
               <MenuItem>
@@ -264,7 +264,7 @@ const RecipeCard = ({
               </DialogTitle>
               <DialogContent sx={{ textAlign: "center" }}>
                 <Typography variant="body1">
-                  Apakah anda yakin akan menghapus resep {resep.nama}?
+                  Apakah anda yakin akan menghapus resep {resep.recipeName}?
                 </Typography>
               </DialogContent>
               <DialogActions sx={{ justifyContent: "space-between" }}>
@@ -303,7 +303,7 @@ const RecipeCard = ({
             <CardMedia
               component="img"
               height="142"
-              image={resep.image}
+              image="https://i.ytimg.com/vi/CLfLetvF96E/maxresdefault.jpg"
               alt={resep.image}
             />
             <CardContent sx={{ padding: 1 }}>
@@ -314,7 +314,7 @@ const RecipeCard = ({
                   textAlign={"left"}
                   sx={{ color: "#01BFBF" }}
                 >
-                  {resep.kategori}
+                  {resep.categories.categoryName}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -322,7 +322,7 @@ const RecipeCard = ({
                   textAlign={"left"}
                   sx={{ color: "#01BFBF" }}
                 >
-                  {resep.difficulty}
+                  {resep.levels.levelName}
                 </Typography>
               </Box>
               <Typography
@@ -331,7 +331,7 @@ const RecipeCard = ({
                 component="div"
                 textAlign={"left"}
               >
-                {resep.nama}
+                {resep.recipeName}
               </Typography>
             </CardContent>
             <CardActions sx={{ padding: 1 }}>
@@ -351,7 +351,7 @@ const RecipeCard = ({
                     >
                       <AccessTime sx={{ color: "#01BFBF" }} />
                       <Typography variant="body2" sx={{ color: "#01BFBF" }}>
-                        &nbsp;{resep.waktu} Menit
+                        &nbsp;{resep.time} Menit
                       </Typography>
                     </IconButton>
                   </Grid>
@@ -374,7 +374,7 @@ const RecipeCard = ({
                 </Grid>
                 <br />
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <Link to={`/your-page-path/${resep.id}`}>
+                  <Link to={`/your-page-path/${resep.recipeId}`}>
                     <Typography variant="body2" color={"#01BFBF"}>
                       Lihat Detil Resep
                     </Typography>
@@ -391,11 +391,11 @@ const RecipeCard = ({
 
 RecipeCard.propTypes = {
   resep: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    nama: PropTypes.string.isRequired,
-    kategori: PropTypes.string.isRequired,
-    difficulty: PropTypes.string.isRequired,
-    waktu: PropTypes.number.isRequired,
+    recipeId: PropTypes.number.isRequired,
+    recipeName: PropTypes.string.isRequired,
+    categories: PropTypes.string.isRequired,
+    levels: PropTypes.string.isRequired,
+    time: PropTypes.number.isRequired,
     isFavorite: PropTypes.bool.isRequired,
     image: PropTypes.string.isRequired,
   }).isRequired,

@@ -16,7 +16,8 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
 import { FilterList, Search } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Navigation from "../components/Navigation";
 import ChocolateChip from "./Resources/Imgs/cookies_pastries_chocolate_chips_187114_1600x900.jpg";
 import EggBenedict from "./Resources/Imgs/classic-eggs-benedict-with-lemon-basil-hollandaise-1.webp";
@@ -34,7 +35,7 @@ const DaftarResepSaya = () => {
   const [difficulty, setDifficulty] = useState(null);
   const [category, setCategory] = useState(null);
   const [cookTIme, setCookTime] = useState(null);
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState(null);
 
   const handleChangeDifficulty = (event) => {
     setDifficulty(event.target.value);
@@ -68,81 +69,68 @@ const DaftarResepSaya = () => {
     setOption(null);
   };
 
-  const ResepSaya = () => {
-    return [
-      {
-        id: 1,
-        nama: "Chocolate Chip",
-        kategori: "Breakfast",
-        difficulty: "Hard",
-        waktu: 25,
-        isFavorite: true,
-        image: ChocolateChip,
-      },
-      {
-        id: 2,
-        nama: "Egg Benedict",
-        kategori: "Breakfast",
-        difficulty: "Hard",
-        waktu: 20,
-        isFavorite: false,
-        image: EggBenedict,
-      },
-      {
-        id: 3,
-        nama: "Grilled Rib Eye",
-        kategori: "Breakfast",
-        difficulty: "Hard",
-        waktu: 45,
-        isFavorite: false,
-        image: GrilledRibEye,
-      },
-      {
-        id: 4,
-        nama: "Nasi Goreng",
-        kategori: "Dinner",
-        difficulty: "Easy",
-        waktu: 25,
-        isFavorite: false,
-        image: NasiGoreng,
-      },
-      {
-        id: 5,
-        nama: "Old Fashioned Pancake",
-        kategori: "Breakfast",
-        difficulty: "Hard",
-        waktu: 20,
-        isFavorite: false,
-        image: OldFashionedPancake,
-      },
-      {
-        id: 6,
-        nama: "Pancake",
-        kategori: "Breakfast",
-        difficulty: "Easy",
-        waktu: 20,
-        isFavorite: false,
-        image: Pancake,
-      },
-      {
-        id: 7,
-        nama: "Sashimi",
-        kategori: "Breakfast",
-        difficulty: "Easy",
-        waktu: 15,
-        isFavorite: true,
-        image: Sashimi,
-      },
-      {
-        id: 8,
-        nama: "Simple Sugar Cakes",
-        kategori: "Breakfast",
-        difficulty: "Medium",
-        waktu: 20,
-        isFavorite: false,
-        image: SugarCake,
-      },
-    ];
+  const [myRecipes, setMyRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const userId = "129";
+
+  const fetchMyRecipes = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/book-recipe/book-recipes/my-recipes",
+        {
+          params: {
+            userId: userId,
+            foodName: searchTerm,
+            levelId: difficulty,
+            categoryId: category,
+            time: cookTIme,
+            sortBy: sort,
+          },
+        }
+      );
+      setMyRecipes(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error(`Error fetching recipes: ${error}`);
+    } finally {
+      setLoading(false); // Set loading to false whether the request is successful or not
+    }
+  };
+
+  useEffect(() => {
+    fetchMyRecipes();
+  }, [searchTerm, difficulty, category, cookTIme, sort]);
+
+  const handleApplyFilters = () => {
+    setLoading(true); // Set loading to true when applying filters
+    fetchMyRecipes();
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleDeleteRecipe = async (recipeId, userId) => {
+    try {
+      // Send a PUT request to delete the recipe
+      setLoading(true);
+      const response = await axios.put(
+        `http://localhost:8080/book-recipe/book-recipes/${recipeId}?userId=${userId}`
+      );
+
+      // Check if the request was successful
+      if (response.status === 200) {
+        console.log("Recipe deleted successfully!");
+        // You may want to update your state or perform other actions
+      } else {
+        console.error("Failed to delete recipe");
+      }
+    } catch (error) {
+      console.error("Error deleting recipe:", error.message);
+    } finally {
+      fetchMyRecipes();
+    }
   };
 
   return (
@@ -197,6 +185,8 @@ const DaftarResepSaya = () => {
                         </InputAdornment>
                       ),
                     }}
+                    onChange={handleSearchChange}
+                    value={searchTerm}
                   />
                 </Grid>
                 <Grid item>
@@ -252,9 +242,10 @@ const DaftarResepSaya = () => {
                             <MenuItem value="">
                               <em>None</em>
                             </MenuItem>
-                            <MenuItem value={"Easy"}>Easy</MenuItem>
-                            <MenuItem value={"Medium"}>Medium</MenuItem>
-                            <MenuItem value={"Hard"}>Hard</MenuItem>
+                            <MenuItem value={3}>Easy</MenuItem>
+                            <MenuItem value={2}>Medium</MenuItem>
+                            <MenuItem value={1}>Hard</MenuItem>
+                            <MenuItem value={0}>Master Chef</MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>
@@ -273,9 +264,10 @@ const DaftarResepSaya = () => {
                             <MenuItem value="">
                               <em>None</em>
                             </MenuItem>
-                            <MenuItem value={"Breakfast"}>Breakfast</MenuItem>
-                            <MenuItem value={"Lunch"}>Lunch</MenuItem>
-                            <MenuItem value={"Dinner"}>Dinner</MenuItem>
+                            <MenuItem value={0}>Lunch</MenuItem>
+                            <MenuItem value={1}>Breakfast</MenuItem>
+                            <MenuItem value={2}>Dinner</MenuItem>
+                            <MenuItem value={3}>Snack</MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>
@@ -294,11 +286,8 @@ const DaftarResepSaya = () => {
                             <MenuItem value="">
                               <em>None</em>
                             </MenuItem>
-                            <MenuItem value={"0-30 Menit"}>0-30 Menit</MenuItem>
-                            <MenuItem value={"30-60 Menit"}>
-                              30-60 Menit
-                            </MenuItem>
-                            <MenuItem value={"+60 Menit"}>+60 Menit</MenuItem>
+                            <MenuItem value={30}>0-30 Menit</MenuItem>
+                            <MenuItem value={60}>30-60 Menit</MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>
@@ -317,12 +306,14 @@ const DaftarResepSaya = () => {
                             <MenuItem value="">
                               <em>None</em>
                             </MenuItem>
-                            <MenuItem value={"Nama Resep A-Z"}>
+                            <MenuItem value={"nameAsc"}>
                               Nama Resep A-Z
                             </MenuItem>
-                            <MenuItem value={"Nama Resep Z-A"}>
+                            <MenuItem value={"nameDesc"}>
                               Nama Resep Z-A
                             </MenuItem>
+                            <MenuItem value={"timeAsc"}>Durasi A-Z</MenuItem>
+                            <MenuItem value={"timeDesc"}>Durasi Z-A</MenuItem>
                           </Select>
                         </FormControl>
                       </Grid>
@@ -339,6 +330,7 @@ const DaftarResepSaya = () => {
                       </Grid>
                       <Grid display={"flex"} item xs={6} gap={1}>
                         <Button
+                          onClick={handleClose}
                           variant="contained"
                           sx={{
                             color: "#01BFBF",
@@ -357,6 +349,7 @@ const DaftarResepSaya = () => {
                           Batal
                         </Button>
                         <Button
+                          onClick={handleApplyFilters}
                           variant="contained"
                           sx={{
                             textTransform: "capitalize",
@@ -402,6 +395,8 @@ const DaftarResepSaya = () => {
                   </InputAdornment>
                 ),
               }}
+              onChange={handleSearchChange}
+              value={searchTerm}
             />
             <Box
               item
@@ -459,9 +454,10 @@ const DaftarResepSaya = () => {
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        <MenuItem value={"Easy"}>Easy</MenuItem>
-                        <MenuItem value={"Medium"}>Medium</MenuItem>
-                        <MenuItem value={"Hard"}>Hard</MenuItem>
+                        <MenuItem value={3}>Easy</MenuItem>
+                        <MenuItem value={2}>Medium</MenuItem>
+                        <MenuItem value={1}>Hard</MenuItem>
+                        <MenuItem value={0}>Master Chef</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -478,9 +474,10 @@ const DaftarResepSaya = () => {
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        <MenuItem value={"Breakfast"}>Breakfast</MenuItem>
-                        <MenuItem value={"Lunch"}>Lunch</MenuItem>
-                        <MenuItem value={"Dinner"}>Dinner</MenuItem>
+                        <MenuItem value={0}>Lunch</MenuItem>
+                        <MenuItem value={1}>Breakfast</MenuItem>
+                        <MenuItem value={2}>Dinner</MenuItem>
+                        <MenuItem value={3}>Snack</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -497,9 +494,8 @@ const DaftarResepSaya = () => {
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
-                        <MenuItem value={"0-30 Menit"}>0-30 Menit</MenuItem>
-                        <MenuItem value={"30-60 Menit"}>30-60 Menit</MenuItem>
-                        <MenuItem value={"+60 Menit"}>+60 Menit</MenuItem>
+                        <MenuItem value={30}>0-30 Menit</MenuItem>
+                        <MenuItem value={60}>30-60 Menit</MenuItem>
                       </Select>
                     </FormControl>
                   </Grid>
@@ -560,22 +556,18 @@ const DaftarResepSaya = () => {
                   displayEmpty
                   inputProps={{ "aria-label": "Without label" }}
                   sx={{ width: "150px", height: "40px", fontSize: "14px" }}
-                  renderValue={(selected) => {
-                    if (selected === "") {
-                      return <em>Sort By</em>;
-                    }
-                    return selected;
-                  }}
                 >
                   <MenuItem sx={{ fontSize: "14px" }} value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem sx={{ fontSize: "14px" }} value={"Nama Resep A-Z"}>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"nameDesc"}>
                     Nama Resep A-Z
                   </MenuItem>
-                  <MenuItem sx={{ fontSize: "14px" }} value={"Nama Resep Z-A"}>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"nameAsc"}>
                     Nama Resep Z-A
                   </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"timeDesc"}>Durasi A-Z</MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"timeAsc"}>Durasi Z-A</MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -610,9 +602,9 @@ const DaftarResepSaya = () => {
             alignItems="flex-start"
             marginBottom={3}
           >
-            {ResepSaya().map((resep) => (
+            {myRecipes.map((resep) => (
               <RecipeCard
-                key={resep.id}
+                key={resep.recipeId}
                 resep={resep}
                 handleOpenOptions={handleOpenOptions}
                 option={option}
@@ -620,22 +612,59 @@ const DaftarResepSaya = () => {
               />
             ))}
           </Grid>
-          <Pagination
-            className="pagination"
-            count={10}
-            size="small"
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              "& .Mui-selected": {
-                color: "white", // Change the color for the selected page
-                backgroundColor: "#01BFBF", // Change the background color for the selected page
-              },
-              "& .MuiPaginationItem-root": {
-                color: "black", // Change the color for other pages
-              },
-            }}
-          />
+
+          <div>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              myRecipes.map((recipe) => (
+                <div key={recipe.recipeId}>
+                  <h2>{recipe.recipeName}</h2>
+                  <p>Category: {recipe.categories.categoryName}</p>
+                  <p>Level: {recipe.levels.levelName}</p>
+                  <p>Time: {recipe.time} minutes</p>
+                  <p>Favorite: {recipe.is_favorite ? "Yes" : "No"}</p>
+                  <button
+                    onClick={() => handleDeleteRecipe(recipe.recipeId, userId)}
+                  >
+                    delete
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: "15px",
+                alignItems: "baseline",
+                flexWrap: "wrap",
+              }}
+            >
+              Entries
+              <Button>8</Button>
+              <Button>16</Button>
+              <Button>32</Button>
+            </Box>
+            <Pagination
+              className="pagination"
+              count={10}
+              size="small"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                "& .Mui-selected": {
+                  color: "white", // Change the color for the selected page
+                  backgroundColor: "#01BFBF", // Change the background color for the selected page
+                },
+                "& .MuiPaginationItem-root": {
+                  color: "black", // Change the color for other pages
+                },
+              }}
+            />
+          </Box>
         </Grid>
       </Container>
     </>
