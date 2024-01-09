@@ -6,6 +6,12 @@ import FormHelperText from '@mui/material/FormHelperText';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Typography from '@mui/material/Typography';
+import {
+    FieldWrapper, 
+    LabelText, 
+    Fieldstyle, 
+    errorColor 
+} from '../styles/style.jsx';
 
 export const TextInput = ({
     label,
@@ -13,38 +19,15 @@ export const TextInput = ({
     field,
     errors
 }) => {
-    const FieldWrapper = {
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        gap: "0.25rem",
-        backgroundColor: "white",
-        fontSize: "0.875rem",
-        lineHeight: "1.25rem",
-    }
-
-    const errorColor = {
-        color: "#ff0000"
-    }
-
-    const inputStyle = {
-        borderColor: errors[fieldName] ? "#ff0000" : "#b4b4bb",
-    }
-
-    const inputWrapper = {
-        backgroundColor: "white",
-    }
-
     return (
         <div style={FieldWrapper}>
-            <Typography sx={{ color: errors[fieldName] ? "#ff0000" : "#7f7f7f", fontSize: "0.875rem", lineHeight: "1.25rem", }}>
+            <Typography sx={LabelText(errors[fieldName])}>
                 {label}{" "}
                 <span style={errorColor}>*</span>
             </Typography>
             <OutlinedInput
                 {...field(fieldName)}
-                style={inputStyle}
-                className='field-input-text'
+                sx={Fieldstyle}
                 placeholder={label}
             />
             {errors[fieldName] && (
@@ -69,32 +52,9 @@ export const PasswordInput = ({
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-
-    const FieldWrapper = {
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        gap: "0.25rem",
-        backgroundColor: "white",
-        fontSize: "0.875rem",
-        lineHeight: "1.25rem",
-    }
-
-    const errorColor = {
-        color: "#ff0000"
-    }
-
-    const inputStyle = {
-        borderColor: errors[fieldName] ? "#ff0000" : "#b4b4bb",
-    }
-
-    const inputWrapper = {
-        backgroundColor: "white",
-    }
-
     return (
         <div style={FieldWrapper}>
-            <Typography sx={{ color: errors[fieldName] ? "#ff0000" : "#7f7f7f", fontSize: "0.875rem", lineHeight: "1.25rem", }}>
+            <Typography sx={LabelText(errors[fieldName])}>
                 {label}{" "}
                 <span style={errorColor}>*</span>
             </Typography>
@@ -114,8 +74,7 @@ export const PasswordInput = ({
                     </InputAdornment>
                 }
                 placeholder={label}
-                style={inputStyle}
-                className='field-input-text'
+                sx={Fieldstyle}
             />
             {errors[fieldName] && (
                 <FormHelperText sx={errorColor}>{errors[fieldName].message}</FormHelperText>

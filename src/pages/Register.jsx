@@ -3,12 +3,17 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import AuthWrapper from "../components/AuthWrapper";
-import {BlueButton} from "../components/Button"
+import { BlueButton } from "../components/Button"
 import { Logo } from '../components/Logo';
 import { TextInput, PasswordInput } from "../components/TextField";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
 import toast from 'react-hot-toast';
+import {
+  wrapper,
+  formContentWrapper
+} from '../styles/style.jsx';
 
 const cssReset = `
   * {
@@ -52,6 +57,9 @@ export const registerSchema = z.object({
     .min(1, {
       message: "Kolom Konfirmasi Kata Sandi tidak boleh kosong"
     }),
+}).refine((data) => data.password === data.retypePassword, {
+  message: "Konfirmasi kata sandi tidak sama dengan kata sandi.",
+  path: ["retypePassword"]
 });
 
 const Register = () => {
@@ -63,79 +71,53 @@ const Register = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post("http://localhost:8080/user-management/users/sign-up", data);
-      toast.success('Berhasil daftar!');
-      console.log(response);
-      navigate('/login');
+      if (response.data.status === "OK") {
+        toast.success('Berhasil daftar!');
+        navigate('/login');
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const wrapper = {
-    fontFamily: 'Mulish, sans-serif',
-    margin: "0", // m-0
-    display: "flex", // flex
-    flexDirection: "column", // flex-col
-    alignItems: "center", // items-center
-    marginRight: "auto", // mx-auto
-    marginLeft: "auto",
-    paddingRight: "1rem", // px-4
-    paddingLeft: "1rem",
-    gap: "0.5rem", // gap-2
-    paddingTop: "2.5rem", // py-10
-    paddingBottom: "2.5rem",
-  };
-
-  const formContentWrapper = {
-    backgroundColor: "white",
-    paddingLeft: "2rem",
-    paddingRight: "2rem",
-    paddingTop: "1.5rem",
-    paddingBottom: "1.5rem",
-    display: "flex",
-    flexDirection: "column",
-    gap: "1rem",
-    alignItems: "center",
-  }
-
   return (
-    <div style={wrapper} >
+    <Box sx={wrapper} >
       <style>{cssReset}</style>
       <Logo />
       <AuthWrapper
         title="Daftar"
-        linkText="Batal, kembali ke Halaman Login"
+        linkText="Batal, Kembali ke Halaman Login"
         url="/login"
       >
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
-          <TextInput 
+          <TextInput
             label="Username"
             fieldName="username"
             field={register}
             errors={errors}
           />
-          <TextInput 
+          <TextInput
             label="Nama Lengkap"
             fieldName="fullname"
             field={register}
             errors={errors}
           />
-          <PasswordInput 
+          <PasswordInput
             label="Kata Sandi"
             fieldName="password"
             field={register}
             errors={errors}
           />
-          <PasswordInput 
+          <PasswordInput
             label="Konfirmasi Kata Sandi"
             fieldName="retypePassword"
             field={register}
             errors={errors}
           />
-          <BlueButton text="Daftar" customStyle={{width: '100%'}} />
+          <BlueButton text="Daftar" customStyle={{ width: '100%' }} type='submit' />
         </form>
       </AuthWrapper>
-    </div>
+    </Box>
   );
 };
 

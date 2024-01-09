@@ -1,5 +1,17 @@
 import React from "react";
 import { useMediaQuery } from "@uidotdev/usehooks";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
+import {
+  formWrapper,
+  formTitleWrapper,
+  linkStyle,
+  footerTextStyle,
+  footerStyle,
+  FooterLink
+} from '../styles/style.jsx';
+
 
 const AuthWrapper = ({
   children,
@@ -13,81 +25,34 @@ const AuthWrapper = ({
     "only screen and (min-width : 768px)"
   );
 
-  const formWrapper = {
-    maxWidth: "32rem",
-    marginLeft: "auto",
-    marginRight: "auto",
-    borderRadius: "calc(0.5rem - 2px)",
-    width: "100%",
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-    paddingBottom: "0.5rem",
-    backgroundColor: "white"
-  }
-
-  const formTitleWrapper = {
-    backgroundColor: "#f49881",
-    paddingTop: "0.5rem", // py-2
-    paddingBottom: "0.5rem",
-    fontSize: "1.125rem", // text-lg
-    lineHeight: "1.75rem",
-    color: "white",
-    textAlign: "center"
-  }
-
-  const linkStyle = {
-    color: "#f49881", 
-    fontSize: "0.875rem", 
-    lineHeight: "1.25rem", 
-    textDecoration: "none",
-    textAlign: "center",
-  }
-
-  const footerTextStyle = {
-    fontSize: "0.875rem",
-    lineHeight: "1.25rem", 
-    textDecoration: "none",
-  }
-
-  const footerStyle = {
-    width: "100%", 
-    paddingBottom: "0.25rem", 
-    display: "flex", 
-    alignItems: "center",
-    flexDirection: isMediumDevice? "row" : "column",
-    justifyContent: "center",
-  }
-
-  const aboutStyle = {
-    display: "flex",
-    justifyContent: "center",
-    gap: "5rem"
-  }
-
   return (
-    <div style={formWrapper}>
-      <div style={formTitleWrapper}>
-        {title}
-      </div>
+    <Box sx={formWrapper}>
+      <Box sx={formTitleWrapper}>
+        <Typography>
+          {title}
+        </Typography>
+      </Box>
       {children}
-      <div style={footerStyle}>
-        <p style={footerTextStyle}>
+      <Box sx={footerStyle(isMediumDevice)}>
+        <Typography sx={footerTextStyle}>
           {footerText}
-        </p>
-        <a href={url} style={linkStyle}>
+        </Typography>
+        <Link href={url} sx={linkStyle}>
           {linkText}
-        </a>
-      </div>
+        </Link>
+      </Box>
       {showAboutAndContact && (
-        <div style={aboutStyle}>
-          <a href="/about" style={linkStyle}>
+        <Box sx={FooterLink}>
+          <Link href="/about" sx={linkStyle}>
             About
-          </a>
-          <a href="/contact" style={linkStyle}>
+          </Link>
+          <Link href="/contact" sx={linkStyle}>
             Contact
-          </a>
-        </div>
+          </Link>
+        </Box>
       )}
-    </div>
+    </Box>
+
   );
 }
  
