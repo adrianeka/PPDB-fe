@@ -117,6 +117,55 @@ function DaftarResep() {
       recipeName: "Nasi Goreng",
       time: 45,
     },
+    {
+      recipeId: 3,
+      imageUrl: nasgor,
+      difficult: "Medium",
+      categories: { categoryName: "Dinner" },
+      recipeName: "Nasi Goreng",
+      time: 45,
+    },
+    {
+      recipeId: 4,
+      imageUrl: nasgor,
+      difficult: "Medium",
+      categories: { categoryName: "Dinner" },
+      recipeName: "Nasi Goreng",
+      time: 45,
+    },
+    {
+      recipeId: 5,
+      imageUrl: nasgor,
+      difficult: "Medium",
+      categories: { categoryName: "Dinner" },
+      recipeName: "Nasi Goreng",
+      time: 45,
+    },
+    {
+      recipeId: 6,
+      imageUrl: nasgor,
+      difficult: "Medium",
+      categories: { categoryName: "Dinner" },
+      recipeName: "Nasi Goreng",
+      time: 45,
+    },
+    {
+      recipeId: 7,
+      imageUrl: nasgor,
+      difficult: "Medium",
+      categories: { categoryName: "Dinner" },
+      recipeName: "Nasi Goreng",
+      time: 45,
+    },
+    {
+      recipeId: 8,
+      imageUrl: nasgor,
+      difficult: "Medium",
+      categories: { categoryName: "Dinner" },
+      recipeName: "Nasi Goreng",
+      time: 45,
+    },
+
     // Tambahkan data dummy sesuai kebutuhan
   ];
 
@@ -160,7 +209,7 @@ function DaftarResep() {
           <Grid item>
             <Grid
               container
-              spacing={4}
+              spacing={2}
               direction="row"
               justifyContent="space-between"
               alignItems="center"
@@ -170,7 +219,11 @@ function DaftarResep() {
                   <Button
                     variant="contained"
                     startIcon={<AddIcon />}
-                    sx={{ backgroundColor: "#01BFBF" }}
+                    sx={{
+                      backgroundColor: "#01BFBF",
+                      fontFamily: "Mulish-Regular",
+                      textTransform: "none",
+                    }}
                   >
                     Tambah Resep
                   </Button>
@@ -178,11 +231,12 @@ function DaftarResep() {
               </Grid>
               <Grid item>
                 <TextField
+                  fullWidth
                   id="filled-basic"
                   placeholder="Cari Resep"
                   type="search"
                   size="small"
-                  sx={{ width: "500px", background: "white" }}
+                  sx={{ background: "white" }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
@@ -201,7 +255,11 @@ function DaftarResep() {
                   aria-haspopup="true"
                   aria-expanded={open ? "true" : undefined}
                   onClick={handleClick}
-                  sx={{ background: "white", color: "#0000008A" }}
+                  sx={{
+                    background: "white",
+                    color: "#0000008A",
+                    textTransform: "none",
+                  }}
                 >
                   Filter
                 </Button>
@@ -280,10 +338,24 @@ function DaftarResep() {
                       </TextField>
                     </FormControl>
                   </MenuItem>
-                  <MenuItem sx={{ flexDirection: "row", justifyContent: "space-around" }}>
-                    <Button variant="text" sx={{color: "#EA4335"}}>Bersihkan Filter</Button>
-                    <Button variant="outlined" sx={{ color: "#01BFBF" }} >Batal</Button>
-                    <Button variant="contained"  sx={{ backgroundColor: "#01BFBF" }}>Terapkan</Button>
+                  <MenuItem
+                    sx={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                    }}
+                  >
+                    <Button variant="text" sx={{ color: "#EA4335" }}>
+                      Bersihkan Filter
+                    </Button>
+                    <Button variant="outlined" sx={{ color: "#01BFBF" }}>
+                      Batal
+                    </Button>
+                    <Button
+                      variant="contained"
+                      sx={{ backgroundColor: "#01BFBF" }}
+                    >
+                      Terapkan
+                    </Button>
                   </MenuItem>
                 </Menu>
                 {/* <Typography>BARIS FILTER</Typography> */}
@@ -298,8 +370,8 @@ function DaftarResep() {
               container
               spacing={6}
               direction="row"
-              justifyContent="flex-start"
-              alignItems="flex-start"
+              justifyContent="center"
+              alignItems="center"
               marginBottom={10}
             >
               {post.map((recipes) => (
@@ -385,7 +457,9 @@ function DaftarResep() {
                               className="recipe"
                               to={"detail-resep/" + recipes.recipeId}
                             >
-                              <Typography variant="body2">
+                              <Typography
+                                variant="body2"
+                              >
                                 Lihat detail Resep
                               </Typography>
                             </Link>

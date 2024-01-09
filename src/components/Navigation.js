@@ -48,15 +48,15 @@ const Navigation = () => {
                     >
                         Buku Resep 79
                     </Typography>
-                        <Stack direction="row" spacing={4} justifyContent="flex-end">
+                        <Stack direction="row" spacing={4} justifyContent="flex-end" alignItems="center">
                             <Link to={'/daftar-resep'}>
-                                <Button sx={{fontWeight: 'bold', color: '#FFFFFF'}}>Daftar Resep</Button>
+                                <Button sx={{fontWeight: 'bold', color: '#FFFFFF', textTransform: 'none'}}>Daftar Resep</Button>
                             </Link>
                             <Link to={'/resep-saya'}>
-                                <Button sx={{fontWeight: 'bold', color: '#FFFFFF'}}>Resep Saya</Button>
+                                <Button sx={{fontWeight: 'bold', color: '#FFFFFF', textTransform: 'none'}}>Resep Saya</Button>
                             </Link>
                             <Link to={'/resep-favorit'}>
-                                <Button sx={{fontWeight: 'bold', color: '#FFFFFF'}}>Resep Favorit</Button>
+                                <Button sx={{fontWeight: 'bold', color: '#FFFFFF', textTransform: 'none'}}>Resep Favorit</Button>
                             </Link>
                         <div>
                             <IconButton                                
