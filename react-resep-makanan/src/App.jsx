@@ -1,7 +1,9 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import LoginPage from './pages/Login'
+import Login from './pages/Login'
 import DaftarResep from './pages/DaftarRerep';
-import Landing from './pages/Landing';
+import About from './pages/About';
+import Contact from './pages/Contact';
+import Register from './pages/Register';
 
 function App() {
 
@@ -9,9 +11,11 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path='/user-management/users/signin' element={<LoginPage />}/>
+          <Route path='/user-management/users/signin' element={<Login />}/>
           <Route path='/daftar-resep' element={<DaftarResep />}/>
-          <Route exact path='/' element={<Landing />}/>
+          <Route path='/about' element={<About />}/>
+          <Route path='/contact' element={<Contact />}/>
+          <Route path='/user-management/users/signup' element={<Register />}/>
         </Routes>
       </Router>
     </div>

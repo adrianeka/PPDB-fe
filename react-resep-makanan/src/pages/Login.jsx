@@ -59,7 +59,7 @@ export const loginSchema = z.object({
     }),
 });
 
-const LoginPage = () => {
+const Login = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -115,7 +115,7 @@ const LoginPage = () => {
       <AuthWrapper
         title="Login"
         linkText=" Daftar Disini"
-        url="/register"
+        url="/user-management/users/signup"
         footerText="Belum punya Akun? "
         showAboutAndContact={true}
       >
@@ -140,4 +140,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default Login;
