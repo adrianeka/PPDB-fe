@@ -71,8 +71,10 @@ const DaftarResepSaya = () => {
 
   const [myRecipes, setMyRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletionLoading, setDeletionLoading] = useState(false);
+  const [deletionSuccess, setDeletionSuccess] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const userId = "129";
+  const userId = "129"; // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
 
   const fetchMyRecipes = async () => {
     try {
@@ -103,7 +105,7 @@ const DaftarResepSaya = () => {
   }, [searchTerm, difficulty, category, cookTIme, sort]);
 
   const handleApplyFilters = () => {
-    setLoading(true); // Set loading to true when applying filters
+    setLoading(true);
     fetchMyRecipes();
   };
 
@@ -113,30 +115,31 @@ const DaftarResepSaya = () => {
 
   const handleDeleteRecipe = async (recipeId, userId) => {
     try {
-      // Send a PUT request to delete the recipe
-      setLoading(true);
+      setDeletionLoading(true);
       const response = await axios.put(
         `http://localhost:8080/book-recipe/book-recipes/${recipeId}?userId=${userId}`
       );
-
+  
       // Check if the request was successful
       if (response.status === 200) {
         console.log("Recipe deleted successfully!");
-        // You may want to update your state or perform other actions
+        setDeletionLoading(false);
+        setDeletionSuccess(true);
       } else {
-        console.error("Failed to delete recipe");
+        console.error("Failed to delete recipe: ");
       }
     } catch (error) {
       console.error("Error deleting recipe:", error.message);
     } finally {
       fetchMyRecipes();
     }
-  };
+  };  
 
   return (
     <>
       <Navigation />
       <Container>
+        {/* Desktop view */}
         <Hidden smDown>
           <Box
             display="flex"
@@ -377,6 +380,7 @@ const DaftarResepSaya = () => {
           </Box>
         </Hidden>
 
+        {/* Mobile View */}
         <Hidden smUp>
           <Box>
             <Typography sx={{ fontWeight: "bold", fontSize: "22px" }}>
@@ -566,8 +570,12 @@ const DaftarResepSaya = () => {
                   <MenuItem sx={{ fontSize: "14px" }} value={"nameAsc"}>
                     Nama Resep Z-A
                   </MenuItem>
-                  <MenuItem sx={{ fontSize: "14px" }} value={"timeDesc"}>Durasi A-Z</MenuItem>
-                  <MenuItem sx={{ fontSize: "14px" }} value={"timeAsc"}>Durasi Z-A</MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"timeDesc"}>
+                    Durasi A-Z
+                  </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"timeAsc"}>
+                    Durasi Z-A
+                  </MenuItem>
                 </Select>
               </FormControl>
             </Box>
@@ -609,6 +617,10 @@ const DaftarResepSaya = () => {
                 handleOpenOptions={handleOpenOptions}
                 option={option}
                 handleCloseOptions={handleCloseOptions}
+                handleDeleteRecipe={handleDeleteRecipe}
+                userId={userId}
+                deletionLoading={deletionLoading}
+                deletionSuccess={deletionSuccess}
               />
             ))}
           </Grid>

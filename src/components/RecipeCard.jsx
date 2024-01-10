@@ -34,6 +34,10 @@ const RecipeCard = ({
   handleOpenOptions,
   option,
   handleCloseOptions,
+  handleDeleteRecipe,
+  userId,
+  deletionLoading,
+  deletionSuccess,
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -45,14 +49,9 @@ const RecipeCard = ({
     setOpenDialog(false);
   };
 
-  const handleDelete = () => {
-    // Perform delete operation here
-    // Close the dialog
-    handleCloseDialog();
-  };
-
   return (
     <>
+      {/* Desktop */}
       <Hidden smDown>
         <Grid item key={resep.recipeId}>
           <Card sx={{ width: 250, position: "relative" }}>
@@ -116,7 +115,7 @@ const RecipeCard = ({
                   Tidak
                 </Button>
                 <Button
-                  onClick={handleDelete}
+                  onClick={() => handleDeleteRecipe(resep.recipeId, userId)}
                   sx={{
                     color: "white",
                     textTransform: "capitalize",
@@ -137,8 +136,8 @@ const RecipeCard = ({
             <CardMedia
               component="img"
               height="142"
-              image="https://i.ytimg.com/vi/CLfLetvF96E/maxresdefault.jpg"
-              alt={resep.image}
+              image={resep.imageUrl}
+              alt={resep.imageUrl}
             />
             <CardContent sx={{ padding: 1 }}>
               <Box display={"flex"} justifyContent={"space-between"}>
@@ -195,7 +194,7 @@ const RecipeCard = ({
                     alignItems={"center"}
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   >
-                    {resep.isFavorite ? (
+                    {resep.is_favorite === true ? (
                       <Star sx={{ color: "#01BFBF" }} />
                     ) : (
                       <StarOutline sx={{ color: "#01BFBF" }} />
@@ -219,6 +218,8 @@ const RecipeCard = ({
           </Card>
         </Grid>
       </Hidden>
+
+      {/* Mobile View */}
       <Hidden smUp>
         <Grid item key={resep.recipeId}>
           <Card sx={{ width: 330, position: "relative"}}>
@@ -282,7 +283,7 @@ const RecipeCard = ({
                   Tidak
                 </Button>
                 <Button
-                  onClick={handleDelete}
+                  onClick={() => handleDeleteRecipe(resep.recipeId, userId)}
                   sx={{
                     color: "white",
                     textTransform: "capitalize",
@@ -303,8 +304,8 @@ const RecipeCard = ({
             <CardMedia
               component="img"
               height="142"
-              image="https://i.ytimg.com/vi/CLfLetvF96E/maxresdefault.jpg"
-              alt={resep.image}
+              image={resep.imageUrl}
+              alt={resep.imageUrl}
             />
             <CardContent sx={{ padding: 1 }}>
               <Box display={"flex"} justifyContent={"space-between"}>
@@ -357,11 +358,11 @@ const RecipeCard = ({
                   </Grid>
                   <Grid
                     item
-                    display={"flex"}
+                    display={"flex"}  
                     alignItems={"center"}
                     sx={{ "&:hover": { cursor: "pointer" } }}
                   >
-                    {resep.isFavorite ? (
+                    {resep.is_favorite === true ? (
                       <Star sx={{ color: "#01BFBF" }} />
                     ) : (
                       <StarOutline sx={{ color: "#01BFBF" }} />
@@ -397,11 +398,16 @@ RecipeCard.propTypes = {
     levels: PropTypes.string.isRequired,
     time: PropTypes.number.isRequired,
     isFavorite: PropTypes.bool.isRequired,
-    image: PropTypes.string.isRequired,
+    imageUrl: PropTypes.string.isRequired,
+    is_favorite: PropTypes.bool.isRequired,
   }).isRequired,
   handleOpenOptions: PropTypes.func.isRequired,
   option: PropTypes.number,
   handleCloseOptions: PropTypes.func.isRequired,
+  handleDeleteRecipe: PropTypes.func.isRequired,
+  userId: PropTypes.number.isRequired,
+  deletionLoading: PropTypes.bool,
+  deletionSuccess: PropTypes.bool,
 };
 
 export default RecipeCard;
