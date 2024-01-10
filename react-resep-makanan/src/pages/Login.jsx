@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import toast, { Toaster } from 'react-hot-toast';
-import { useNavigate,  useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -13,23 +13,11 @@ import {
   PasswordInput
 } from "../components/TextField";
 import {
+  cssReset,
   wrapper,
   formContentWrapper
 } from '../styles/style.jsx';
 import axios from "axios";
-
-const cssReset = `
-  * {
-    margin: 0;
-    padding: 0;
-  }
-  body,
-  html,
-  :root {
-    height: 100%;
-    background-color: #f0f9f9;
-  }
-`;
 
 export const loginSchema = z.object({
   username: z
@@ -62,7 +50,6 @@ export const loginSchema = z.object({
 const Login = () => {
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
