@@ -83,7 +83,6 @@ const Login = () => {
       password: password
     });
     notify(response.data.statusCode);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     handleLoginResponse(response.data.statusCode)
   };
 
@@ -97,8 +96,9 @@ const Login = () => {
     }
   }
 
-  const handleLoginResponse =(status) =>{
+  const handleLoginResponse =async (status) =>{
     if (status === 200) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate('/daftar-resep');
     } else if (status === 401) {
       reset();
