@@ -23,6 +23,9 @@ import { styled } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import { getDaftarResepMakanan } from "../services/apis";
+import ErrorSnackbar from "../components/ErrorSnackbar";
+import CardSkeletonLoading from "../components/CardSkeletonLoading";
 
 const MyPagination = styled(Pagination)({
   "&.MuiPagination-root": {
@@ -105,6 +108,47 @@ const DaftarResepMasakan = () => {
     setPage(value);
   };
 
+  const [resepData, setResepData] = useState([]);
+  const [totalData, setTotalData] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const [isPageError, setIsPageError] = useState(false);
+  const [isDataEmpty, setIsDataEmpty] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  console.log("isPageError", isPageError);
+
+  useEffect(() => {
+    setIsLoading(true);
+    async function fetchDataResepMasakan() {
+      try {
+        const response = await getDaftarResepMakanan(
+          page,
+          entries,
+          recipeName,
+          foodLevel,
+          foodCategory,
+          cookingTime,
+          sortBy
+        );
+        setResepData(response.data.data);
+        setTotalData(response.data.total);
+        console.log("response", response);
+
+        setIsLoading(false);
+        setIsPageError(false);
+      } catch (error) {
+        setIsPageError(true);
+        setIsLoading(true);
+      }
+    }
+    fetchDataResepMasakan();
+  }, [cookingTime, entries, foodCategory, foodLevel, page, recipeName, sortBy]);
+
+  useEffect(() => {
+    const total = Math.ceil(totalData / entries);
+    setTotalPage(total);
+  }, [totalData, entries]);
+
   const theme = useTheme();
   const smallScreen = useMediaQuery(theme.breakpoints.only("xs"));
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -118,9 +162,13 @@ const DaftarResepMasakan = () => {
     window.addEventListener("scroll", handleScroll);
     document.title = "Daftar Resep Masakan";
   });
+
   return (
     <>
       <Navbar />
+      {isPageError && (
+        <ErrorSnackbar message="Terjadi kesalahan server. Silahkan coba kembali" />
+      )}
       <Box
         width="100%"
         paddingY={{ xs: "16px", md: "32px" }}
@@ -340,18 +388,12 @@ const DaftarResepMasakan = () => {
                       label="Sort By"
                       onChange={handleChangeSortBy}>
                       <MenuItem value="">Default</MenuItem>
-                      <MenuItem value="receiptName-ASC">
-                        Nama Resep A-Z
-                      </MenuItem>
-                      <MenuItem value="receiptName-DESC">
+                      <MenuItem value="recipeName-ASC">Nama Resep A-Z</MenuItem>
+                      <MenuItem value="recipeName-DESC">
                         Nama Resep Z-A
                       </MenuItem>
-                      <MenuItem value="cookingTime-ASC">
-                        Waktu Memasak A-Z
-                      </MenuItem>
-                      <MenuItem value="cookingTime-DESC">
-                        Waktu Memasak Z-A
-                      </MenuItem>
+                      <MenuItem value="time-ASC">Waktu Memasak A-Z</MenuItem>
+                      <MenuItem value="time-DESC">Waktu Memasak Z-A</MenuItem>
                     </Select>
                   </FormControl>
                 </Stack>
@@ -391,8 +433,8 @@ const DaftarResepMasakan = () => {
         <Box
           display={{ xs: "none", md: "flex" }}
           justifyContent="space-between"
-          gap={2}
-          width="50%"
+          gap={1}
+          width="50vw"
           marginX="auto">
           <Button
             variant="contained"
@@ -428,12 +470,17 @@ const DaftarResepMasakan = () => {
           <Box>
             <Button
               id="filter"
+              size="large"
               variant="outlined"
               aria-controls={openFilterMenu ? "filter" : undefined}
               aria-haspopup="true"
               aria-expanded={openFilterMenu ? "true" : undefined}
               onClick={handleClickFilterMenu}
-              sx={{ textTransform: "none" }}>
+              sx={{
+                textTransform: "none",
+                color: "#9696A0",
+                "&.MuiButton-outlined": { borderColor: "#9696A0" },
+              }}>
               <Box display="flex" gap={2}>
                 <Typography>Filter</Typography>
                 <FilterListIcon />
@@ -546,16 +593,16 @@ const DaftarResepMasakan = () => {
                           id="sortBy"
                           value={sortBy}
                           onChange={handleChangeSortBy}>
-                          <MenuItem value="receiptName-ASC">
+                          <MenuItem value="recipeName-ASC">
                             Nama Resep A-Z
                           </MenuItem>
-                          <MenuItem value="receiptName-DESC">
+                          <MenuItem value="recipeName-DESC">
                             Nama Resep Z-A
                           </MenuItem>
-                          <MenuItem value="cookingTime-ASC">
+                          <MenuItem value="time-ASC">
                             Waktu Memasak A-Z
                           </MenuItem>
-                          <MenuItem value="cookingTime-DESC">
+                          <MenuItem value="time-DESC">
                             Waktu Memasak Z-A
                           </MenuItem>
                         </Select>
@@ -620,11 +667,22 @@ const DaftarResepMasakan = () => {
             Daftar Resep Makanan
           </Typography>
           <Grid container spacing={3} sx={{ marginBottom: 3 }}>
-            {Array.from({ length: 8 }).map((_, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
-                <ResepMakananCard />
-              </Grid>
-            ))}
+            {resepData ? (
+              isLoading ? (
+                Array.from({ length: 8 }).map((_, index) => (
+                  <Grid item xs={12} sm={6} md={3} key={index}>
+                    <CardSkeletonLoading />
+                  </Grid>
+                ))
+              ) : (
+                <ResepMakananCard
+                  resepData={resepData}
+                  setIsPageError={setIsPageError}
+                />
+              )
+            ) : (
+              setIsLoading(true)
+            )}
           </Grid>
           <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
@@ -701,7 +759,7 @@ const DaftarResepMasakan = () => {
                 display="flex"
                 justifyContent={{ xs: "center", md: "right" }}>
                 <MyPagination
-                  count={10}
+                  count={totalPage}
                   onChange={handlePaginationChange}
                   page={page}
                   color="primary"
