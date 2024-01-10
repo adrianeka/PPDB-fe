@@ -21,32 +21,39 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../components/Navigation";
 import RecipeCard from "../components/RecipeCard";
-import PlaceholderImage from "./Resources/Imgs/grilled-ribeye-5.jpg"
 
 const DaftarResepSaya = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [option, setOption] = useState(null);
   const [difficulty, setDifficulty] = useState(null);
+  const [tempDifficulty, setTempDifficulty] = useState(null);
   const [category, setCategory] = useState(null);
-  const [cookTIme, setCookTime] = useState(null);
+  const [tempCategory, setTempCategory] = useState(null);
+  const [cookTime, setCookTime] = useState(null);
+  const [tempCookTime, setTempCookTime] = useState(null);
   const [sort, setSort] = useState(null);
+  const [tempSort, setTempSort] = useState(null);
   const [entries, setEntries] = useState(8);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
   const handleChangeDifficulty = (event) => {
-    setDifficulty(event.target.value);
+    setTempDifficulty(event.target.value); // Update the temporary difficulty whenever the user selects a new difficulty
   };
 
   const handleChangeCategory = (event) => {
-    setCategory(event.target.value);
+    setTempCategory(event.target.value); // Update the temporary category whenever the user selects a new category
   };
 
   const handleChangeCookTime = (event) => {
-    setCookTime(event.target.value);
+    setTempCookTime(event.target.value);
   };
 
   const handleChangeSort = (event) => {
+    setTempSort(event.target.value);
+  };
+
+  const handleChangeSortMobile = (event) => {
     setSort(event.target.value);
   };
 
@@ -69,21 +76,17 @@ const DaftarResepSaya = () => {
   const [myRecipes, setMyRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletionLoading, setDeletionLoading] = useState(false);
-  const [deletionSuccess, setDeletionSuccess] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [inputValue, setInputValue] = useState("");
   const userId = 73; // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
 
   const handleEntriesClick = (value) => {
     if (entries === value) {
-      // If the button is already selected, do nothing
       return;
     }
     setEntries(value);
     setPage(1);
   };
-
-
 
   const fetchMyRecipes = async () => {
     try {
@@ -98,7 +101,7 @@ const DaftarResepSaya = () => {
             recipeName: searchTerm,
             levelId: difficulty,
             categoryId: category,
-            time: cookTIme,
+            time: cookTime,
             sortBy: sort,
           },
         }
@@ -109,7 +112,7 @@ const DaftarResepSaya = () => {
     } catch (error) {
       console.error(`Error fetching recipes: ${error}`);
     } finally {
-      setLoading(false); // Set loading to false whether the request is successful or not
+      setLoading(false);
     }
   };
 
@@ -119,15 +122,25 @@ const DaftarResepSaya = () => {
 
   useEffect(() => {
     fetchMyRecipes();
-  }, [searchTerm, difficulty, category, cookTIme, sort, entries, page]);
+  }, [searchTerm, difficulty, category, cookTime, sort, entries, page]);
 
   const handleApplyFilters = () => {
-    setLoading(true);
-    fetchMyRecipes();
+    setDifficulty(tempDifficulty);
+    setCategory(tempCategory);
+    setCookTime(tempCookTime);
+    setSort(tempSort);
+    handleClose();
+  };
+
+  const handleClearFilters = () => {
+    setTempDifficulty(null);
+    setTempCategory(null);
+    setTempCookTime(null);
+    setTempSort(null);
   };
 
   const handleInputChange = (event) => {
-    setInputValue(event.target.value); // Update the input value whenever the user types
+    setInputValue(event.target.value);
   };
 
   const handleSearchChange = (event) => {
@@ -149,8 +162,6 @@ const DaftarResepSaya = () => {
       if (response.status === 200) {
         console.log("Recipe deleted successfully!");
         setLoading(true);
-        setDeletionLoading(false);
-        setDeletionSuccess(true);
       } else {
         console.error("Failed to delete recipe: ");
       }
@@ -158,6 +169,7 @@ const DaftarResepSaya = () => {
       console.error("Error deleting recipe:", error.message);
     } finally {
       fetchMyRecipes();
+      setDeletionLoading(false);
     }
   };
 
@@ -277,7 +289,7 @@ const DaftarResepSaya = () => {
                           sx={{ m: 1, minWidth: 120, margin: "0px" }}
                         >
                           <Select
-                            value={difficulty}
+                            value={tempDifficulty}
                             onChange={handleChangeDifficulty}
                             displayEmpty
                             inputProps={{ "aria-label": "Without label" }}
@@ -299,7 +311,7 @@ const DaftarResepSaya = () => {
                           sx={{ m: 1, minWidth: 120, margin: "0px" }}
                         >
                           <Select
-                            value={category}
+                            value={tempCategory}
                             onChange={handleChangeCategory}
                             displayEmpty
                             inputProps={{ "aria-label": "Without label" }}
@@ -321,7 +333,7 @@ const DaftarResepSaya = () => {
                           sx={{ m: 1, minWidth: 120, margin: "0px" }}
                         >
                           <Select
-                            value={cookTIme}
+                            value={tempCookTime}
                             onChange={handleChangeCookTime}
                             displayEmpty
                             inputProps={{ "aria-label": "Without label" }}
@@ -341,7 +353,7 @@ const DaftarResepSaya = () => {
                           sx={{ m: 1, minWidth: 120, margin: "0px" }}
                         >
                           <Select
-                            value={sort}
+                            value={tempSort}
                             onChange={handleChangeSort}
                             displayEmpty
                             inputProps={{ "aria-label": "Without label" }}
@@ -363,6 +375,7 @@ const DaftarResepSaya = () => {
                       </Grid>
                       <Grid item xs={6} display={"flex"}>
                         <Typography
+                          onClick={handleClearFilters}
                           fontSize={16}
                           sx={{
                             color: "#EA4335",
@@ -491,7 +504,7 @@ const DaftarResepSaya = () => {
                     <Typography fontSize={16}>Tingkat Kesulitan</Typography>
                     <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
                       <Select
-                        value={difficulty}
+                        value={tempDifficulty}
                         onChange={handleChangeDifficulty}
                         displayEmpty
                         inputProps={{ "aria-label": "Without label" }}
@@ -511,7 +524,7 @@ const DaftarResepSaya = () => {
                     <Typography fontSize={16}>Kategori</Typography>
                     <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
                       <Select
-                        value={category}
+                        value={tempCategory}
                         onChange={handleChangeCategory}
                         displayEmpty
                         inputProps={{ "aria-label": "Without label" }}
@@ -531,7 +544,7 @@ const DaftarResepSaya = () => {
                     <Typography fontSize={16}>Waktu Memasak</Typography>
                     <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
                       <Select
-                        value={cookTIme}
+                        value={tempCookTime}
                         onChange={handleChangeCookTime}
                         displayEmpty
                         inputProps={{ "aria-label": "Without label" }}
@@ -548,6 +561,7 @@ const DaftarResepSaya = () => {
 
                   <Grid item xs={6} display={"flex"}>
                     <Typography
+                      onClick={handleClearFilters}
                       fontSize={16}
                       sx={{
                         color: "#EA4335",
@@ -578,6 +592,7 @@ const DaftarResepSaya = () => {
                     </Button>
                     <Button
                       variant="contained"
+                      onClick={handleApplyFilters}
                       sx={{
                         textTransform: "capitalize",
                         backgroundColor: "#01BFBF",
@@ -598,7 +613,7 @@ const DaftarResepSaya = () => {
               <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
                 <Select
                   value={sort}
-                  onChange={handleChangeSort}
+                  onChange={handleChangeSortMobile}
                   displayEmpty
                   inputProps={{ "aria-label": "Without label" }}
                   sx={{ width: "150px", height: "40px", fontSize: "14px" }}
@@ -674,7 +689,6 @@ const DaftarResepSaya = () => {
                   handleDeleteRecipe={handleDeleteRecipe}
                   userId={userId}
                   deletionLoading={deletionLoading}
-                  deletionSuccess={deletionSuccess}
                 />
               ))
             )}

@@ -15,6 +15,7 @@ import {
   DialogActions,
   Button,
   Hidden,
+  CircularProgress,
 } from "@mui/material";
 import {
   MoreHoriz,
@@ -36,8 +37,7 @@ const RecipeCard = ({
   handleCloseOptions,
   handleDeleteRecipe,
   userId,
-  deletionLoading,
-  deletionSuccess,
+  deletionLoading
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -115,6 +115,7 @@ const RecipeCard = ({
                   Tidak
                 </Button>
                 <Button
+                  disabled={deletionLoading ? true : false}
                   onClick={() => handleDeleteRecipe(resep.recipeId, userId)}
                   sx={{
                     color: "white",
@@ -128,7 +129,7 @@ const RecipeCard = ({
                     },
                   }}
                 >
-                  Ya
+                  {deletionLoading ? <CircularProgress size={25}/> : "Ya"}
                 </Button>
               </DialogActions>
             </Dialog>
