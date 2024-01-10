@@ -23,9 +23,12 @@ import {
   Select,
   FormControl,
   Grid,
+  Pagination,
   IconButton,
   InputAdornment,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
 import Navigation from "./Navigation";
@@ -40,12 +43,6 @@ import Favorite from "./Favorite";
 
 function DaftarResep() {
   const [anchorEl, setAnchorEl] = useState(null);
-
-  const [age, setAge] = React.useState("");
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
 
   //Dummy Data untuk Filter
   const categories = [
@@ -457,9 +454,7 @@ function DaftarResep() {
                               className="recipe"
                               to={"detail-resep/" + recipes.recipeId}
                             >
-                              <Typography
-                                variant="body2"
-                              >
+                              <Typography variant="body2">
                                 Lihat detail Resep
                               </Typography>
                             </Link>
@@ -470,6 +465,42 @@ function DaftarResep() {
                   </Card>
                 </Grid>
               ))}
+              <Grid
+                item
+                container
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: "15px",
+                    alignItems: "baseline",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <Typography sx={{ color: "#787885" }}>Entries</Typography>
+                  <Button variant="contained" sx={{backgroundColor: "#01BFBF", color:"#FFFFFF"}}>8</Button>
+                  <Button variant="text">16</Button>
+                  <Button variant="text">32</Button>
+                </Box>
+                <Grid item>
+                  <Pagination
+                    count={10}
+                    sx={{
+                      justifyContent: "center",
+                      "& .Mui-selected": {
+                        color: "white", // Change the color for the selected page
+                        backgroundColor: "#01BFBF", // Change the background color for the selected page
+                      },
+                      "& .MuiPaginationItem-root": {
+                        color: "black", // Change the color for other pages
+                      },
+                    }}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
