@@ -71,7 +71,19 @@ const DaftarResepSaya = () => {
   const [deletionLoading, setDeletionLoading] = useState(false);
   const [deletionSuccess, setDeletionSuccess] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const userId = 73; // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
+
+  const handleEntriesClick = (value) => {
+    if (entries === value) {
+      // If the button is already selected, do nothing
+      return;
+    }
+    setEntries(value);
+    setPage(1);
+  };
+
+
 
   const fetchMyRecipes = async () => {
     try {
@@ -80,16 +92,14 @@ const DaftarResepSaya = () => {
         "http://localhost:8080/book-recipe/book-recipes/my-recipes",
         {
           params: {
-            pageSize: 1,
-            pageNumber: 32,
+            pageSize: page,
+            pageNumber: entries,
             userId: userId,
             recipeName: searchTerm,
             levelId: difficulty,
             categoryId: category,
             time: cookTIme,
             sortBy: sort,
-            pageNumber: entries,
-            pageSize: page,
           },
         }
       );
@@ -123,6 +133,7 @@ const DaftarResepSaya = () => {
   const handleSearchChange = (event) => {
     if (event.key === "Enter") {
       event.preventDefault(); // Prevent form submission
+      setPage(1);
       setSearchTerm(inputValue); // Update the search term when Enter is pressed
     }
   };
@@ -137,6 +148,7 @@ const DaftarResepSaya = () => {
       // Check if the request was successful
       if (response.status === 200) {
         console.log("Recipe deleted successfully!");
+        setLoading(true);
         setDeletionLoading(false);
         setDeletionSuccess(true);
       } else {
@@ -667,28 +679,6 @@ const DaftarResepSaya = () => {
               ))
             )}
           </Grid>
-
-          {/* <div>
-            {loading ? (
-              <p>Loading...</p>
-            ) : (
-              myRecipes.map((recipe) => (
-                <div key={recipe.recipeId}>
-                  <h2>{recipe.recipeName}</h2>
-                  <p>Category: {recipe.categories.categoryName}</p>
-                  <p>Level: {recipe.levels.levelName}</p>
-                  <p>Time: {recipe.time} minutes</p>
-                  <p>Favorite: {recipe.is_favorite ? "Yes" : "No"}</p>
-                  <button
-                    onClick={() => handleDeleteRecipe(recipe.recipeId, userId)}
-                  >
-                    delete
-                  </button>
-                </div>
-              ))
-            )}
-          </div> */}
-
           <Box display={"flex"} justifyContent={"space-between"}>
             <Box
               sx={{
