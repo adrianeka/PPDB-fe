@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   FormControl,
   Grid,
@@ -29,6 +30,9 @@ const DaftarResepSaya = () => {
   const [category, setCategory] = useState(null);
   const [cookTIme, setCookTime] = useState(null);
   const [sort, setSort] = useState(null);
+  const [entries, setEntries] = useState(8);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const handleChangeDifficulty = (event) => {
     setDifficulty(event.target.value);
@@ -71,6 +75,7 @@ const DaftarResepSaya = () => {
 
   const fetchMyRecipes = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         "http://localhost:8080/book-recipe/book-recipes/my-recipes",
         {
@@ -78,14 +83,17 @@ const DaftarResepSaya = () => {
             pageSize: 1,
             pageNumber: 32,
             userId: userId,
-            foodName: searchTerm,
+            recipeName: searchTerm,
             levelId: difficulty,
             categoryId: category,
             time: cookTIme,
             sortBy: sort,
+            pageNumber: entries,
+            pageSize: page,
           },
         }
       );
+      setTotal(response.data.total);
       setMyRecipes(response.data.data);
       console.log(response.data.data);
     } catch (error) {
@@ -95,17 +103,28 @@ const DaftarResepSaya = () => {
     }
   };
 
+  const handlePaginationChange = (event, page) => {
+    setPage(page);
+  };
+
   useEffect(() => {
     fetchMyRecipes();
-  }, [searchTerm, difficulty, category, cookTIme, sort]);
+  }, [searchTerm, difficulty, category, cookTIme, sort, entries, page]);
 
   const handleApplyFilters = () => {
     setLoading(true);
     fetchMyRecipes();
   };
 
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value); // Update the input value whenever the user types
+  };
+
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent form submission
+      setSearchTerm(inputValue); // Update the search term when Enter is pressed
+    }
   };
 
   const handleDeleteRecipe = async (recipeId, userId) => {
@@ -114,7 +133,7 @@ const DaftarResepSaya = () => {
       const response = await axios.put(
         `http://localhost:8080/book-recipe/book-recipes/${recipeId}?userId=${userId}`
       );
-  
+
       // Check if the request was successful
       if (response.status === 200) {
         console.log("Recipe deleted successfully!");
@@ -128,7 +147,21 @@ const DaftarResepSaya = () => {
     } finally {
       fetchMyRecipes();
     }
-  };  
+  };
+
+  const entryButtons = (value) => {
+    return {
+      textTransform: "none",
+      backgroundColor: entries === value ? " #01BFBF" : "transparent",
+      color: entries === value ? "white" : "grey",
+      fontSize: "14px",
+      fontWeight: "500",
+      padding: "5px",
+      borderRadius: "3px",
+      minWidth: "26px",
+      height: "27px",
+    };
+  };
 
   return (
     <>
@@ -183,8 +216,9 @@ const DaftarResepSaya = () => {
                         </InputAdornment>
                       ),
                     }}
-                    onChange={handleSearchChange}
-                    value={searchTerm}
+                    onChange={handleInputChange} // Update the TextField input value whenever the user types
+                    onKeyDown={handleSearchChange} // Update the search term when Enter is pressed
+                    value={inputValue}
                   />
                 </Grid>
                 <Grid item>
@@ -394,8 +428,9 @@ const DaftarResepSaya = () => {
                   </InputAdornment>
                 ),
               }}
-              onChange={handleSearchChange}
-              value={searchTerm}
+              onChange={handleInputChange} // Update the TextField input value whenever the user types
+              onKeyDown={handleSearchChange} // Update the search term when Enter is pressed
+              value={inputValue}
             />
             <Box
               item
@@ -601,26 +636,39 @@ const DaftarResepSaya = () => {
             container
             spacing={6}
             direction="row"
-            justifyContent="flex-start"
+            justifyContent="center"
             alignItems="flex-start"
             marginBottom={3}
           >
-            {myRecipes.map((resep) => (
-              <RecipeCard
-                key={resep.recipeId}
-                resep={resep}
-                handleOpenOptions={handleOpenOptions}
-                option={option}
-                handleCloseOptions={handleCloseOptions}
-                handleDeleteRecipe={handleDeleteRecipe}
-                userId={userId}
-                deletionLoading={deletionLoading}
-                deletionSuccess={deletionSuccess}
-              />
-            ))}
+            {loading ? (
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                paddingBlock={10}
+              >
+                <CircularProgress />
+                <Typography variant="body1">Loading your recipes...</Typography>
+              </Box>
+            ) : (
+              myRecipes.map((resep) => (
+                <RecipeCard
+                  key={resep.recipeId}
+                  resep={resep}
+                  handleOpenOptions={handleOpenOptions}
+                  option={option}
+                  handleCloseOptions={handleCloseOptions}
+                  handleDeleteRecipe={handleDeleteRecipe}
+                  userId={userId}
+                  deletionLoading={deletionLoading}
+                  deletionSuccess={deletionSuccess}
+                />
+              ))
+            )}
           </Grid>
 
-          <div>
+          {/* <div>
             {loading ? (
               <p>Loading...</p>
             ) : (
@@ -639,25 +687,41 @@ const DaftarResepSaya = () => {
                 </div>
               ))
             )}
-          </div>
+          </div> */}
 
           <Box display={"flex"} justifyContent={"space-between"}>
             <Box
               sx={{
+                maxWidth: "300px",
                 display: "flex",
-                gap: "15px",
+                gap: "10px",
                 alignItems: "baseline",
                 flexWrap: "wrap",
               }}
             >
               Entries
-              <Button>8</Button>
-              <Button>16</Button>
-              <Button>32</Button>
+              <Button
+                sx={entries === 8 ? entryButtons(8) : entryButtons(8, true)}
+                onClick={() => handleEntriesClick(8)}
+              >
+                8
+              </Button>
+              <Button
+                sx={entries === 16 ? entryButtons(16) : entryButtons(16, true)}
+                onClick={() => handleEntriesClick(16)}
+              >
+                16
+              </Button>
+              <Button
+                sx={entries === 32 ? entryButtons(32) : entryButtons(32, true)}
+                onClick={() => handleEntriesClick(32)}
+              >
+                32
+              </Button>
             </Box>
             <Pagination
               className="pagination"
-              count={10}
+              count={Math.ceil(total / entries)}
               size="small"
               sx={{
                 display: "flex",
@@ -670,6 +734,8 @@ const DaftarResepSaya = () => {
                   color: "black", // Change the color for other pages
                 },
               }}
+              page={page}
+              onChange={handlePaginationChange}
             />
           </Box>
         </Grid>
