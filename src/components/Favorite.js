@@ -15,8 +15,7 @@ function Favorite (props) {
       }
       setOpen(false);
     };
-  
-
+    
     // Mengambil Id resep
     const recipeId = props.recipeId
 
@@ -26,7 +25,7 @@ function Favorite (props) {
 
     // Get User Favorite
     useEffect(() => {
-        http.get('/recipe/user-favorites')
+        http.get('/book-recipe/my-favorite-recipes')
         .then((response) => {
           setPost(response.data);
           console.log(response.data);
@@ -40,7 +39,7 @@ function Favorite (props) {
 
     // Toogle Favorite
     const toogleFavorite = (recipeId) => {
-        http.get(`/recipe/toggle-favorite/${recipeId}`)
+        http.get(`/book-recipe/book-recipes/${recipeId}/favorites`)
         .then((response) => {
             setNewPost(response.data);
             console.log(response);
