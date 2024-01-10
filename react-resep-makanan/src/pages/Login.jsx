@@ -83,6 +83,7 @@ const Login = () => {
       password: password
     });
     notify(response.data.statusCode);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     handleLoginResponse(response.data.statusCode)
   };
 
