@@ -73,7 +73,7 @@ const Register = () => {
       const response = await axios.post("http://localhost:8080/user-management/users/sign-up", data);
       if (response.data.status === "OK") {
         toast.success('Berhasil daftar!');
-        navigate('/login');
+        navigate('/user-management/users/signin');
       }
     } catch (error) {
       console.log(error);
@@ -87,7 +87,7 @@ const Register = () => {
       <AuthWrapper
         title="Daftar"
         linkText="Batal, Kembali ke Halaman Login"
-        url="/login"
+        url="/user-management/users/signin"
       >
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
           <TextInput
