@@ -19,15 +19,8 @@ import { FilterList, Search } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../components/Navigation";
-import ChocolateChip from "./Resources/Imgs/cookies_pastries_chocolate_chips_187114_1600x900.jpg";
-import EggBenedict from "./Resources/Imgs/classic-eggs-benedict-with-lemon-basil-hollandaise-1.webp";
-import GrilledRibEye from "./Resources/Imgs/grilled-ribeye-5.jpg";
-import NasiGoreng from "./Resources/Imgs/fried-rice-recipe-1366x768.webp";
-import OldFashionedPancake from "./Resources/Imgs/oldfashionedpanckae.jpg";
-import Pancake from "./Resources/Imgs/Fluffy-Pancakes-New-CMS.jpg";
-import Sashimi from "./Resources/Imgs/sashimi.jpg";
-import SugarCake from "./Resources/Imgs/sugarcake.jpg";
 import RecipeCard from "../components/RecipeCard";
+import PlaceholderImage from "./Resources/Imgs/grilled-ribeye-5.jpg"
 
 const DaftarResepSaya = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -74,7 +67,7 @@ const DaftarResepSaya = () => {
   const [deletionLoading, setDeletionLoading] = useState(false);
   const [deletionSuccess, setDeletionSuccess] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const userId = "129"; // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
+  const userId = 73; // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
 
   const fetchMyRecipes = async () => {
     try {
@@ -82,6 +75,8 @@ const DaftarResepSaya = () => {
         "http://localhost:8080/book-recipe/book-recipes/my-recipes",
         {
           params: {
+            pageSize: 1,
+            pageNumber: 32,
             userId: userId,
             foodName: searchTerm,
             levelId: difficulty,

@@ -394,10 +394,9 @@ RecipeCard.propTypes = {
   resep: PropTypes.shape({
     recipeId: PropTypes.number.isRequired,
     recipeName: PropTypes.string.isRequired,
-    categories: PropTypes.string.isRequired,
-    levels: PropTypes.string.isRequired,
+    categories: PropTypes.object.isRequired,
+    levels: PropTypes.object.isRequired,
     time: PropTypes.number.isRequired,
-    isFavorite: PropTypes.bool.isRequired,
     imageUrl: PropTypes.string.isRequired,
     is_favorite: PropTypes.bool.isRequired,
   }).isRequired,
