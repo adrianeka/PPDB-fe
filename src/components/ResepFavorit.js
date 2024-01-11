@@ -1,162 +1,94 @@
-import { Container } from "@mui/system";
-import React, {
-  useEffect,
-  useState,
-  MouseEvent,
-  HTMLButtonElement,
-} from "react";
-import "./style/custom.css";
-import { Link } from "react-router-dom";
 import {
   Alert,
-  Backdrop,
   Box,
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  CircularProgress,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  colors,
-  FormHelperText,
-  Menu,
-  MenuItem,
-  FormLabel,
-  InputLabel,
-  Snackbar,
-  Select,
+  CircularProgress,
+  Container,
   FormControl,
   Grid,
-  Pagination,
-  IconButton,
+  Hidden,
   InputAdornment,
+  Menu,
+  MenuItem,
+  Pagination,
+  Select,
   TextField,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import Navigation from "./Navigation";
 import AddIcon from "@mui/icons-material/Add";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import StarIcon from "@mui/icons-material/Star";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import SearchIcon from "@mui/icons-material/Search";
-import nasgor from "../assets/nasgor.jpg";
+import { Link } from "react-router-dom";
+import { FilterList, Search } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import Favorite from "./Favorite";
+import Navigation from "./Navigation";
+import RecipeCard from "./RecipeCard";
 
-//Dummy Data untuk Filter
-const categories = [
-  {
-    value: "",
-    label: "none",
-  },
-  {
-    value: 0,
-    label: "Lunch"
-  },
-  {
-    value: 1,
-    label: "Breakfast"
-  },
-  {
-    value: 2,
-    label: "Dinner"
-  },
-  {
-    value: 3,
-    label: "Snack"
-  },
-];
-
-const difficulties = [
-  {
-    value: "",
-    label: "none",
-  },
-  {
-    value: 3,
-    label: "Easy",
-  },
-  {
-    value: 2,
-    label: "Medium",
-  },
-  {
-    value: 1,
-    label: "Hard",
-  },
-  {
-    value: 0,
-    label: "Master Chef",
-  },
-];
-
-const cookTimes = [
-  {
-    value: "",
-    label: "none",
-  },
-  {
-    value: 15,
-    label: "0 - 15 Menit",
-  },
-  {
-    value: 30,
-    label: "15 - 30 Menit",
-  },
-  {
-    value: 45,
-    label: "30 - 45 Menit",
-  },
-  {
-    value: 60,
-    label: "45 - 60 Menit",
-  },
-];
-
-const sortBy = [
-  {
-    value: "",
-    label: "none",
-  },
-  {
-    value: "nameAsc",
-    label: "Nama Resep A - Z",
-  },
-  {
-    value: "nameDesc",
-    label: "Nama Resep Z - A",
-  },
-];
-
-
-function ResepFavorit() {
+const DaftarResepFavorit = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [option, setOption] = useState(null);
   const [difficulty, setDifficulty] = useState(null);
+  const [tempDifficulty, setTempDifficulty] = useState("");
   const [category, setCategory] = useState(null);
-  const [cookTime, setCookTime] = useState(null);
+  const [tempCategory, setTempCategory] = useState("");
+  const [cookMin, setCookMin] = useState(null);
+  const [tempCookMin, setTempCookMin] = useState(null);
+  const [cookMax, setCookMax] = useState(null);
+  const [tempCookMax, setTempCookMax] = useState(null);
+  const [tempCookTime, setTempCookTime] = useState("");
   const [sort, setSort] = useState(null);
+  const [tempSort, setTempSort] = useState("");
+  const [entries, setEntries] = useState(8);
+  const [page, setPage] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const handleChangeDifficulty = (event) => {
-    setDifficulty(event.target.value);
+    setTempDifficulty(event.target.value); // Update the temporary difficulty whenever the user selects a new difficulty
+    console.log("temp difficulty changed: " + event.target.value);
   };
 
   const handleChangeCategory = (event) => {
-    setCategory(event.target.value);
+    setTempCategory(event.target.value); // Update the temporary category whenever the user selects a new category
+    console.log("temp category changed: " + event.target.value);
   };
 
+  // Mengubah fungsi handleChangeCookTime
   const handleChangeCookTime = (event) => {
-    setCookTime(event.target.value);
+    setTempCookTime(event.target.value);
+    if (event.target.value == 1) {
+      console.log(
+        `opsi nomer: ${event.target.value} bertipe ${typeof event.target.value}`
+      );
+      console.log("Set time 1 di klik");
+      setTempCookMin(1);
+      setTempCookMax(30);
+    }
+
+    if (event.target.value == 2) {
+      console.log(
+        `opsi nomer: ${event.target.value} bertipe ${typeof event.target.value}`
+      );
+      console.log("Set time 2 di klik");
+      setTempCookMin(30);
+      setTempCookMax(60);
+    }
   };
 
   const handleChangeSort = (event) => {
+    setTempSort(event.target.value);
+    console.log("temp sort changed: " + event.target.value);
+  };
+
+  const handleChangeSortMobile = (event) => {
     setSort(event.target.value);
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const handleOpenOptions = (event, id) => {
@@ -167,22 +99,13 @@ function ResepFavorit() {
     setOption(null);
   };
 
-  //Filter
-
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const [myFavRecipes, setMyFavRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const userId = 100;
+  const [searchTerm, setSearchTerm] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const userId = 101; // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
 
-  const [alertVariant, setAlertVariant] = useState("")
+  const [alertVariant, setAlertVariant] = useState("");
   const [error, setError] = useState(null);
 
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
@@ -195,38 +118,68 @@ function ResepFavorit() {
     setErrorDialogOpen(true);
   };
 
-  //Pagination
-  const [pageSize, setPageSize] = useState(8); // Ubah sesuai kebutuhan
-  const [page, setPage] = useState(0);
-
-  const handlePageSizeButtonClick = (size) => {
-    setPageSize(size);
+  const handleEntriesClick = (value) => {
+    if (entries === value) {
+      return;
+    }
+    setEntries(value);
+    setPage(0);
   };
 
-  const handlePageChange = (event, value) => {
-    setPage(value-1);
+  const fetchTotalRecipes = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/book-recipe/book-recipes/my-favorite-recipes",
+        {
+          params: {
+            userId: userId,
+            recipeName: searchTerm || null,
+            level: difficulty || null,
+            category: category || null,
+            cookMin: cookMin || null,
+            cookMax: cookMax || null,
+            sort: sort || null,
+          },
+        }
+      );
+  
+      // Sesuaikan dengan respons dari server
+      const totalRecipes = response.data.total;
+      
+      console.log(`total resep: ${totalRecipes}`);
+      setTotal(totalRecipes);
+    } catch (error) {
+      console.error(`Error fetching total recipes: ${error}`);
+      // Handle error fetching total recipes
+    }
   };
 
   const fetchMyFavRecipes = async () => {
     try {
+      setLoading(true);
+
+      await fetchTotalRecipes(); // Panggil fungsi untuk mendapatkan total resep
+
       const response = await axios.get(
-        "http://localhost:8080/book-recipe/my-favorite-recipes",
+        "http://localhost:8080/book-recipe/book-recipes/my-favorite-recipes",
         {
           params: {
-            userId: userId,
-            foodName: searchTerm,
-            levelId: difficulty,
-            categoryId: category,
-            time: cookTime,
-            sortBy: sort,
-            pageSize: pageSize,
+            pageSize: entries,
             page: page,
+            userId: userId,
+            recipeName: searchTerm || null,
+            level: difficulty || null,
+            category: category || null,
+            cookMin: cookMin || null,
+            cookMax: cookMax || null,
+            sort: sort || null,
           },
         }
       );
+      // console.log(`total resep: ${response.data.total}`);
+      // setTotal(response.data.total);
       setMyFavRecipes(response.data.data);
-      console.log(response.data);
-      console.log("Msg: ", response.data.message)
+      console.log(response.data.data);
     } catch (error) {
       console.error(`Error fetching recipes: ${error}`);
       showErrorDialog();
@@ -245,413 +198,645 @@ function ResepFavorit() {
         setAlertVariant("error");
         console.log(`status error: ${error.response.status}`);
       }
-      
     } finally {
       setLoading(false);
     }
   };
-  
+
+  const handlePaginationChange = (event, page) => {
+    setPage(page - 1);
+  };
 
   useEffect(() => {
     fetchMyFavRecipes();
-  }, [searchTerm, difficulty, category, cookTime, sort, pageSize, page]);  
-
+    console.log(`total resep: ${total}`)
+    console.log(
+      `level=${difficulty}&category=${category}&cookMin=${cookMin}&cookMax=${cookMax}&sort=${sort}`
+    );
+  }, [
+    userId,
+    searchTerm,
+    difficulty,
+    category,
+    cookMin,
+    cookMax,
+    sort,
+    entries,
+    page,
+  ]);
 
   const handleApplyFilters = () => {
-    setLoading(true); // Set loading to true when applying filters
-    fetchMyFavRecipes();
+    setDifficulty(tempDifficulty);
+    setCategory(tempCategory);
+    setCookMin(tempCookMin);
+    setCookMax(tempCookMax);
+    setSort(tempSort);
+    //   console.log(`level=${difficulty}&category=${category}&cookMin=${cookMin}&cookMax=${cookMax}&sort=${sort}`)
+    handleClose();
+  };
+
+  const handleClearFilters = () => {
+    setTempDifficulty("");
+    setTempCategory("");
+    setTempCookTime("");
+    setTempSort("");
+  };
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
   };
 
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent form submission
+      setPage(0);
+      setSearchTerm(inputValue); // Update the search term when Enter is pressed
+    }
   };
 
-
-  // Mengambil token dari local storage
-  // const accessToken = localStorage.getItem("token");
-  // console.log(accessToken);
-
-  // const authAxios = axios.create({
-  //   baseURL: "http://localhost:8080/api",
-  //   headers: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //   },
-  // });
-
-  // const [post, setPost] = useState(dummyData);
-
-  // if (!post) return null;
-
-  
+  const entryButtons = (value) => {
+    return {
+      textTransform: "none",
+      backgroundColor: entries === value ? " #01BFBF" : "transparent",
+      color: entries === value ? "white" : "grey",
+      fontSize: "14px",
+      fontWeight: "500",
+      padding: "5px",
+      borderRadius: "3px",
+      minWidth: "26px",
+      height: "27px",
+    };
+  };
 
   return (
-    <div>
+    <>
       <Navigation />
       <Container>
-        <Grid
-          container
-          spacing={4}
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          paddingTop={7}
-        >
-          <Grid item>
-            <Grid
-              container
-              spacing={2}
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid item>
-                <Link to={"/tambah-resep"}>
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    sx={{
-                      backgroundColor: "#01BFBF",
-                      fontFamily: "Mulish-Regular",
-                      textTransform: "none",
-                    }}
-                  >
-                    Tambah Resep
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item>
-              <TextField
-                  fullWidth
-                  id="filled-basic"
-                  placeholder="Cari Resep"
-                  type="search"
-                  size="small"
-                  sx={{ background: "white" }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  // Connect the input field to the search term state
-                  value={searchTerm}
-                  onChange={handleSearchChange}
-                />
-              </Grid>
-              <Grid item>
-                <Button
-                  id="filter-button"
-                  variant="contained"
-                  endIcon={<FilterListIcon />}
-                  aria-controls={open ? "filter-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={handleClick}
-                  sx={{
-                    background: "white",
-                    color: "#0000008A",
-                    textTransform: "none",
-                  }}
-                >
-                  Filter
-                </Button>
-                <Menu
-                  id="filter-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    "aria-labelledby": "basic-button",
-                  }}
-                  component="form"
-                  sx={{
-                    "& .MuiTextField-root": { m: 1, width: "25ch" },
-                  }}
-                  noValidate
-                  autoComplete="off"
-                >
-                  <MenuItem sx={{ flexDirection: "row" }}>
-                    <FormControl fullWidth>
-                      <FormLabel>Tingkat Kesulitan</FormLabel>
-                      <TextField
-                        id="outlined-select-difficult"
-                        select
-                        defaultValue=""
-                      >
-                        {difficulties.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </FormControl>
-                    <FormControl fullWidth>
-                      <FormLabel>Kategori</FormLabel>
-                      <TextField
-                        id="outlined-select-category"
-                        select
-                        defaultValue=""
-                      >
-                        {categories.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </FormControl>
-                  </MenuItem>
-                  <MenuItem sx={{ flexDirection: "row" }}>
-                    <FormControl fullWidth>
-                      <FormLabel>Waktu Memasak</FormLabel>
-                      <TextField
-                        id="outlined-select-cooktime"
-                        select
-                        defaultValue=""
-                      >
-                        {cookTimes.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </FormControl>
-                    <FormControl fullWidth>
-                      <FormLabel>Sortir</FormLabel>
-                      <TextField
-                        id="outlined-select-sort"
-                        select
-                        defaultValue=""
-                      >
-                        {sortBy.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </FormControl>
-                  </MenuItem>
-                  <MenuItem
-                    sx={{
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <Button variant="text" sx={{ color: "#EA4335" }}>
-                      Bersihkan Filter
-                    </Button>
-                    <Button variant="outlined" sx={{ color: "#01BFBF" }}>
-                      Batal
-                    </Button>
-                    <Button
-                      variant="contained"
-                      sx={{ backgroundColor: "#01BFBF" }}
-                    >
-                      Terapkan
-                    </Button>
-                  </MenuItem>
-                </Menu>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Typography variant="h4">Resep Favorit</Typography>
-          </Grid>
-          <Grid item>
-            <Grid
-              container
-              spacing={6}
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              marginBottom={10}
-            >
-              { loading ? (
-              <Grid item>
-                <CircularProgress />
-              </Grid>
-                ) : (
-                myFavRecipes.map((recipes) => (
-                  <Grid item key={recipes.recipeId}>
-                    <Card sx={{ width: 250 }}>
-                      <CardMedia
-                        sx={{ height: 120 }}
-                        image={recipes.imageUrl}
-                        title={nasgor}
-                      />
-                      <CardContent>
-                        <Grid
-                          container
-                          direction="row"
-                          justifyContent="space-between"
-                        >
-                          <Typography
-                            variant="body2"
-                            color="#01BFBF"
-                            textAlign={"left"}
-                          >
-                            {recipes.categories.categoryName}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="#01BFBF"
-                            textAlign={"right"}
-                          >
-                            {recipes.levels.levelName}
-                          </Typography>
-                        </Grid>
-                        <Typography
-                          gutterBottom
-                          variant="body1"
-                          component="div"
-                          textAlign={"left"}
-                        >
-                          {recipes.recipeName}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Grid container direction="column" marginBottom={1}>
-                          <Grid
-                            container
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            sx={{ color: "black" }}
-                          >
-                            <Grid item>
-                              <IconButton aria-label="add to favorites" disabled>
-                                <AccessTimeIcon sx={{ color: "#01BFBF" }} />
-                                <Typography
-                                  variant="body2"
-                                  sx={{ color: "#01BFBF", marginLeft: 1 }}
-                                >
-                                  &nbsp;{recipes.time} menit
-                                </Typography>
-                              </IconButton>
-                            </Grid>
-                            {recipes.is_favorite ? (
-                              <Grid item>
-                                <IconButton aria-label="add to favorites">
-                                  <StarIcon sx={{ color: "#01BFBF" }} />
-                                  <Typography
-                                    variant="body2"
-                                    sx={{ color: "#01BFBF", marginLeft: 1 }}
-                                  >
-                                    Favorit
-                                  </Typography>
-                                </IconButton>
-                              </Grid>
-                              // <Grid item>
-                              //     <Favorite recipeId={recipes.recipeId}/>
-                              // </Grid> 
-                              ) : null
-                              }
-
-                          </Grid>
-  
-                          <Grid
-                            container
-                            direction="row"
-                            justifyContent="center"
-                            alignItems="center"
-                            sx={{ color: "black" }}
-                          >
-                            <Grid item>
-                              <Link
-                                className="recipe"
-                                to={"detail-resep/" + recipes.recipeId}
-                              >
-                                <Typography variant="body2">
-                                  Lihat detail Resep
-                                </Typography>
-                              </Link>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                ))
-              )}
+        {/* Desktop view */}
+        <Hidden smDown>
+          <Box
+            display="flex"
+            flexDirection="Column"
+            alignItems={"center"}
+            paddingTop={5}
+          >
+            <Grid item>
               <Grid
-                item
                 container
+                spacing={4}
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: "15px",
-                    alignItems: "baseline",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <Typography sx={{ color: "#787885" }}>Entries</Typography>
-                  <Button
-                    variant={pageSize === 8 ? "contained" : "text"}
-                    sx={{
-                      backgroundColor: pageSize === 8 ? "#01BFBF" : "transparent",
-                      color: pageSize === 8 ? "#FFFFFF" : "#787885",
-                    }}
-                    onClick={() => handlePageSizeButtonClick(8)}
-                  >
-                    8
-                  </Button>
-                  <Button
-                    variant={pageSize === 16 ? "contained" : "text"}
-                    sx={{
-                      backgroundColor: pageSize === 16 ? "#01BFBF" : "transparent",
-                      color: pageSize === 16 ? "#FFFFFF" : "#787885",
-                    }}
-                    onClick={() => handlePageSizeButtonClick(16)}
-                  >
-                    16
-                  </Button>
-                  <Button
-                    variant={pageSize === 32 ? "contained" : "text"}
-                    sx={{
-                      backgroundColor: pageSize === 32 ? "#01BFBF" : "transparent",
-                      color: pageSize === 32 ? "#FFFFFF" : "#787885",
-                    }}
-                    onClick={() => handlePageSizeButtonClick(32)}
-                  >
-                    32
-                  </Button>
-                </Box>
                 <Grid item>
-                  <Pagination
-                    count={10}
-                    page={page}
-                    onChange={handlePageChange}
-                    sx={{
-                      justifyContent: "center",
-                      "& .Mui-selected": {
-                        color: "white", // Change the color for the selected page
-                        backgroundColor: "#01BFBF", // Change the background color for the selected page
-                      },
-                      "& .MuiPaginationItem-root": {
-                        color: "black", // Change the color for other pages
-                      },
+                  <Link to={"/tambah-resep"}>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      sx={{
+                        textTransform: "capitalize",
+                        backgroundColor: "#01BFBF",
+                        boxShadow: "none",
+                        "&:hover": {
+                          backgroundColor: "#01A0A0",
+                          boxShadow: "none",
+                        },
+                      }}
+                    >
+                      Tambah Resep
+                    </Button>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id="filled-basic"
+                    placeholder="Cari Resep"
+                    type="search"
+                    size="small"
+                    sx={{ width: "500px", background: "white" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Search />
+                        </InputAdornment>
+                      ),
                     }}
+                    onChange={handleInputChange} // Update the TextField input value whenever the user types
+                    onKeyDown={handleSearchChange} // Update the search term when Enter is pressed
+                    value={inputValue}
                   />
+                </Grid>
+                <Grid item>
+                  <Button
+                    className="filter-button"
+                    sx={{
+                      padding: "7px 10px",
+                      border: "1px solid rgba(0, 0, 0, 0.23)",
+                      textTransform: "capitalize",
+                    }}
+                    onClick={handleClick}
+                  >
+                    <Box display={"flex"}>
+                      <Typography
+                        color={"black"}
+                        display={"flex"}
+                        alignItems={"center"}
+                        marginRight={3}
+                      >
+                        Filter
+                      </Typography>
+                      <FilterList sx={{ color: "black" }} />
+                    </Box>
+                  </Button>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <Grid
+                      className="filter-grid"
+                      container
+                      rowSpacing={1}
+                      columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                      sx={{
+                        maxWidth: "445px",
+                        height: "250px",
+                        padding: "10px",
+                      }}
+                    >
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Tingkat Kesulitan</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={tempDifficulty}
+                            onChange={handleChangeDifficulty}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value="Easy">Easy</MenuItem>
+                            <MenuItem value="Medium">Medium</MenuItem>
+                            <MenuItem value="Hard">Hard</MenuItem>
+                            <MenuItem value="Master Chef">Master Chef</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Kategori</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={tempCategory}
+                            onChange={handleChangeCategory}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value="Lunch">Lunch</MenuItem>
+                            <MenuItem value="Breakfast">Breakfast</MenuItem>
+                            <MenuItem value="Dinner">Dinner</MenuItem>
+                            <MenuItem value="Snack">Snack</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Waktu Memasak</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          {/* Mengganti bagian Select untuk waktu memasak */}
+                          <Select
+                            value={tempCookTime}
+                            onChange={handleChangeCookTime}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={1}>0-30 Menit</MenuItem>
+                            <MenuItem value={2}>30-60 Menit</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item>
+                        <Typography fontSize={16}>Sortir</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={tempSort}
+                            onChange={handleChangeSort}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={1}>Nama Resep A-Z</MenuItem>
+                            <MenuItem value={2}>Nama Resep Z-A</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6} display={"flex"}>
+                        <Typography
+                          onClick={handleClearFilters}
+                          fontSize={16}
+                          sx={{
+                            color: "#EA4335",
+                            "&:hover": { cursor: "pointer" },
+                          }}
+                        >
+                          Bersihkan Filter
+                        </Typography>
+                      </Grid>
+                      <Grid display={"flex"} item xs={6} gap={1}>
+                        <Button
+                          onClick={handleClose}
+                          variant="contained"
+                          sx={{
+                            color: "#01BFBF",
+                            textTransform: "capitalize",
+                            backgroundColor: "white",
+                            boxShadow: "none",
+                            border: "1px solid #01BFBF",
+                            width: "85px",
+                            height: "40px",
+                            "&:hover": {
+                              backgroundColor: "white",
+                              boxShadow: "none",
+                            },
+                          }}
+                        >
+                          Batal
+                        </Button>
+                        <Button
+                          onClick={handleApplyFilters}
+                          variant="contained"
+                          sx={{
+                            textTransform: "capitalize",
+                            backgroundColor: "#01BFBF",
+                            boxShadow: "none",
+                            width: "85px",
+                            height: "40px",
+                            "&:hover": {
+                              backgroundColor: "#01A0A0",
+                              boxShadow: "none",
+                            },
+                          }}
+                        >
+                          Terapkan
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Menu>
                 </Grid>
               </Grid>
             </Grid>
+            <Grid item paddingBlock={3}>
+              <Typography variant="h4">Resep Favorit</Typography>
+            </Grid>
+          </Box>
+        </Hidden>
+
+        {/* Mobile View */}
+        <Hidden smUp>
+          <Box>
+            <Grid item paddingBlock={3}>
+              <Typography
+                variant="h4"
+                sx={{ fontWeight: "bold", fontSize: 22 }}
+              >
+                Resep Favorit
+              </Typography>
+            </Grid>
+            <TextField
+              id="filled-basic"
+              placeholder="Cari Resep"
+              type="search"
+              size="small"
+              sx={{ width: "320px", background: "white" }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={handleInputChange} // Update the TextField input value whenever the user types
+              onKeyDown={handleSearchChange} // Update the search term when Enter is pressed
+              value={inputValue}
+            />
+            <Box
+              item
+              className="grid-filter"
+              style={{
+                paddingTop: "10px",
+                display: "flex",
+                gap: "20px",
+                margin: "5px",
+                justifyContent: "center",
+                alignContent: "center",
+              }}
+            >
+              <Button
+                className="filter-button"
+                sx={{
+                  padding: "7px 10px",
+                  border: "1px solid rgba(0, 0, 0, 0.23)",
+                  textTransform: "capitalize",
+                  width: "150px",
+                }}
+                onClick={handleClick}
+              >
+                <Box display={"flex"} gap={5}>
+                  <Typography
+                    color={"black"}
+                    display={"flex"}
+                    alignItems={"center"}
+                    marginRight={3}
+                  >
+                    Filter
+                  </Typography>
+                  <FilterList sx={{ color: "black" }} />
+                </Box>
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <Grid
+                  className="filter-grid"
+                  container
+                  rowSpacing={1}
+                  columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                  sx={{
+                    maxWidth: "257px",
+                    height: "250px",
+                    padding: "10px",
+                  }}
+                >
+                  <Grid item>
+                    <Typography fontSize={16}>Tingkat Kesulitan</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={tempDifficulty}
+                        onChange={handleChangeDifficulty}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value="Easy">Easy</MenuItem>
+                        <MenuItem value="Medium">Medium</MenuItem>
+                        <MenuItem value="Hard">Hard</MenuItem>
+                        <MenuItem value="Master Chef">Master Chef</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <Typography fontSize={16}>Kategori</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={tempCategory}
+                        onChange={handleChangeCategory}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={0}>Lunch</MenuItem>
+                        <MenuItem value={1}>Breakfast</MenuItem>
+                        <MenuItem value={2}>Dinner</MenuItem>
+                        <MenuItem value={3}>Snack</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <Typography fontSize={16}>Waktu Memasak</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={tempCookTime}
+                        onChange={handleChangeCookTime}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={1}>0-30 Menit</MenuItem>
+                        <MenuItem value={2}>30-60 Menit</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={6} display={"flex"}>
+                    <Typography
+                      onClick={handleClearFilters}
+                      fontSize={16}
+                      sx={{
+                        color: "#EA4335",
+                        "&:hover": { cursor: "pointer" },
+                      }}
+                    >
+                      Bersihkan Filter
+                    </Typography>
+                  </Grid>
+                  <Grid display={"flex"} item gap={1}>
+                    <Button
+                      variant="contained"
+                      sx={{
+                        color: "#01BFBF",
+                        textTransform: "capitalize",
+                        backgroundColor: "white",
+                        boxShadow: "none",
+                        border: "1px solid #01BFBF",
+                        width: "85px",
+                        height: "40px",
+                        "&:hover": {
+                          backgroundColor: "white",
+                          boxShadow: "none",
+                        },
+                      }}
+                    >
+                      Batal
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={handleApplyFilters}
+                      sx={{
+                        textTransform: "capitalize",
+                        backgroundColor: "#01BFBF",
+                        boxShadow: "none",
+                        width: "85px",
+                        height: "40px",
+                        "&:hover": {
+                          backgroundColor: "#01A0A0",
+                          boxShadow: "none",
+                        },
+                      }}
+                    >
+                      Terapkan
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Menu>
+              <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                <Select
+                  value={sort}
+                  onChange={handleChangeSortMobile}
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
+                  sx={{ width: "150px", height: "40px", fontSize: "14px" }}
+                >
+                  <MenuItem sx={{ fontSize: "14px" }} value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"1"}>
+                    Nama Resep A-Z
+                  </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"2"}>
+                    Nama Resep Z-A
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            <Box paddingBlock={1}>
+              <Link to={"/tambah-resep"}>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  sx={{
+                    width: "320px",
+                    textTransform: "capitalize",
+                    backgroundColor: "#01BFBF",
+                    boxShadow: "none",
+                    "&:hover": {
+                      backgroundColor: "#01A0A0",
+                      boxShadow: "none",
+                    },
+                  }}
+                >
+                  Tambah Resep
+                </Button>
+              </Link>
+            </Box>
+          </Box>
+        </Hidden>
+        <Grid item>
+          <Grid
+            container
+            spacing={6}
+            direction="row"
+            justifyContent="center"
+            alignItems="flex-start"
+            marginTop={1}
+            marginBottom={3}
+          >
+            {loading ? (
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                paddingBlock={10}
+              >
+                <CircularProgress />
+                <Typography variant="body1">Loading your recipes...</Typography>
+              </Box>
+            ) : (
+              myFavRecipes.map((resep) => (
+                <RecipeCard
+                  key={resep.recipeId}
+                  resep={resep}
+                  handleOpenOptions={handleOpenOptions}
+                  option={option}
+                  handleCloseOptions={handleCloseOptions}
+                  userId={userId}
+                />
+              ))
+            )}
+          </Grid>
+          <Grid item display={"flex"} justifyContent={"space-between"}>
+            <Box
+              sx={{
+                maxWidth: "300px",
+                display: "flex",
+                gap: "10px",
+                alignItems: "baseline",
+                flexWrap: "wrap",
+                marginTop: 2,
+                marginBottom: 4,
+              }}
+            >
+              Entries
+              <Button
+                sx={entries === 8 ? entryButtons(8) : entryButtons(8, true)}
+                onClick={() => handleEntriesClick(8)}
+              >
+                8
+              </Button>
+              <Button
+                sx={entries === 16 ? entryButtons(16) : entryButtons(16, true)}
+                onClick={() => handleEntriesClick(16)}
+              >
+                16
+              </Button>
+              <Button
+                sx={entries === 32 ? entryButtons(32) : entryButtons(32, true)}
+                onClick={() => handleEntriesClick(32)}
+              >
+                32
+              </Button>
+            </Box>
+            <Pagination
+              className="pagination"
+              count={Math.ceil(total / entries) + 1}
+              size="small"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                "& .Mui-selected": {
+                  color: "white", // Change the color for the selected page
+                  backgroundColor: "#01BFBF", // Change the background color for the selected page
+                },
+                "& .MuiPaginationItem-root": {
+                  color: "black", // Change the color for other pages
+                },
+              }}
+              page={page}
+              onChange={handlePaginationChange}
+            />
           </Grid>
         </Grid>
-      </Container>
 
-      <Dialog open={errorDialogOpen} onClose={handleDialogClose}>
-      {error && (
+        <Dialog open={errorDialogOpen} onClose={handleDialogClose}>
+          {error && (
             <Alert variant="filled" severity={alertVariant}>
               {error}
             </Alert>
-      )}
-      </Dialog>
-    </div>
+          )}
+        </Dialog>
+      </Container>
+    </>
   );
-}
+};
 
-export default ResepFavorit;
+export default DaftarResepFavorit;
