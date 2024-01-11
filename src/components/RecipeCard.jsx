@@ -209,7 +209,7 @@ const RecipeCard = ({
                 </Grid>
                 <br />
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <Link to={`/your-page-path/${resep.recipeId}`} style={{ color: '#01BFBF' }}>
+                  <Link to={`/resep-saya/detail-resep/${resep.recipeId}`} style={{ color: '#01BFBF' }}>
                     <Typography variant="body2" color={"#01BFBF"}>
                       Lihat Detil Resep
                     </Typography>
@@ -378,7 +378,7 @@ const RecipeCard = ({
                 </Grid>
                 <br />
                 <Box sx={{ display: "flex", justifyContent: "center" }}>
-                  <Link to={`/your-page-path/${resep.recipeId}`} style={{ color: '#01BFBF' }}>
+                  <Link to={`/resep-saya/detail-resep/${resep.recipeId}`} style={{ color: '#01BFBF' }}>
                     <Typography variant="body2" color={"#01BFBF"}>
                       Lihat Detil Resep
                     </Typography>
