@@ -86,7 +86,9 @@ const DaftarResepSaya = () => {
   const [deletionSuccess, setDeletionSuccess] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const userId = 73; // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
+  const userId = Number(localStorage.getItem('userId')); 
+  // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
+  // doable via brower's LocalStorage injection using key: userId and value of the userId
 
   const handleEntriesClick = (value) => {
     if (entries === value) {
