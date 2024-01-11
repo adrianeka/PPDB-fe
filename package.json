@@ -16,6 +16,8 @@
     "@hookform/resolvers": "^3.3.4",
     "@mui/icons-material": "^5.15.3",
     "@mui/material": "^5.15.3",
+    "@uidotdev/usehooks": "^2.4.1",
+    "axios": "^1.6.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.2",
@@ -31,6 +33,6 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "vite": "^5.0.8"
+    "vite": "^5.0.11"
   }
 }
