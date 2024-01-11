@@ -21,7 +21,7 @@ import {
   Menu as MenuIcon,
   StarOutline,
 } from "@mui/icons-material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../pages/Resources/Imgs/logo.png"; // Update with the path to your logo
 
 const ResponsiveAppBar = styled(AppBar)(({ theme }) => ({
@@ -65,6 +65,8 @@ const Navigation = () => {
     navigate("/");
     localStorage.clear();
   };
+
+  const location = useLocation();
 
   return (
     <Box margin={0} sx={{ display: "flex" }}>
@@ -117,7 +119,7 @@ const Navigation = () => {
               <Button
                 sx={{
                   fontWeight: "bold",
-                  color: "#FFFFFF",
+                  color: location.pathname === '/resep-saya' ? '#01BFBF' : '#FFFFFF',
                   textTransform: "capitalize",
                 }}
               >

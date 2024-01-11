@@ -1,8 +1,13 @@
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
   FormControl,
   Grid,
   Hidden,
@@ -11,12 +16,13 @@ import {
   MenuItem,
   Pagination,
   Select,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { Link } from "react-router-dom";
-import { FilterList, Search } from "@mui/icons-material";
+import { CheckCircleOutline, FilterList, Search } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navigation from "../components/Navigation";
@@ -76,6 +82,7 @@ const DaftarResepSaya = () => {
   const [myRecipes, setMyRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletionLoading, setDeletionLoading] = useState(false);
+  const [deletionSuccess, setDeletionSuccess] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [inputValue, setInputValue] = useState("");
   const userId = 73; // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
@@ -88,10 +95,14 @@ const DaftarResepSaya = () => {
     setPage(1);
   };
 
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
   const fetchMyRecipes = async () => {
+    var response = "";
     try {
       setLoading(true);
-      const response = await axios.get(
+      response = await axios.get(
         "http://localhost:8080/book-recipe/book-recipes/my-recipes",
         {
           params: {
@@ -106,10 +117,23 @@ const DaftarResepSaya = () => {
           },
         }
       );
-      setTotal(response.data.total);
-      setMyRecipes(response.data.data);
-      console.log(response.data.data);
+      if (response.status === 200) {
+        setTotal(response.data.total);
+        setMyRecipes(response.data.data);
+        console.log(response.data.data);
+      }
     } catch (error) {
+      if (response.status === 500) {
+        setTimeout(() => {
+          setErrorMessage(`Terjadi kesalahan server, silahkan coba kembali`);
+          setOpenSnackbar(true);
+          setTimeout(() => {
+            setErrorMessage("");
+            setOpenSnackbar(false);
+          }, 3000);
+        }, 1000);
+        console.error(`Internal Server Error`);
+      }
       console.error(`Error fetching recipes: ${error}`);
     } finally {
       setLoading(false);
@@ -170,7 +194,20 @@ const DaftarResepSaya = () => {
     } finally {
       fetchMyRecipes();
       setDeletionLoading(false);
+      setDeletionSuccess(true);
     }
+  };
+
+  const [openDialogDeleted, setOpenDialogDeleted] = useState(false);
+
+  useEffect(() => {
+    if (deletionSuccess) {
+      setOpenDialogDeleted(true);
+    }
+  }, [deletionSuccess]);
+
+  const handleCloseDialogDeleted = () => {
+    setOpenDialogDeleted(false);
   };
 
   const entryButtons = (value) => {
@@ -199,7 +236,35 @@ const DaftarResepSaya = () => {
             alignItems={"center"}
             paddingTop={5}
           >
-            <Grid item>
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              open={openSnackbar}
+              style={{
+                top: "70px",
+              }}
+            >
+              <Alert
+                severity="error"
+                sx={{
+                  width: "100%",
+                  bgcolor: "red", // Change the background color to red
+                  color: "white", // Change the text color to white
+                  fontWeight: "bold", // Make the text bold
+                  fontSize: "1rem", // Increase the font size
+                  alignItems: "center", // Center the text vertically
+                  justifyContent: "center", // Center the text horizontally
+                  ".MuiAlert-icon": { display: "none" }, // Hide the icon
+                }}
+              >
+                {errorMessage}
+              </Alert>
+            </Snackbar>
+            <Grid
+              item
+              className="menu-desktop"
+              top={"20px"}
+              position={"relative"}
+            >
               <Grid
                 container
                 spacing={4}
@@ -428,7 +493,7 @@ const DaftarResepSaya = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item paddingBlock={3}>
+            <Grid item paddingBlock={6}>
               <Typography variant="h4">Resep Saya</Typography>
             </Grid>
           </Box>
@@ -437,6 +502,26 @@ const DaftarResepSaya = () => {
         {/* Mobile View */}
         <Hidden smUp>
           <Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "fixed",
+                top: "19px",
+                width: "80%",
+                maxWidth: "420px",
+                background: "#CF1D1D",
+                color: "white",
+                height: errorMessage ? "57px" : "0",
+                transition: "height 0.5s ease",
+                borderRadius: "5px",
+                fontWeight: "700",
+              }}
+            >
+              {errorMessage}
+            </Box>
             <Typography sx={{ fontWeight: "bold", fontSize: "22px" }}>
               Resep Saya
             </Typography>
@@ -733,6 +818,11 @@ const DaftarResepSaya = () => {
                 "& .Mui-selected": {
                   color: "white", // Change the color for the selected page
                   backgroundColor: "#01BFBF", // Change the background color for the selected page
+                  "&:hover, &.Mui-focusVisible": {
+                    // Add these lines
+                    backgroundColor: "#01BFBF",
+                    color: "black",
+                  },
                 },
                 "& .MuiPaginationItem-root": {
                   color: "black", // Change the color for other pages
@@ -743,6 +833,51 @@ const DaftarResepSaya = () => {
             />
           </Box>
         </Grid>
+        <br />
+        <br />
+        <Dialog
+          open={openDialogDeleted}
+          onClose={handleCloseDialogDeleted}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent>
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <CheckCircleOutline sx={{ color: "#00E696", fontSize: "80px" }} />
+              <Typography
+                sx={{ fontSize: "32px", fontWeight: "bold", color: "#00E696" }}
+              >
+                Success
+              </Typography>
+            </Box>
+            <DialogContentText
+              display="flex"
+              alignItems="center"
+              flexDirection={"column"}
+              id="alert-dialog-description"
+            >
+              Berhasil Menghapus Resep xxxx
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              sx={{
+                textTransform: "capitalize",
+                backgroundColor: "#01BFBF",
+                color: "white",
+                boxShadow: "none",
+                "&:hover": {
+                  backgroundColor: "#01A0A0",
+                  boxShadow: "none",
+                },
+              }}
+              onClick={handleCloseDialogDeleted}
+              autoFocus
+            >
+              Continue
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );
