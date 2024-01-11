@@ -11,8 +11,6 @@ function App() {
       <Toaster />
       <Router>
         <Routes>
-          <Route exact path='/' element={<Home />}/>
-          <Route path='/test' element={<Test />}/>
           <Route path='/user-management/users/signup' element={<Register />}/>
         </Routes>
       </Router>
