@@ -29,11 +29,11 @@ const ResponsiveAppBar = styled(AppBar)(({ theme }) => ({
   paddingLeft: theme.spacing(0), // Adjust as needed
   paddingRight: theme.spacing(0), // Adjust as needed
   boxShadow: "none",
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up("sm")]: {
     paddingLeft: theme.spacing(2), // Adjust as needed
     paddingRight: theme.spacing(2), // Adjust as needed
   },
-  [theme.breakpoints.up('md')]: {
+  [theme.breakpoints.up("md")]: {
     paddingLeft: theme.spacing(8), // Adjust as needed
     paddingRight: theme.spacing(8), // Adjust as needed
   },
@@ -70,9 +70,7 @@ const Navigation = () => {
 
   return (
     <Box margin={0} sx={{ display: "flex" }}>
-      <ResponsiveAppBar
-        position="static"
-      >
+      <ResponsiveAppBar position="static">
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <img
             src={logo}
@@ -119,7 +117,8 @@ const Navigation = () => {
               <Button
                 sx={{
                   fontWeight: "bold",
-                  color: location.pathname === '/resep-saya' ? '#01BFBF' : '#FFFFFF',
+                  color:
+                    location.pathname === "/resep-saya" ? "#01BFBF" : "#FFFFFF",
                   textTransform: "capitalize",
                 }}
               >
@@ -200,7 +199,15 @@ const Navigation = () => {
             />
           </ListItem>
           <ListItem button onClick={() => handleDrawerItemClick("/resep-saya")}>
-            <ListItemText sx={{ color: "white" }} primary="Resep Saya" />
+            <ListItemText
+              sx={{
+                fontWeight: "bold",
+                color:
+                  location.pathname === "/resep-saya" ? "#01BFBF" : "#FFFFFF",
+                textTransform: "capitalize",
+              }}
+              primary="Resep Saya"
+            />
           </ListItem>
           <ListItem
             button

@@ -42,6 +42,7 @@ const DaftarResepSaya = () => {
   const [entries, setEntries] = useState(8);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [deletedRecipeName, setDeletedRecipeName] = useState("");
 
   const handleChangeDifficulty = (event) => {
     setTempDifficulty(event.target.value); // Update the temporary difficulty whenever the user selects a new difficulty
@@ -175,7 +176,7 @@ const DaftarResepSaya = () => {
     }
   };
 
-  const handleDeleteRecipe = async (recipeId, userId) => {
+  const handleDeleteRecipe = async (recipeId, userId, recipeName) => {
     try {
       setDeletionLoading(true);
       const response = await axios.put(
@@ -184,6 +185,7 @@ const DaftarResepSaya = () => {
 
       // Check if the request was successful
       if (response.status === 200) {
+        setDeletedRecipeName(recipeName);
         console.log("Recipe deleted successfully!");
         setLoading(true);
       } else {
@@ -247,13 +249,13 @@ const DaftarResepSaya = () => {
                 severity="error"
                 sx={{
                   width: "100%",
-                  bgcolor: "red", // Change the background color to red
-                  color: "white", // Change the text color to white
-                  fontWeight: "bold", // Make the text bold
-                  fontSize: "1rem", // Increase the font size
-                  alignItems: "center", // Center the text vertically
-                  justifyContent: "center", // Center the text horizontally
-                  ".MuiAlert-icon": { display: "none" }, // Hide the icon
+                  bgcolor: "red",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  ".MuiAlert-icon": { display: "none" },
                 }}
               >
                 {errorMessage}
@@ -501,27 +503,30 @@ const DaftarResepSaya = () => {
 
         {/* Mobile View */}
         <Hidden smUp>
-          <Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "fixed",
-                top: "19px",
-                width: "80%",
-                maxWidth: "420px",
-                background: "#CF1D1D",
-                color: "white",
-                height: errorMessage ? "57px" : "0",
-                transition: "height 0.5s ease",
-                borderRadius: "5px",
-                fontWeight: "700",
+          <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              open={openSnackbar}
+              style={{
+                top: "70px",
               }}
             >
-              {errorMessage}
-            </Box>
+              <Alert
+                severity="error"
+                sx={{
+                  width: "100%",
+                  bgcolor: "red",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  ".MuiAlert-icon": { display: "none" },
+                }}
+              >
+                {errorMessage}
+              </Alert>
+            </Snackbar>
             <Typography sx={{ fontWeight: "bold", fontSize: "22px" }}>
               Resep Saya
             </Typography>
@@ -771,7 +776,9 @@ const DaftarResepSaya = () => {
                   handleOpenOptions={handleOpenOptions}
                   option={option}
                   handleCloseOptions={handleCloseOptions}
-                  handleDeleteRecipe={handleDeleteRecipe}
+                  handleDeleteRecipe={() =>
+                    handleDeleteRecipe(resep.recipeId, userId, resep.recipeName)
+                  }
                   userId={userId}
                   deletionLoading={deletionLoading}
                 />
@@ -815,17 +822,19 @@ const DaftarResepSaya = () => {
               sx={{
                 display: "flex",
                 justifyContent: "center",
-                "& .Mui-selected": {
-                  color: "white", // Change the color for the selected page
-                  backgroundColor: "#01BFBF", // Change the background color for the selected page
-                  "&:hover, &.Mui-focusVisible": {
-                    // Add these lines
-                    backgroundColor: "#01BFBF",
-                    color: "black",
+                "&.MuiPagination-root": {
+                  "& .Mui-selected": {
+                    color: "white", // Change the color for the selected page
+                    backgroundColor: "#01BFBF", // Change the background color for the selected page
+                    "&:hover": {
+                      // Add these lines
+                      backgroundColor: "#01BFBF",
+                      color: "black",
+                    },
                   },
                 },
                 "& .MuiPaginationItem-root": {
-                  color: "black", // Change the color for other pages
+                  color: "#01BFBF", // Change the color for other pages
                 },
               }}
               page={page}
@@ -856,7 +865,7 @@ const DaftarResepSaya = () => {
               flexDirection={"column"}
               id="alert-dialog-description"
             >
-              Berhasil Menghapus Resep xxxx
+              Berhasil Menghapus Resep {deletedRecipeName}
             </DialogContentText>
           </DialogContent>
           <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
