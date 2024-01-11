@@ -11,22 +11,10 @@ import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import toast from 'react-hot-toast';
 import {
+  cssReset,
   wrapper,
   formContentWrapper
 } from '../styles/style.jsx';
-
-const cssReset = `
-  * {
-    margin: 0;
-    padding: 0;
-  }
-  body,
-  html,
-  :root {
-    height: 100%;
-    background-color: #f0f9f9;
-  }
-`;
 
 export const registerSchema = z.object({
   username: z
@@ -81,7 +69,7 @@ const Register = () => {
   };
 
   return (
-    <Box sx={wrapper} >
+    <Box sx={wrapper}>
       <style>{cssReset}</style>
       <Logo />
       <AuthWrapper
