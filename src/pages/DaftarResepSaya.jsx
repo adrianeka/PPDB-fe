@@ -663,6 +663,7 @@ const DaftarResepSaya = () => {
                   </Grid>
                   <Grid display={"flex"} item gap={1}>
                     <Button
+                      onClick={handleClose}
                       variant="contained"
                       sx={{
                         color: "#01BFBF",
