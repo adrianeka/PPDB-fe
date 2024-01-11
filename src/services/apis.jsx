@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const getDaftarResepMakanan = (
+  userId,
   pageNumber,
   pageSize,
   recipeName,
@@ -9,7 +10,7 @@ export const getDaftarResepMakanan = (
   time,
   sortBy
 ) => {
-  let apiUrl = `http://localhost:8080/book-recipe/book-recipes?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+  let apiUrl = `http://localhost:8080/book-recipe/book-recipes?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
 
   if (recipeName) {
     apiUrl += `&recipeName=${recipeName}`;
@@ -38,8 +39,8 @@ export const getDaftarResepMakanan = (
     });
 };
 
-export const putFavoriteResepMasakan = (recipeId) => {
-  const apiUrl = `http://localhost:8080/book-recipe/${recipeId}/favorites`;
+export const putFavoriteResepMasakan = (recipeId, userId) => {
+  const apiUrl = `http://localhost:8080/book-recipe/book-recipes/${recipeId}/favorites/${userId}`;
 
   return axios
     .put(apiUrl)

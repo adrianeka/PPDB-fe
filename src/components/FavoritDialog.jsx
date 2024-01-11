@@ -58,7 +58,7 @@ export default function FavoritDialog({ open, setOpen, message }) {
             }}>
             Sukses
           </Typography>
-          <Typography>{message}</Typography>
+          <Typography sx={{ textAlign: "center" }}>{message}</Typography>
         </DialogContent>
         <DialogActions>
           <Button

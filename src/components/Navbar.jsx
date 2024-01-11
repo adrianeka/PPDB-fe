@@ -29,7 +29,11 @@ const Navbar = () => {
   };
 
   const location = useLocation();
-  const isOnDaftarResep = location.pathname === "/daftar-resep";
+  const path = location.pathname;
+
+  const isOnDaftarResep = path.startsWith("/daftar-resep");
+  const isOnResepSaya = path.startsWith("/resep-saya");
+  const isOnResepFavorit = path.startsWith("/resep-favorit");
 
   return (
     <AppBar
@@ -119,10 +123,10 @@ const Navbar = () => {
                     Daftar Resep Makanan
                   </Button>
                   <Button
-                    href="#"
+                    href="/resep-saya"
                     sx={{
                       textTransform: "none",
-                      color: "white",
+                      color: isOnResepSaya ? "#01BFBF" : "white",
                       fontSize: "14px",
                       fontWeight: "700",
                     }}>
@@ -134,10 +138,10 @@ const Navbar = () => {
                     Resep Saya
                   </Button>
                   <Button
-                    href="#"
+                    href="/resep-favorit"
                     sx={{
                       textTransform: "none",
-                      color: "white",
+                      color: isOnResepFavorit ? "#01BFBF" : "white",
                       fontSize: "14px",
                       fontWeight: "700",
                     }}>
@@ -186,18 +190,18 @@ const Navbar = () => {
               </Typography>
             </Link>
             <Link
-              href="#"
+              href="/resep-saya"
               sx={{
-                color: "inherit",
+                color: isOnResepSaya ? "#01BFBF" : "white",
                 textDecoration: "none",
                 marginY: "auto",
               }}>
               <Typography sx={{ fontWeight: "700" }}>Resep Saya</Typography>
             </Link>
             <Link
-              href="#"
+              href="/resep-favorit"
               sx={{
-                color: "inherit",
+                color: isOnResepFavorit ? "#01BFBF" : "white",
                 textDecoration: "none",
                 marginY: "auto",
               }}>

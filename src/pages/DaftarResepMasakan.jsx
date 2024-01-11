@@ -23,6 +23,7 @@ import { styled } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import ClearIcon from "@mui/icons-material/Clear";
 import { getDaftarResepMakanan } from "../services/apis";
 import ErrorSnackbar from "../components/ErrorSnackbar";
 import CardSkeletonLoading from "../components/CardSkeletonLoading";
@@ -53,6 +54,8 @@ const DaftarResepMasakan = () => {
     setFilterMenu(null);
   };
 
+  const userId = localStorage.getItem("userId");
+
   const [filterMenuMobile, setFilterMenuMobile] = useState(null);
   const openFilterMenuMobile = Boolean(filterMenuMobile);
   const handleClickFilterMenuMobile = (event) => {
@@ -62,36 +65,71 @@ const DaftarResepMasakan = () => {
     setFilterMenuMobile(null);
   };
 
+  const [tempRecipeName, setTempRecipeName] = useState("");
+  const [tempFoodLevel, setTempFoodLevel] = useState("");
+  const [tempFoodCategory, setTempFoodCategory] = useState("");
+  const [tempCookingTime, setTempCookingTime] = useState("");
+  const [tempSortBy, setTempSortBy] = useState("");
+
   const [recipeName, setRecipeName] = useState("");
   const handleChangeRecipeName = (event) => {
-    setRecipeName(event.target.value);
+    setTempRecipeName(event.target.value);
+    window.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handleApplySearch();
+      }
+    });
   };
 
   const [foodLevel, setFoodLevel] = useState("");
   const handleChangeFoodLevel = (event) => {
-    setFoodLevel(event.target.value);
+    setTempFoodLevel(event.target.value);
   };
 
   const [foodCategory, setFoodCategory] = useState("");
   const handleChangeFoodCategory = (event) => {
-    setFoodCategory(event.target.value);
+    setTempFoodCategory(event.target.value);
   };
 
   const [cookingTime, setCookingTime] = useState("");
   const handleChangeCookingTime = (event) => {
-    setCookingTime(event.target.value);
+    setTempCookingTime(event.target.value);
   };
 
   const [sortBy, setSortBy] = useState("");
   const handleChangeSortBy = (event) => {
+    setTempSortBy(event.target.value);
+  };
+  const handleChangeSortByMobile = (event) => {
     setSortBy(event.target.value);
   };
 
   const handleClickResetFilter = () => {
-    setFoodLevel("");
-    setFoodCategory("");
-    setCookingTime("");
-    setSortBy("");
+    setTempFoodLevel("");
+    setTempFoodCategory("");
+    setTempCookingTime("");
+    setTempSortBy("");
+  };
+
+  const handleApplySearch = () => {
+    setRecipeName(tempRecipeName);
+    setPage(1);
+  };
+
+  const handleApplyFilter = () => {
+    setFoodLevel(tempFoodLevel);
+    setFoodCategory(tempFoodCategory);
+    setCookingTime(tempCookingTime);
+    setSortBy(tempSortBy);
+    setPage(1);
+  };
+
+  const handleApplyFilterMobile = () => {
+    setFoodLevel(tempFoodLevel);
+    setFoodCategory(tempFoodCategory);
+    setCookingTime(tempCookingTime);
+    setPage(1);
   };
 
   const [entries, setEntries] = useState(8);
@@ -115,34 +153,66 @@ const DaftarResepMasakan = () => {
   const [isDataEmpty, setIsDataEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("isPageError", isPageError);
+  async function fetchDataResepMasakan(
+    userId,
+    page,
+    entries,
+    recipeName,
+    foodLevel,
+    foodCategory,
+    cookingTime,
+    sortBy
+  ) {
+    try {
+      const response = await getDaftarResepMakanan(
+        userId,
+        page,
+        entries,
+        recipeName,
+        foodLevel,
+        foodCategory,
+        cookingTime,
+        sortBy
+      );
+      setResepData(response.data.data);
+      setTotalData(response.data.total);
+
+      if (response.data.total === 0) {
+        setIsDataEmpty(true);
+      } else {
+        setIsDataEmpty(false);
+      }
+
+      setIsLoading(false);
+      setIsPageError(false);
+    } catch (error) {
+      setIsPageError(true);
+      setIsLoading(true);
+    }
+  }
 
   useEffect(() => {
     setIsLoading(true);
-    async function fetchDataResepMasakan() {
-      try {
-        const response = await getDaftarResepMakanan(
-          page,
-          entries,
-          recipeName,
-          foodLevel,
-          foodCategory,
-          cookingTime,
-          sortBy
-        );
-        setResepData(response.data.data);
-        setTotalData(response.data.total);
-        console.log("response", response);
-
-        setIsLoading(false);
-        setIsPageError(false);
-      } catch (error) {
-        setIsPageError(true);
-        setIsLoading(true);
-      }
-    }
-    fetchDataResepMasakan();
-  }, [cookingTime, entries, foodCategory, foodLevel, page, recipeName, sortBy]);
+    fetchDataResepMasakan(
+      userId,
+      page,
+      entries,
+      recipeName,
+      foodLevel,
+      foodCategory,
+      cookingTime,
+      sortBy
+    );
+  }, [
+    userId,
+    cookingTime,
+    entries,
+    foodCategory,
+    foodLevel,
+    page,
+    recipeName,
+    sortBy,
+  ]);
 
   useEffect(() => {
     const total = Math.ceil(totalData / entries);
@@ -194,12 +264,20 @@ const DaftarResepMasakan = () => {
                   variant="outlined"
                   size="small"
                   placeholder="Cari Resep"
-                  value={recipeName}
+                  value={tempRecipeName}
                   onChange={handleChangeRecipeName}
                   InputProps={{
                     startAdornment: (
-                      <IconButton>
+                      <IconButton onClick={handleApplySearch}>
                         <SearchIcon />
+                      </IconButton>
+                    ),
+                    endAdornment: tempRecipeName && (
+                      <IconButton
+                        onClick={() => {
+                          setTempRecipeName(""), setRecipeName("");
+                        }}>
+                        <ClearIcon />
                       </IconButton>
                     ),
                   }}
@@ -279,7 +357,7 @@ const DaftarResepMasakan = () => {
                             <Select
                               labelId="level"
                               id="level"
-                              value={foodLevel}
+                              value={tempFoodLevel}
                               onChange={handleChangeFoodLevel}>
                               <MenuItem value="">ALL</MenuItem>
                               <MenuItem value="3">Easy</MenuItem>
@@ -301,7 +379,7 @@ const DaftarResepMasakan = () => {
                             <Select
                               labelId="foodCategory"
                               id="foodCategory"
-                              value={foodCategory}
+                              value={tempFoodCategory}
                               onChange={handleChangeFoodCategory}>
                               <MenuItem value="">ALL</MenuItem>
                               <MenuItem value="1">Breakfast</MenuItem>
@@ -325,7 +403,7 @@ const DaftarResepMasakan = () => {
                             <Select
                               labelId="cookingTime"
                               id="cookingTime"
-                              value={cookingTime}
+                              value={tempCookingTime}
                               onChange={handleChangeCookingTime}>
                               <MenuItem value="">ALL</MenuItem>
                               <MenuItem value="0-30">0-30 Menit</MenuItem>
@@ -359,6 +437,10 @@ const DaftarResepMasakan = () => {
                             Batal
                           </Button>
                           <Button
+                            onClick={() => {
+                              handleApplyFilterMobile(),
+                                handleCloseFilterMenuMobile();
+                            }}
                             fullWidth
                             variant="container"
                             disableElevation
@@ -386,8 +468,8 @@ const DaftarResepMasakan = () => {
                       id="sortBy"
                       value={sortBy}
                       label="Sort By"
-                      onChange={handleChangeSortBy}>
-                      <MenuItem value="">Default</MenuItem>
+                      onChange={handleChangeSortByMobile}>
+                      <MenuItem value="">None</MenuItem>
                       <MenuItem value="recipeName-ASC">Nama Resep A-Z</MenuItem>
                       <MenuItem value="recipeName-DESC">
                         Nama Resep Z-A
@@ -456,12 +538,20 @@ const DaftarResepMasakan = () => {
             variant="outlined"
             size="small"
             placeholder="Cari Resep"
-            value={recipeName}
+            value={tempRecipeName}
             onChange={handleChangeRecipeName}
             InputProps={{
               startAdornment: (
-                <IconButton>
+                <IconButton onClick={handleApplySearch}>
                   <SearchIcon />
+                </IconButton>
+              ),
+              endAdornment: tempRecipeName && (
+                <IconButton
+                  onClick={() => {
+                    setTempRecipeName(""), setRecipeName("");
+                  }}>
+                  <ClearIcon />
                 </IconButton>
               ),
             }}
@@ -532,7 +622,7 @@ const DaftarResepMasakan = () => {
                         <Select
                           labelId="level"
                           id="level"
-                          value={foodLevel}
+                          value={tempFoodLevel}
                           onChange={handleChangeFoodLevel}>
                           <MenuItem value="">ALL</MenuItem>
                           <MenuItem value="3">Easy</MenuItem>
@@ -552,7 +642,7 @@ const DaftarResepMasakan = () => {
                         <Select
                           labelId="foodCategory"
                           id="foodCategory"
-                          value={foodCategory}
+                          value={tempFoodCategory}
                           onChange={handleChangeFoodCategory}>
                           <MenuItem value="">ALL</MenuItem>
                           <MenuItem value="1">Breakfast</MenuItem>
@@ -574,7 +664,7 @@ const DaftarResepMasakan = () => {
                         <Select
                           labelId="cookingTime"
                           id="cookingTime"
-                          value={cookingTime}
+                          value={tempCookingTime}
                           onChange={handleChangeCookingTime}>
                           <MenuItem value="">ALL</MenuItem>
                           <MenuItem value="0-30">0-30 Menit</MenuItem>
@@ -591,7 +681,7 @@ const DaftarResepMasakan = () => {
                         <Select
                           labelId="sortBy"
                           id="sortBy"
-                          value={sortBy}
+                          value={tempSortBy}
                           onChange={handleChangeSortBy}>
                           <MenuItem value="recipeName-ASC">
                             Nama Resep A-Z
@@ -632,6 +722,9 @@ const DaftarResepMasakan = () => {
                         Batal
                       </Button>
                       <Button
+                        onClick={() => {
+                          handleApplyFilter(), handleCloseFilterMenu();
+                        }}
                         variant="container"
                         disableElevation
                         sx={{
@@ -678,10 +771,32 @@ const DaftarResepMasakan = () => {
                 <ResepMakananCard
                   resepData={resepData}
                   setIsPageError={setIsPageError}
+                  userId={userId}
+                  fetchDataResepMasakan={fetchDataResepMasakan}
+                  cookingTime={cookingTime}
+                  entries={entries}
+                  foodCategory={foodCategory}
+                  foodLevel={foodLevel}
+                  page={page}
+                  recipeNameProps={recipeName}
+                  sortBy={sortBy}
                 />
               )
             ) : (
               setIsLoading(true)
+            )}
+            {isDataEmpty && (
+              <Box display="flex" flexDirection="column" marginX="auto">
+                <img src="/svg/SearchNotFound.svg" alt="notFound" width={500} />
+                <Typography
+                  sx={{
+                    fontSize: "24px",
+                    textAlign: "center",
+                    fontWeight: "700",
+                  }}>
+                  Data Tidak Ditemukan
+                </Typography>
+              </Box>
             )}
           </Grid>
           <Grid container spacing={1}>

@@ -1,52 +1,50 @@
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
+  CardMedia,
   Checkbox,
   Divider,
   FormControlLabel,
   FormGroup,
   Grid,
-  IconButton,
   Link,
-  Menu,
   Typography,
 } from "@mui/material";
-import cardImage from "../../public/img/image.png";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import { useState } from "react";
 import FavoritDialog from "./FavoritDialog";
 import { putFavoriteResepMasakan } from "../services/apis";
 
-const ResepMakananCard = ({ resepData, setIsPageError }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event, recipeId) => {
-    setAnchorEl(event.currentTarget);
-    console.log("event", event.currentTarget);
-    console.log("resepId", recipeId);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const [favoriteCheck, setFavoriteCheck] = useState(false);
+const ResepMakananCard = ({
+  resepData,
+  setIsPageError,
+  userId,
+  fetchDataResepMasakan,
+  cookingTime,
+  entries,
+  foodCategory,
+  foodLevel,
+  page,
+  recipeNameProps,
+  sortBy,
+}) => {
   const [openFavoriteDialog, setOpenFavoriteDialog] = useState(false);
   const [favoriteMessage, setFavoriteMessage] = useState("");
 
-  const handleChange = (event, recipeId) => {
-    setFavoriteCheck(event.target.checked);
-    console.log("id", recipeId);
+  const handleChange = (event, recipeId, recipeName, statusFavorite) => {
     async function putFavorite() {
       try {
-        const response = await putFavoriteResepMasakan(recipeId);
-        console.log("response", response);
+        if (statusFavorite === false) {
+          setFavoriteMessage(`Berhasil Menambah Resep ${recipeName}`);
+        } else if (statusFavorite === true) {
+          setFavoriteMessage(`Berhasil Menghapus Resep ${recipeName}`);
+        }
+
+        await putFavoriteResepMasakan(recipeId, userId);
         setOpenFavoriteDialog(true);
       } catch (error) {
         console.log("error change favorite data", error);
@@ -54,6 +52,16 @@ const ResepMakananCard = ({ resepData, setIsPageError }) => {
       }
     }
     putFavorite();
+    fetchDataResepMasakan(
+      userId,
+      page,
+      entries,
+      recipeNameProps,
+      foodLevel,
+      foodCategory,
+      cookingTime,
+      sortBy
+    );
   };
 
   return (
@@ -66,90 +74,15 @@ const ResepMakananCard = ({ resepData, setIsPageError }) => {
       {resepData.map((data, index) => (
         <Grid item xs={12} sm={6} md={3} key={index}>
           <Card sx={{ maxWidth: 345 }}>
-            <Box
-              className="cardImage"
-              style={{
-                backgroundImage: `url(${cardImage})`,
+            <CardMedia
+              component="img"
+              src={data.imageUrl}
+              alt={data.recipeName}
+              sx={{
                 backgroundSize: "cover",
                 height: "140px",
-              }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "right",
-                }}>
-                <IconButton
-                  aria-label="more"
-                  id="more-button"
-                  aria-controls={open ? "more-menu" : undefined}
-                  aria-expanded={open ? "true" : undefined}
-                  aria-haspopup="true"
-                  onClick={(event) => {
-                    handleClick(event, data.recipeId);
-                  }}
-                  size="small"
-                  sx={{
-                    color: "white",
-                    backgroundColor: "rgba(0,0,0,0.10)",
-                    "&:hover": {
-                      backgroundColor: "rgba(0,0,0,0.10)",
-                    },
-                    zIndex: 2,
-                    padding: 0,
-                    margin: 0,
-                  }}>
-                  <MoreHorizIcon />
-                </IconButton>
-              </Box>
-            </Box>
-
-            <Menu
-              id="more-menu"
-              MenuListProps={{
-                "aria-labelledby": "more-button",
               }}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              PaperProps={{
-                style: {
-                  width: "20ch",
-                  boxShadow: "1px 1px rgba(0,0,0, 0.10)",
-                },
-              }}>
-              <Box display="flex" flexDirection="column" gap={2} padding={1}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    textTransform: "none",
-                    color: "#01BFBF",
-                    backgroundColor: "white",
-                    "&:hover": {
-                      backgroundColor: "white",
-                    },
-                  }}>
-                  <Box display="flex" gap={2}>
-                    <EditIcon />
-                    <Typography>Edit</Typography>
-                  </Box>
-                </Button>
-                <Button
-                  variant="contained"
-                  sx={{
-                    textTransform: "none",
-                    color: "#FF0000",
-                    backgroundColor: "white",
-                    "&:hover": {
-                      backgroundColor: "white",
-                    },
-                  }}>
-                  <Box display="flex" gap={2}>
-                    <DeleteSweepIcon />
-                    <Typography>Hapus</Typography>
-                  </Box>
-                </Button>
-              </Box>
-            </Menu>
+            />
 
             <CardContent>
               <Box
@@ -201,13 +134,18 @@ const ResepMakananCard = ({ resepData, setIsPageError }) => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        icon={<StarBorderIcon />}
-                        checkedIcon={<StarIcon />}
+                        icon={<StarBorderIcon sx={{ color: "#01BFBF" }} />}
+                        checkedIcon={<StarIcon sx={{ color: "#01BFBF" }} />}
                       />
                     }
-                    checked={data.is_favorite}
+                    checked={data.isFavorite}
                     onChange={(event) => {
-                      handleChange(event, data.recipeId);
+                      handleChange(
+                        event,
+                        data.recipeId,
+                        data.recipeName,
+                        data.isFavorite
+                      );
                     }}
                     value="favorite"
                     label={
@@ -228,7 +166,7 @@ const ResepMakananCard = ({ resepData, setIsPageError }) => {
               <Grid container>
                 <Grid item xs={12}>
                   <Link
-                    href="#"
+                    href={`/daftar-resep/detail-resep/${data.recipeId}`}
                     sx={{
                       textDecoration: "none",
                       textAlign: "center",
