@@ -70,8 +70,7 @@ const Login = () => {
       password: password
     });
     notify(response.data.statusCode);
-    localStorage.setItem("userId", response.data.data.id);
-    handleLoginResponse(response.data.statusCode)
+    handleLoginResponse(response.data)
   };
 
   const notify = (status) => {
@@ -84,11 +83,12 @@ const Login = () => {
     }
   }
 
-  const handleLoginResponse =async (status) =>{
-    if (status === 200) {
+  const handleLoginResponse =async (data) =>{
+    if (data.statusCode === 200) {
+      localStorage.setItem("userId", data.data.id);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate('/daftar-resep');
-    } else if (status === 401) {
+    } else if (data.statusCode === 401) {
       reset();
     } else {
       reset();
