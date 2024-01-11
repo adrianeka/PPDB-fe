@@ -70,6 +70,7 @@ const Login = () => {
       password: password
     });
     notify(response.data.statusCode);
+    localStorage.setItem("userId", response.data.data.id);
     handleLoginResponse(response.data.statusCode)
   };
 
