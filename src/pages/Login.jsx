@@ -1,5 +1,5 @@
 import React from "react";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";

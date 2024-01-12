@@ -1,16 +1,16 @@
 import React from "react";
 import { useMediaQuery } from "@uidotdev/usehooks";
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+import { Box } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Link from "@mui/material/Link";
 import {
   formWrapper,
   formTitleWrapper,
   linkStyle,
   footerTextStyle,
   footerStyle,
-  FooterLink
-} from '../styles/style.jsx';
+  FooterLink,
+} from "../styles/style.jsx";
 
 const AuthWrapper = ({
   children,
@@ -18,24 +18,18 @@ const AuthWrapper = ({
   linkText,
   url,
   footerText,
-  showAboutAndContact
+  showAboutAndContact,
 }) => {
-  const isMediumDevice = useMediaQuery(
-    "only screen and (min-width : 768px)"
-  );
+  const isMediumDevice = useMediaQuery("only screen and (min-width : 768px)");
 
   return (
     <Box sx={formWrapper}>
       <Box sx={formTitleWrapper}>
-        <Typography>
-          {title}
-        </Typography>
+        <Typography>{title}</Typography>
       </Box>
       {children}
       <Box sx={footerStyle(isMediumDevice)}>
-        <Typography sx={footerTextStyle}>
-          {footerText}
-        </Typography>
+        <Typography sx={footerTextStyle}>{footerText}</Typography>
         <Link href={url} sx={linkStyle}>
           {linkText}
         </Link>
@@ -52,6 +46,6 @@ const AuthWrapper = ({
       )}
     </Box>
   );
-}
- 
+};
+
 export default AuthWrapper;

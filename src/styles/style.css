@@ -1,7 +1,7 @@
 .large-button {
   width: 20px;
-  color: 'red';
-  font-size: 16px
+  color: "red";
+  font-size: 16px;
 }
 
 html,
@@ -10,8 +10,8 @@ body {
   padding: 0;
   height: 100%;
   width: 100%;
-  background-color: #F0F9F9;
-  font-family: 'Mulish';
+  background-color: #f0f9f9;
+  font-family: "Mulish";
 }
 
 #root {
@@ -23,76 +23,71 @@ body {
   background-color: white;
   width: 40%;
   padding: 20px 0 20px 0;
-
 }
 
-
-
-.center-box{
+.center-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.footer-link{
+.footer-link {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   align-items: center;
   width: 45%;
   padding: 5px 0 5px 0;
 }
 
-.font-robot{
-  font-family: 'Roboto', sans-serif;
+.font-robot {
+  font-family: "Roboto", sans-serif;
 }
 
 @media (max-width: 600px) {
   .box-title {
-      text-align: center;
-      padding: 3px 0 3px 0;
-      width: 85%;
-      font-size: 12px;
+    text-align: center;
+    padding: 3px 0 3px 0;
+    width: 85%;
+    font-size: 12px;
   }
 }
 
 /* Media query untuk perangkat dengan lebar antara 600px dan 900px (tablet) */
 @media (min-width: 601px) and (max-width: 900px) {
   .box-title {
-      text-align: center;
-      padding: 3px 0 3px 0;
-      width: 35%;
-      font-size: 12px;
+    text-align: center;
+    padding: 3px 0 3px 0;
+    width: 35%;
+    font-size: 12px;
   }
 }
 
 /* Media query untuk perangkat dengan lebar lebih dari 900px (desktop) */
 @media (min-width: 901px) {
   .box-title {
-      text-align: center;
-      padding: 3px 0 3px 0;
-      width: 30%;
-      font-size: 14px;
-      font-weight: 700;
+    text-align: center;
+    padding: 3px 0 3px 0;
+    width: 30%;
+    font-size: 14px;
+    font-weight: 700;
   }
 
   .box-form {
-      background-color: white;
-      width: 30%;
-      padding: 20px 0 20px 0;
-  
+    background-color: white;
+    width: 30%;
+    padding: 20px 0 20px 0;
   }
 
-  .footer-link{
-      display: flex;
-      justify-content:space-between;
-      align-items: center;
-      padding: 30px 0 5px 0;
+  .footer-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 0 5px 0;
   }
-  
 }
 
-.field-input-text{
+.field-input-text {
   height: 35px;
 }
 
@@ -100,20 +95,48 @@ body {
   font-size: 13px;
 }
 
-
-.font-pink{
-  color: #F49881;
+.font-pink {
+  color: #f49881;
 }
 
-.font-white{
+.font-white {
   color: white;
 }
 
-.bg-pink{
-  background-color: #F49881;
+.bg-pink {
+  background-color: #f49881;
 }
 
-.logo{
+.logo {
   margin-bottom: 15px;
   gap: 10px;
+}
+
+.box {
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1% 2%;
+  width: 100%; /* Menggunakan lebar 100% agar sesuai dengan kontainer induk */
+  max-width: 550px; /* Menetapkan lebar maksimum */
+  height: auto; /* Mengatur tinggi ke otomatis untuk menyesuaikan konten */
+  border: 1px solid #01bfbf;
+  border-radius: 4px;
+  margin-bottom: 17px;
+}
+
+@media only screen and (max-width: 600px) {
+  /* Gaya CSS untuk perangkat dengan lebar layar <= 600px */
+  body {
+    background-color: #f0f9f9;
+  }
+
+  .box {
+    flex-direction: column; /* Mengubah arah flexbox pada layar kecil */
+    text-align: center; /* Pusatkan teks pada layar kecil */
+  }
+
+  .item {
+    margin-top: 8px; /* Menambahkan margin atas pada item pada layar kecil */
+  }
 }

@@ -8,7 +8,7 @@ import { Logo } from "../components/Logo";
 import { TextInput, PasswordInput } from "../components/TextField";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
+import {Box} from "@mui/material";
 import toast from "react-hot-toast";
 import { cssReset, wrapper, formContentWrapper } from "../styles/style.jsx";
 
