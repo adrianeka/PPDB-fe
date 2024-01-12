@@ -8,6 +8,8 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import ReactQuill from "react-quill";
 import Navigation from "../components/Navbar";
 import "react-quill/dist/quill.snow.css"; // import styles
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { GlobalStyles } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import {
@@ -103,7 +105,7 @@ function TambahResep() {
     } else if (!value) {
       setErrors({
         ...errors,
-        recipeName: "Kolom Nama Resep Masakan tidak boleh kosong",
+        recipeName: "Nama Resep Masakan tidak boleh kosong",
       });
     } else if (!/^[A-Za-z\s]*$/.test(value)) {
       setErrors({
@@ -139,7 +141,7 @@ function TambahResep() {
     if (!value) {
       setErrors({
         ...errors,
-        timeCook: "Kolom Waktu tidak boleh kosong",
+        timeCook: "Waktu tidak boleh kosong",
       });
     }
     // Check if the value contains valid numbers between 1 and 999
@@ -164,7 +166,7 @@ function TambahResep() {
     // Use the actual invalid value here, for example "", null, or "0"
     setErrors({
       ...errors,
-      selectedLevel: value === "" ? "Tingkat Kesulitan tidak boleh kosong" : "",
+      selectedLevel: value === "" ? "Kesulitan tidak boleh kosong" : "",
     });
   };
 
@@ -225,7 +227,7 @@ function TambahResep() {
         ? regexRecipeName.test(recipeName)
           ? ""
           : "Kolom tidak boleh berisi karakter khusus/angka"
-        : "Kolom Nama Resep Masakan tidak boleh kosong";
+        : "Nama Resep Masakan tidak boleh kosong";
     }
 
     // Validation for timeCook
@@ -235,7 +237,7 @@ function TambahResep() {
       ? isValidNumber
         ? ""
         : "Hanya boleh berisi angka 1-999"
-      : "Kolom Waktu tidak boleh kosong";
+      : "Waktu tidak boleh kosong";
 
     // Validation for ingridient
     const isIngredientEmpty =
@@ -261,7 +263,7 @@ function TambahResep() {
       : "Kategori Masakan tidak boleh kosong";
     tempErrors.selectedLevel = selectedLevel
       ? ""
-      : "Tingkat Kesulitan tidak boleh kosong";
+      : "Kesulitan tidak boleh kosong";
     tempErrors.imageFile = imageFile ? "" : "Gambar Makanan tidak boleh kosong";
 
     // Validation for imageFile
@@ -420,7 +422,7 @@ function TambahResep() {
       sx={{
         color: "red",
         fontSize: "0.70rem",
-        fontFamily: "Mulish-Black",
+
         position: "absolute", // Use absolute positioning
         marginTop: "2px",
       }}
@@ -428,6 +430,16 @@ function TambahResep() {
       {error}
     </Typography>
   );
+
+  const theme = useTheme();
+  // This will return true if the screen width is less than 'sm'
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTab = useMediaQuery("(max-width:950px)");
+  const isTabletOrSmaller = useMediaQuery("(max-width:1100px)");
+  const dynamicStyles = {
+    headingFontSize: isTabletOrSmaller ? "0.77rem" : "1rem", // Example font size change
+    // Add other dynamic styles as needed
+  };
 
   const ServerErrorDialog = ({ open, onClose }) => (
     <Dialog
@@ -485,7 +497,7 @@ function TambahResep() {
             sx={{
               color: "gray",
               textAlign: "center",
-              fontFamily: "Mulish-Black",
+
               marginTop: "5px",
             }}
           >
@@ -514,20 +526,23 @@ function TambahResep() {
             bottom: "-20px", // Adjust this value to position the helper text correctly
             marginLeft: 0,
             color: "red !important",
-            fontFamily: "Mulish-Black",
+
             fontSize: "0.70rem",
           },
 
           // Add more specific styles if necessary for the Quill error messages
           ".ingredients-editor .ql-editor + p": {
             color: "red",
-            fontFamily: "Mulish-Black",
+
             // other styles as necessary
           },
           ".how-to-cook-editor .ql-editor + p": {
             color: "red",
-            fontFamily: "Mulish-Black",
+
             // other styles as necessary
+          },
+          html: {
+            overflowY: "scroll !important",
           },
         }}
       />
@@ -563,7 +578,6 @@ function TambahResep() {
               component="div"
               sx={{
                 fontWeight: "bold",
-                fontFamily: "Mulish-Bold",
                 color: "#00E696",
                 // fontSize: "5rem",
               }}
@@ -573,7 +587,7 @@ function TambahResep() {
           </DialogTitle>
           <DialogContentText
             id="success-dialog-description"
-            sx={{ fontFamily: "Mulish-Black", color: "black" }}
+            sx={{ color: "black" }}
           >
             {submitMessage}
           </DialogContentText>
@@ -595,9 +609,10 @@ function TambahResep() {
           <Typography
             variant="h4"
             gutterBottom
+            textAlign="center"
             marginTop={6}
             sx={{
-              fontFamily: "Mulish-Bold",
+              fontWeight: "bold",
             }}
           >
             Buat Resep Masakan Baru
@@ -605,7 +620,7 @@ function TambahResep() {
           <form onSubmit={handleSubmit}>
             <Grid
               container
-              spacing={17}
+              spacing={isTab ? 2 : 17}
               justifyContent="center"
               paddingTop={3}
               paddingRight={5}
@@ -620,7 +635,6 @@ function TambahResep() {
                     marginBottom: 1,
                     textAlign: "left",
                     color: "gray",
-                    fontFamily: "Mulish-Black",
                   }}
                 >
                   Nama Resep Masakan <span style={{ color: "red" }}>*</span>
@@ -636,7 +650,6 @@ function TambahResep() {
                   sx={{
                     background: "white",
                     marginTop: 0,
-                    fontFamily: "Mulish-Black",
                   }}
                 />
                 {/* Image Upload */}
@@ -646,14 +659,12 @@ function TambahResep() {
                     marginTop: 2,
                     textAlign: "left",
                     color: "gray",
-                    fontFamily: "Mulish-Black",
                   }}
                 >
                   Gambar Makanan{" "}
                   <span
                     style={{
                       color: "red",
-                      fontFamily: "Mulish-Black",
                     }}
                   >
                     *
@@ -675,7 +686,7 @@ function TambahResep() {
                       justifyContent: "center",
                       height: 150, // Adjust the height as needed
                       cursor: "pointer",
-                      fontFamily: "Mulish-Black",
+
                       border: errors.imageFile
                         ? "2px dashed #dd2727"
                         : "2px dashed gray",
@@ -690,7 +701,7 @@ function TambahResep() {
                         position: "absolute",
                         bottom: "-20px", // Adjust this value as needed
                         color: "red",
-                        fontFamily: "Mulish-Black",
+
                         marginTop: 0,
                         fontSize: "0.70rem",
                       }}
@@ -706,7 +717,6 @@ function TambahResep() {
                     marginBottom: 1,
                     textAlign: "left",
                     color: "gray",
-                    fontFamily: "Mulish-Black",
                   }}
                 >
                   Bahan - Bahan <span style={{ color: "red" }}>*</span>
@@ -729,7 +739,6 @@ function TambahResep() {
                       style={{
                         background: "white",
                         marginBottom: "0px",
-                        fontFamily: "Mulish-Black",
                       }} // Additional styling if needed
                     />
                     {errors.ingridient && (
@@ -741,7 +750,13 @@ function TambahResep() {
 
               {/* Right Column */}
               <Grid item xs={12} md={6}>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: isMobile ? 1 : 2,
+                  }}
+                >
                   {/* Category Selection */}
                   <Box>
                     <Typography
@@ -749,7 +764,6 @@ function TambahResep() {
                         marginBottom: 1,
                         textAlign: "left",
                         color: "gray",
-                        fontFamily: "Mulish-Black",
                       }}
                     >
                       Kategori Masakan <span style={{ color: "red" }}>*</span>
@@ -758,13 +772,14 @@ function TambahResep() {
                       fullWidth
                       error={!!errors.selectedCategory}
                       variant="outlined"
-                      sx={{ background: "white", fontFamily: "Mulish-Black" }}
+                      sx={{ background: "white" }}
                     >
                       <Select
                         value={selectedCategory}
                         onChange={handleCategoryChange}
                         displayEmpty
                         inputProps={{ "aria-label": "Without label" }}
+                        sx={{ textAlign: "center" }}
                       >
                         <MenuItem value="" disabled>
                           Pilih Kategori
@@ -773,6 +788,7 @@ function TambahResep() {
                           <MenuItem
                             key={category.categoryId}
                             value={category.categoryId.toString()}
+                            sx={{ textAlign: "center" }}
                           >
                             {category.categoryName}
                           </MenuItem>
@@ -786,16 +802,22 @@ function TambahResep() {
                     </FormControl>
                   </Box>
 
-                  <Box sx={{ display: "flex", gap: 2 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: isMobile ? 1 : 2,
+                      flexDirection: isMobile ? "column" : "row",
+                    }}
+                  >
                     {/* Time Cook */}
-                    <Box sx={{ flex: 1 }}>
+                    <Box sx={{ flex: 1, minWidth: "150px" }}>
                       <Typography
                         sx={{
                           marginBottom: 1,
                           marginTop: 1,
                           textAlign: "left",
                           color: "gray",
-                          fontFamily: "Mulish-Black",
+                          fontSize: dynamicStyles.headingFontSize,
                         }}
                       >
                         Waktu Memasak (Menit){" "}
@@ -808,7 +830,6 @@ function TambahResep() {
                         sx={{
                           background: "white",
                           marginTop: 0,
-                          fontFamily: "Mulish-Black",
                         }}
                         value={timeCook}
                         onChange={handleTimeCookChange}
@@ -819,14 +840,14 @@ function TambahResep() {
                     </Box>
 
                     {/* Level Selection */}
-                    <Box sx={{ flex: 1 }}>
+                    <Box sx={{ flex: 1, minWidth: "150px" }}>
                       <Typography
                         sx={{
                           marginBottom: 1,
                           marginTop: 1,
                           textAlign: "left",
                           color: "gray",
-                          fontFamily: "Mulish-Black",
+                          fontSize: dynamicStyles.headingFontSize,
                         }}
                       >
                         Tingkat Kesulitan{" "}
@@ -836,13 +857,14 @@ function TambahResep() {
                         fullWidth
                         error={!!errors.selectedLevel}
                         variant="outlined"
-                        sx={{ background: "white", fontFamily: "Mulish-Black" }}
+                        sx={{ background: "white" }}
                       >
                         <Select
                           value={selectedLevel}
                           onChange={handleLevelChange}
                           displayEmpty
                           inputProps={{ "aria-label": "Without label" }}
+                          sx={{ textAlign: "center" }}
                         >
                           <MenuItem value="" disabled>
                             Pilih Tingkat Kesulitan
@@ -851,6 +873,7 @@ function TambahResep() {
                             <MenuItem
                               key={level.levelId}
                               value={level.levelId.toString()}
+                              sx={{ textAlign: "center" }}
                             >
                               {level.levelName}
                             </MenuItem>
@@ -873,7 +896,6 @@ function TambahResep() {
                         marginBottom: 1,
                         textAlign: "left",
                         color: "gray",
-                        fontFamily: "Mulish-Black",
                       }}
                     >
                       Cara Masak <span style={{ color: "red" }}>*</span>
@@ -896,7 +918,6 @@ function TambahResep() {
                           style={{
                             background: "white",
                             marginBottom: "0px",
-                            fontFamily: "Mulish-Black",
                           }} // Additional styling if needed
                         />
                         {errors.howToCook && (
@@ -911,8 +932,8 @@ function TambahResep() {
                     xs={12}
                     container
                     justifyContent="flex-end"
-                    spacing={6}
-                    paddingTop={1}
+                    spacing={isMobile ? 1 : 6}
+                    paddingTop={isMobile ? 2 : 1}
                   >
                     {/* Batal Button */}
                     <Grid item>
