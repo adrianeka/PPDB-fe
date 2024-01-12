@@ -483,6 +483,7 @@ const DaftarResepMasakan = () => {
               <Grid item xs={12}>
                 <Button
                   fullWidth
+                  href="/tambah-resep"
                   variant="contained"
                   size="medium"
                   disableElevation
@@ -519,6 +520,7 @@ const DaftarResepMasakan = () => {
           width="50vw"
           marginX="auto">
           <Button
+            href="/tambah-resep"
             variant="contained"
             disableElevation
             sx={{

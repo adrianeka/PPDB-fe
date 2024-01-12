@@ -9,6 +9,7 @@ import { theme } from "./styles";
 import DetailResep from "./pages/DetailResep";
 import ResepSaya from "./pages/ResepSaya";
 import ResepFavorit from "./pages/ResepFavorit";
+import TambahResep from "./pages/TambahResep";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/tambah-resep" element={<TambahResep />} />
           <Route path="/daftar-resep" element={<DaftarResepMasakan />} />
           <Route
             path="/daftar-resep/detail-resep/:id"
