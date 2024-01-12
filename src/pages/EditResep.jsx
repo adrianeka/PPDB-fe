@@ -6,6 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import Navigation from "../components/Navbar";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
 import { GlobalStyles } from "@mui/system";
@@ -633,6 +634,7 @@ function EditResep() {
         </DialogActions>
       </Dialog>
       <div>
+        <Navigation />
         <Container>
           <Typography
             variant="h4"

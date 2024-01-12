@@ -1,4 +1,3 @@
-import React from "react";
 import { Box } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";

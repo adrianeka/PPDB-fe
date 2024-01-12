@@ -1,4 +1,3 @@
-import React from "react";
 import { useMediaQuery } from "@uidotdev/usehooks";
 import { Box } from "@mui/material";
 import Typography from "@mui/material/Typography";

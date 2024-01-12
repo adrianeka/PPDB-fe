@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import ReactQuill from "react-quill";
+import Navigation from "../components/Navbar";
 import "react-quill/dist/quill.snow.css"; // import styles
 import { GlobalStyles } from "@mui/system";
 import { useNavigate } from "react-router-dom";
@@ -589,6 +590,7 @@ function TambahResep() {
         </DialogActions>
       </Dialog>
       <div>
+        <Navigation />
         <Container>
           <Typography
             variant="h4"
