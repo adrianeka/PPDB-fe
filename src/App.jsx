@@ -33,7 +33,7 @@ function App() {
             path="/resep-saya/detail-resep/:id"
             element={<DetailResep />}
           />
-          <Route path="resep-saya/edit-resep/:id" element={<EditResep />} />
+          <Route path="/resep-saya/edit-resep/:id" element={<EditResep />} />
           <Route path="/resep-favorit" element={<ResepFavorit />} />
           <Route
             path="/resep-favorit/detail-resep/:id"

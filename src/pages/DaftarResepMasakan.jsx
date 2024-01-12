@@ -230,7 +230,6 @@ const DaftarResepMasakan = () => {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-    document.title = "Daftar Resep Masakan";
   });
 
   return (
