@@ -25,7 +25,7 @@ import { Link } from "react-router-dom";
 import { CheckCircleOutline, FilterList, Search } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Navigation from "../components/Navigation";
+import Navbar from "../components/Navbar";
 import RecipeCard from "../components/RecipeCard";
 
 const DaftarResepSaya = () => {
@@ -86,7 +86,7 @@ const DaftarResepSaya = () => {
   const [deletionSuccess, setDeletionSuccess] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const userId = Number(localStorage.getItem('userId')); 
+  const userId = Number(localStorage.getItem("userId"));
   // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
   // doable via brower's LocalStorage injection using key: userId and value of the userId
 
@@ -230,7 +230,7 @@ const DaftarResepSaya = () => {
 
   return (
     <>
-      <Navigation />
+      <Navbar />
       <Container>
         {/* Desktop view */}
         <Hidden smDown>
@@ -238,15 +238,13 @@ const DaftarResepSaya = () => {
             display="flex"
             flexDirection="Column"
             alignItems={"center"}
-            paddingTop={5}
-          >
+            paddingTop={5}>
             <Snackbar
               anchorOrigin={{ vertical: "top", horizontal: "center" }}
               open={openSnackbar}
               style={{
                 top: "70px",
-              }}
-            >
+              }}>
               <Alert
                 severity="error"
                 sx={{
@@ -258,8 +256,7 @@ const DaftarResepSaya = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   ".MuiAlert-icon": { display: "none" },
-                }}
-              >
+                }}>
                 {errorMessage}
               </Alert>
             </Snackbar>
@@ -267,15 +264,13 @@ const DaftarResepSaya = () => {
               item
               className="menu-desktop"
               top={"20px"}
-              position={"relative"}
-            >
+              position={"relative"}>
               <Grid
                 container
                 spacing={4}
                 direction="row"
                 justifyContent="space-between"
-                alignItems="center"
-              >
+                alignItems="center">
                 <Grid item>
                   <Link to={"/tambah-resep"}>
                     <Button
@@ -289,8 +284,7 @@ const DaftarResepSaya = () => {
                           backgroundColor: "#01A0A0",
                           boxShadow: "none",
                         },
-                      }}
-                    >
+                      }}>
                       Tambah Resep
                     </Button>
                   </Link>
@@ -322,15 +316,13 @@ const DaftarResepSaya = () => {
                       border: "1px solid rgba(0, 0, 0, 0.23)",
                       textTransform: "capitalize",
                     }}
-                    onClick={handleClick}
-                  >
+                    onClick={handleClick}>
                     <Box display={"flex"}>
                       <Typography
                         color={"black"}
                         display={"flex"}
                         alignItems={"center"}
-                        marginRight={3}
-                      >
+                        marginRight={3}>
                         Filter
                       </Typography>
                       <FilterList sx={{ color: "black" }} />
@@ -339,8 +331,7 @@ const DaftarResepSaya = () => {
                   <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                  >
+                    onClose={handleClose}>
                     <Grid
                       className="filter-grid"
                       container
@@ -350,20 +341,17 @@ const DaftarResepSaya = () => {
                         maxWidth: "445px",
                         height: "250px",
                         padding: "10px",
-                      }}
-                    >
+                      }}>
                       <Grid item xs={6}>
                         <Typography fontSize={16}>Tingkat Kesulitan</Typography>
                         <FormControl
-                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
-                        >
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}>
                           <Select
                             value={tempDifficulty}
                             onChange={handleChangeDifficulty}
                             displayEmpty
                             inputProps={{ "aria-label": "Without label" }}
-                            sx={{ width: "180px", height: "36px" }}
-                          >
+                            sx={{ width: "180px", height: "36px" }}>
                             <MenuItem value="">
                               <em>None</em>
                             </MenuItem>
@@ -377,15 +365,13 @@ const DaftarResepSaya = () => {
                       <Grid item xs={6}>
                         <Typography fontSize={16}>Kategori</Typography>
                         <FormControl
-                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
-                        >
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}>
                           <Select
                             value={tempCategory}
                             onChange={handleChangeCategory}
                             displayEmpty
                             inputProps={{ "aria-label": "Without label" }}
-                            sx={{ width: "180px", height: "36px" }}
-                          >
+                            sx={{ width: "180px", height: "36px" }}>
                             <MenuItem value="">
                               <em>None</em>
                             </MenuItem>
@@ -399,15 +385,13 @@ const DaftarResepSaya = () => {
                       <Grid item xs={6}>
                         <Typography fontSize={16}>Waktu Memasak</Typography>
                         <FormControl
-                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
-                        >
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}>
                           <Select
                             value={tempCookTime}
                             onChange={handleChangeCookTime}
                             displayEmpty
                             inputProps={{ "aria-label": "Without label" }}
-                            sx={{ width: "180px", height: "36px" }}
-                          >
+                            sx={{ width: "180px", height: "36px" }}>
                             <MenuItem value="">
                               <em>None</em>
                             </MenuItem>
@@ -419,15 +403,13 @@ const DaftarResepSaya = () => {
                       <Grid item>
                         <Typography fontSize={16}>Sortir</Typography>
                         <FormControl
-                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
-                        >
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}>
                           <Select
                             value={tempSort}
                             onChange={handleChangeSort}
                             displayEmpty
                             inputProps={{ "aria-label": "Without label" }}
-                            sx={{ width: "180px", height: "36px" }}
-                          >
+                            sx={{ width: "180px", height: "36px" }}>
                             <MenuItem value="">
                               <em>None</em>
                             </MenuItem>
@@ -449,8 +431,7 @@ const DaftarResepSaya = () => {
                           sx={{
                             color: "#EA4335",
                             "&:hover": { cursor: "pointer" },
-                          }}
-                        >
+                          }}>
                           Bersihkan Filter
                         </Typography>
                       </Grid>
@@ -470,8 +451,7 @@ const DaftarResepSaya = () => {
                               backgroundColor: "white",
                               boxShadow: "none",
                             },
-                          }}
-                        >
+                          }}>
                           Batal
                         </Button>
                         <Button
@@ -487,8 +467,7 @@ const DaftarResepSaya = () => {
                               backgroundColor: "#01A0A0",
                               boxShadow: "none",
                             },
-                          }}
-                        >
+                          }}>
                           Terapkan
                         </Button>
                       </Grid>
@@ -511,8 +490,7 @@ const DaftarResepSaya = () => {
               open={openSnackbar}
               style={{
                 top: "70px",
-              }}
-            >
+              }}>
               <Alert
                 severity="error"
                 sx={{
@@ -524,8 +502,7 @@ const DaftarResepSaya = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   ".MuiAlert-icon": { display: "none" },
-                }}
-              >
+                }}>
                 {errorMessage}
               </Alert>
             </Snackbar>
@@ -552,8 +529,7 @@ const DaftarResepSaya = () => {
             <Box
               item
               className="grid-filter"
-              style={{ paddingTop: "10px", display: "flex", gap: "20px" }}
-            >
+              style={{ paddingTop: "10px", display: "flex", gap: "20px" }}>
               <Button
                 className="filter-button"
                 sx={{
@@ -562,15 +538,13 @@ const DaftarResepSaya = () => {
                   textTransform: "capitalize",
                   width: "150px",
                 }}
-                onClick={handleClick}
-              >
+                onClick={handleClick}>
                 <Box display={"flex"} gap={5}>
                   <Typography
                     color={"black"}
                     display={"flex"}
                     alignItems={"center"}
-                    marginRight={3}
-                  >
+                    marginRight={3}>
                     Filter
                   </Typography>
                   <FilterList sx={{ color: "black" }} />
@@ -579,8 +553,7 @@ const DaftarResepSaya = () => {
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
+                onClose={handleClose}>
                 <Grid
                   className="filter-grid"
                   container
@@ -590,8 +563,7 @@ const DaftarResepSaya = () => {
                     maxWidth: "257px",
                     height: "250px",
                     padding: "10px",
-                  }}
-                >
+                  }}>
                   <Grid item>
                     <Typography fontSize={16}>Tingkat Kesulitan</Typography>
                     <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
@@ -600,8 +572,7 @@ const DaftarResepSaya = () => {
                         onChange={handleChangeDifficulty}
                         displayEmpty
                         inputProps={{ "aria-label": "Without label" }}
-                        sx={{ width: "180px", height: "36px" }}
-                      >
+                        sx={{ width: "180px", height: "36px" }}>
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
@@ -620,8 +591,7 @@ const DaftarResepSaya = () => {
                         onChange={handleChangeCategory}
                         displayEmpty
                         inputProps={{ "aria-label": "Without label" }}
-                        sx={{ width: "180px", height: "36px" }}
-                      >
+                        sx={{ width: "180px", height: "36px" }}>
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
@@ -640,8 +610,7 @@ const DaftarResepSaya = () => {
                         onChange={handleChangeCookTime}
                         displayEmpty
                         inputProps={{ "aria-label": "Without label" }}
-                        sx={{ width: "180px", height: "36px" }}
-                      >
+                        sx={{ width: "180px", height: "36px" }}>
                         <MenuItem value="">
                           <em>None</em>
                         </MenuItem>
@@ -658,8 +627,7 @@ const DaftarResepSaya = () => {
                       sx={{
                         color: "#EA4335",
                         "&:hover": { cursor: "pointer" },
-                      }}
-                    >
+                      }}>
                       Bersihkan Filter
                     </Typography>
                   </Grid>
@@ -679,8 +647,7 @@ const DaftarResepSaya = () => {
                           backgroundColor: "white",
                           boxShadow: "none",
                         },
-                      }}
-                    >
+                      }}>
                       Batal
                     </Button>
                     <Button
@@ -696,8 +663,7 @@ const DaftarResepSaya = () => {
                           backgroundColor: "#01A0A0",
                           boxShadow: "none",
                         },
-                      }}
-                    >
+                      }}>
                       Terapkan
                     </Button>
                   </Grid>
@@ -709,8 +675,7 @@ const DaftarResepSaya = () => {
                   onChange={handleChangeSortMobile}
                   displayEmpty
                   inputProps={{ "aria-label": "Without label" }}
-                  sx={{ width: "150px", height: "40px", fontSize: "14px" }}
-                >
+                  sx={{ width: "150px", height: "40px", fontSize: "14px" }}>
                   <MenuItem sx={{ fontSize: "14px" }} value="">
                     <em>None</em>
                   </MenuItem>
@@ -743,8 +708,7 @@ const DaftarResepSaya = () => {
                       backgroundColor: "#01A0A0",
                       boxShadow: "none",
                     },
-                  }}
-                >
+                  }}>
                   Tambah Resep
                 </Button>
               </Link>
@@ -758,16 +722,14 @@ const DaftarResepSaya = () => {
             direction="row"
             justifyContent="center"
             alignItems="flex-start"
-            marginBottom={3}
-          >
+            marginBottom={3}>
             {loading ? (
               <Box
                 display={"flex"}
                 flexDirection={"column"}
                 justifyContent={"center"}
                 alignItems={"center"}
-                paddingBlock={10}
-              >
+                paddingBlock={10}>
                 <CircularProgress />
                 <Typography variant="body1">Loading your recipes...</Typography>
               </Box>
@@ -796,25 +758,21 @@ const DaftarResepSaya = () => {
                 gap: "10px",
                 alignItems: "baseline",
                 flexWrap: "wrap",
-              }}
-            >
+              }}>
               Entries
               <Button
                 sx={entries === 8 ? entryButtons(8) : entryButtons(8, true)}
-                onClick={() => handleEntriesClick(8)}
-              >
+                onClick={() => handleEntriesClick(8)}>
                 8
               </Button>
               <Button
                 sx={entries === 16 ? entryButtons(16) : entryButtons(16, true)}
-                onClick={() => handleEntriesClick(16)}
-              >
+                onClick={() => handleEntriesClick(16)}>
                 16
               </Button>
               <Button
                 sx={entries === 32 ? entryButtons(32) : entryButtons(32, true)}
-                onClick={() => handleEntriesClick(32)}
-              >
+                onClick={() => handleEntriesClick(32)}>
                 32
               </Button>
             </Box>
@@ -851,14 +809,12 @@ const DaftarResepSaya = () => {
           open={openDialogDeleted}
           onClose={handleCloseDialogDeleted}
           aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
+          aria-describedby="alert-dialog-description">
           <DialogContent>
             <Box display="flex" flexDirection="column" alignItems="center">
               <CheckCircleOutline sx={{ color: "#00E696", fontSize: "80px" }} />
               <Typography
-                sx={{ fontSize: "32px", fontWeight: "bold", color: "#00E696" }}
-              >
+                sx={{ fontSize: "32px", fontWeight: "bold", color: "#00E696" }}>
                 Success
               </Typography>
             </Box>
@@ -866,8 +822,7 @@ const DaftarResepSaya = () => {
               display="flex"
               alignItems="center"
               flexDirection={"column"}
-              id="alert-dialog-description"
-            >
+              id="alert-dialog-description">
               Berhasil Menghapus Resep {deletedRecipeName}
             </DialogContentText>
           </DialogContent>
@@ -884,8 +839,7 @@ const DaftarResepSaya = () => {
                 },
               }}
               onClick={handleCloseDialogDeleted}
-              autoFocus
-            >
+              autoFocus>
               Continue
             </Button>
           </DialogActions>
