@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import AuthWrapper from "../components/AuthWrapper";
-import { BlueButton } from "../components/Button";
+import { BlueButton } from "../components/Button.jsx";
 import { Logo } from "../components/Logo";
 import { TextInput, PasswordInput } from "../components/TextField";
 import axios from "axios";
@@ -80,7 +80,8 @@ const Register = () => {
       <AuthWrapper
         title="Daftar"
         linkText="Batal, Kembali ke Halaman Login"
-        url="/">
+        url="/"
+      >
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
           <TextInput
             label="Username"
