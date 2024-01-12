@@ -1,7 +1,7 @@
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Home from './pages/Home'
 import Test from './pages/Test'
-import DaftarResepSaya from './pages/DaftarResepSaya';
+import ResepSaya from './pages/ResepSaya';
 
 import "./styles/index.css";
 import { ThemeProvider } from "@mui/material";
@@ -16,7 +16,7 @@ function App() {
         <Routes>
           <Route exact path='/' element={<Home />}/>
           <Route path='/test' element={<Test />}/>
-          <Route path='/resep-saya' element={<DaftarResepSaya />}/>
+          <Route path='/resep-saya' element={<ResepSaya />}/>
         </Routes>
       </Router>
     </ThemeProvider>
