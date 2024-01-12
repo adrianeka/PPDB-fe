@@ -1,13 +1,898 @@
-import { Typography } from "@mui/material";
-import Navbar from "../components/Navbar";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  FormControl,
+  Grid,
+  Hidden,
+  InputAdornment,
+  Menu,
+  MenuItem,
+  Pagination,
+  Select,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { Link } from "react-router-dom";
+import { CheckCircleOutline, FilterList, Search } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Navigation from "../components/Navigation";
+import RecipeCard from "../components/RecipeCard";
 
-const ResepSaya = () => {
+const DaftarResepSaya = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [option, setOption] = useState(null);
+  const [difficulty, setDifficulty] = useState(null);
+  const [tempDifficulty, setTempDifficulty] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [tempCategory, setTempCategory] = useState(null);
+  const [cookTime, setCookTime] = useState(null);
+  const [tempCookTime, setTempCookTime] = useState(null);
+  const [sort, setSort] = useState(null);
+  const [tempSort, setTempSort] = useState(null);
+  const [entries, setEntries] = useState(8);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [deletedRecipeName, setDeletedRecipeName] = useState("");
+
+  const handleChangeDifficulty = (event) => {
+    setTempDifficulty(event.target.value); // Update the temporary difficulty whenever the user selects a new difficulty
+  };
+
+  const handleChangeCategory = (event) => {
+    setTempCategory(event.target.value); // Update the temporary category whenever the user selects a new category
+  };
+
+  const handleChangeCookTime = (event) => {
+    setTempCookTime(event.target.value);
+  };
+
+  const handleChangeSort = (event) => {
+    setTempSort(event.target.value);
+  };
+
+  const handleChangeSortMobile = (event) => {
+    setSort(event.target.value);
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOpenOptions = (event, id) => {
+    setOption(id);
+  };
+
+  const handleCloseOptions = () => {
+    setOption(null);
+  };
+
+  const [myRecipes, setMyRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [deletionLoading, setDeletionLoading] = useState(false);
+  const [deletionSuccess, setDeletionSuccess] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const userId = Number(localStorage.getItem('userId')); 
+  // For further integration, Use the actual userID from LocalStorage or SessionStorage, which obtained from logging in
+  // doable via brower's LocalStorage injection using key: userId and value of the userId
+
+  const handleEntriesClick = (value) => {
+    if (entries === value) {
+      return;
+    }
+    setEntries(value);
+    setPage(1);
+  };
+
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const fetchMyRecipes = async () => {
+    var response = "";
+    try {
+      setLoading(true);
+      response = await axios.get(
+        "http://localhost:8080/book-recipe/book-recipes/my-recipes",
+        {
+          params: {
+            pageSize: page,
+            pageNumber: entries,
+            userId: userId,
+            recipeName: searchTerm,
+            levelId: difficulty,
+            categoryId: category,
+            time: cookTime,
+            sortBy: sort,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setTotal(response.data.total);
+        setMyRecipes(response.data.data);
+        console.log(response.data.data);
+      }
+    } catch (error) {
+      if (response.status === 500) {
+        setTimeout(() => {
+          setErrorMessage(`Terjadi kesalahan server, silahkan coba kembali`);
+          setOpenSnackbar(true);
+          setTimeout(() => {
+            setErrorMessage("");
+            setOpenSnackbar(false);
+          }, 3000);
+        }, 1000);
+        console.error(`Internal Server Error`);
+      }
+      console.error(`Error fetching recipes: ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePaginationChange = (event, page) => {
+    setPage(page);
+  };
+
+  useEffect(() => {
+    fetchMyRecipes();
+  }, [searchTerm, difficulty, category, cookTime, sort, entries, page]);
+
+  const handleApplyFilters = () => {
+    setDifficulty(tempDifficulty);
+    setCategory(tempCategory);
+    setCookTime(tempCookTime);
+    setSort(tempSort);
+    handleClose();
+  };
+
+  const handleClearFilters = () => {
+    setTempDifficulty(null);
+    setTempCategory(null);
+    setTempCookTime(null);
+    setTempSort(null);
+  };
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSearchChange = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent form submission
+      setPage(1);
+      setSearchTerm(inputValue); // Update the search term when Enter is pressed
+    }
+  };
+
+  const handleDeleteRecipe = async (recipeId, userId, recipeName) => {
+    try {
+      setDeletionLoading(true);
+      const response = await axios.put(
+        `http://localhost:8080/book-recipe/book-recipes/${recipeId}?userId=${userId}`
+      );
+
+      // Check if the request was successful
+      if (response.status === 200) {
+        setDeletedRecipeName(recipeName);
+        console.log("Recipe deleted successfully!");
+        setLoading(true);
+      } else {
+        console.error("Failed to delete recipe: ");
+      }
+    } catch (error) {
+      console.error("Error deleting recipe:", error.message);
+    } finally {
+      fetchMyRecipes();
+      setDeletionLoading(false);
+      setDeletionSuccess(true);
+    }
+  };
+
+  const [openDialogDeleted, setOpenDialogDeleted] = useState(false);
+
+  useEffect(() => {
+    if (deletionSuccess) {
+      setOpenDialogDeleted(true);
+    }
+  }, [deletionSuccess]);
+
+  const handleCloseDialogDeleted = () => {
+    setOpenDialogDeleted(false);
+  };
+
+  const entryButtons = (value) => {
+    return {
+      textTransform: "none",
+      backgroundColor: entries === value ? " #01BFBF" : "transparent",
+      color: entries === value ? "white" : "grey",
+      fontSize: "14px",
+      fontWeight: "500",
+      padding: "5px",
+      borderRadius: "3px",
+      minWidth: "26px",
+      height: "27px",
+    };
+  };
+
   return (
-    <div>
-      <Navbar />
-      <Typography>Resep Saya</Typography>
-    </div>
+    <>
+      <Navigation />
+      <Container>
+        {/* Desktop view */}
+        <Hidden smDown>
+          <Box
+            display="flex"
+            flexDirection="Column"
+            alignItems={"center"}
+            paddingTop={5}
+          >
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              open={openSnackbar}
+              style={{
+                top: "70px",
+              }}
+            >
+              <Alert
+                severity="error"
+                sx={{
+                  width: "100%",
+                  bgcolor: "red",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  ".MuiAlert-icon": { display: "none" },
+                }}
+              >
+                {errorMessage}
+              </Alert>
+            </Snackbar>
+            <Grid
+              item
+              className="menu-desktop"
+              top={"20px"}
+              position={"relative"}
+            >
+              <Grid
+                container
+                spacing={4}
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Grid item>
+                  <Link to={"/tambah-resep"}>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      sx={{
+                        textTransform: "capitalize",
+                        backgroundColor: "#01BFBF",
+                        boxShadow: "none",
+                        "&:hover": {
+                          backgroundColor: "#01A0A0",
+                          boxShadow: "none",
+                        },
+                      }}
+                    >
+                      Tambah Resep
+                    </Button>
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    id="filled-basic"
+                    placeholder="Cari Resep"
+                    type="search"
+                    size="small"
+                    sx={{ width: "500px", background: "white" }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Search />
+                        </InputAdornment>
+                      ),
+                    }}
+                    onChange={handleInputChange} // Update the TextField input value whenever the user types
+                    onKeyDown={handleSearchChange} // Update the search term when Enter is pressed
+                    value={inputValue}
+                  />
+                </Grid>
+                <Grid item>
+                  <Button
+                    className="filter-button"
+                    sx={{
+                      padding: "7px 10px",
+                      border: "1px solid rgba(0, 0, 0, 0.23)",
+                      textTransform: "capitalize",
+                    }}
+                    onClick={handleClick}
+                  >
+                    <Box display={"flex"}>
+                      <Typography
+                        color={"black"}
+                        display={"flex"}
+                        alignItems={"center"}
+                        marginRight={3}
+                      >
+                        Filter
+                      </Typography>
+                      <FilterList sx={{ color: "black" }} />
+                    </Box>
+                  </Button>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <Grid
+                      className="filter-grid"
+                      container
+                      rowSpacing={1}
+                      columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                      sx={{
+                        maxWidth: "445px",
+                        height: "250px",
+                        padding: "10px",
+                      }}
+                    >
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Tingkat Kesulitan</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={tempDifficulty}
+                            onChange={handleChangeDifficulty}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={3}>Easy</MenuItem>
+                            <MenuItem value={2}>Medium</MenuItem>
+                            <MenuItem value={1}>Hard</MenuItem>
+                            <MenuItem value={0}>Master Chef</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Kategori</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={tempCategory}
+                            onChange={handleChangeCategory}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={0}>Lunch</MenuItem>
+                            <MenuItem value={1}>Breakfast</MenuItem>
+                            <MenuItem value={2}>Dinner</MenuItem>
+                            <MenuItem value={3}>Snack</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography fontSize={16}>Waktu Memasak</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={tempCookTime}
+                            onChange={handleChangeCookTime}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={30}>0-30 Menit</MenuItem>
+                            <MenuItem value={60}>30-60 Menit</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item>
+                        <Typography fontSize={16}>Sortir</Typography>
+                        <FormControl
+                          sx={{ m: 1, minWidth: 120, margin: "0px" }}
+                        >
+                          <Select
+                            value={tempSort}
+                            onChange={handleChangeSort}
+                            displayEmpty
+                            inputProps={{ "aria-label": "Without label" }}
+                            sx={{ width: "180px", height: "36px" }}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={"nameAsc"}>
+                              Nama Resep A-Z
+                            </MenuItem>
+                            <MenuItem value={"nameDesc"}>
+                              Nama Resep Z-A
+                            </MenuItem>
+                            <MenuItem value={"timeAsc"}>Durasi A-Z</MenuItem>
+                            <MenuItem value={"timeDesc"}>Durasi Z-A</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={6} display={"flex"}>
+                        <Typography
+                          onClick={handleClearFilters}
+                          fontSize={16}
+                          sx={{
+                            color: "#EA4335",
+                            "&:hover": { cursor: "pointer" },
+                          }}
+                        >
+                          Bersihkan Filter
+                        </Typography>
+                      </Grid>
+                      <Grid display={"flex"} item xs={6} gap={1}>
+                        <Button
+                          onClick={handleClose}
+                          variant="contained"
+                          sx={{
+                            color: "#01BFBF",
+                            textTransform: "capitalize",
+                            backgroundColor: "white",
+                            boxShadow: "none",
+                            border: "1px solid #01BFBF",
+                            width: "85px",
+                            height: "40px",
+                            "&:hover": {
+                              backgroundColor: "white",
+                              boxShadow: "none",
+                            },
+                          }}
+                        >
+                          Batal
+                        </Button>
+                        <Button
+                          onClick={handleApplyFilters}
+                          variant="contained"
+                          sx={{
+                            textTransform: "capitalize",
+                            backgroundColor: "#01BFBF",
+                            boxShadow: "none",
+                            width: "85px",
+                            height: "40px",
+                            "&:hover": {
+                              backgroundColor: "#01A0A0",
+                              boxShadow: "none",
+                            },
+                          }}
+                        >
+                          Terapkan
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Menu>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item paddingBlock={6}>
+              <Typography variant="h4">Resep Saya</Typography>
+            </Grid>
+          </Box>
+        </Hidden>
+
+        {/* Mobile View */}
+        <Hidden smUp>
+          <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
+            <Snackbar
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+              open={openSnackbar}
+              style={{
+                top: "70px",
+              }}
+            >
+              <Alert
+                severity="error"
+                sx={{
+                  width: "100%",
+                  bgcolor: "red",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "1rem",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  ".MuiAlert-icon": { display: "none" },
+                }}
+              >
+                {errorMessage}
+              </Alert>
+            </Snackbar>
+            <Typography sx={{ fontWeight: "bold", fontSize: "22px" }}>
+              Resep Saya
+            </Typography>
+            <TextField
+              id="filled-basic"
+              placeholder="Cari Resep"
+              type="search"
+              size="small"
+              sx={{ width: "320px", background: "white" }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={handleInputChange} // Update the TextField input value whenever the user types
+              onKeyDown={handleSearchChange} // Update the search term when Enter is pressed
+              value={inputValue}
+            />
+            <Box
+              item
+              className="grid-filter"
+              style={{ paddingTop: "10px", display: "flex", gap: "20px" }}
+            >
+              <Button
+                className="filter-button"
+                sx={{
+                  padding: "7px 10px",
+                  border: "1px solid rgba(0, 0, 0, 0.23)",
+                  textTransform: "capitalize",
+                  width: "150px",
+                }}
+                onClick={handleClick}
+              >
+                <Box display={"flex"} gap={5}>
+                  <Typography
+                    color={"black"}
+                    display={"flex"}
+                    alignItems={"center"}
+                    marginRight={3}
+                  >
+                    Filter
+                  </Typography>
+                  <FilterList sx={{ color: "black" }} />
+                </Box>
+              </Button>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <Grid
+                  className="filter-grid"
+                  container
+                  rowSpacing={1}
+                  columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                  sx={{
+                    maxWidth: "257px",
+                    height: "250px",
+                    padding: "10px",
+                  }}
+                >
+                  <Grid item>
+                    <Typography fontSize={16}>Tingkat Kesulitan</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={tempDifficulty}
+                        onChange={handleChangeDifficulty}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={3}>Easy</MenuItem>
+                        <MenuItem value={2}>Medium</MenuItem>
+                        <MenuItem value={1}>Hard</MenuItem>
+                        <MenuItem value={0}>Master Chef</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <Typography fontSize={16}>Kategori</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={tempCategory}
+                        onChange={handleChangeCategory}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={0}>Lunch</MenuItem>
+                        <MenuItem value={1}>Breakfast</MenuItem>
+                        <MenuItem value={2}>Dinner</MenuItem>
+                        <MenuItem value={3}>Snack</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <Typography fontSize={16}>Waktu Memasak</Typography>
+                    <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                      <Select
+                        value={tempCookTime}
+                        onChange={handleChangeCookTime}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                        sx={{ width: "180px", height: "36px" }}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={30}>0-30 Menit</MenuItem>
+                        <MenuItem value={60}>30-60 Menit</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item xs={6} display={"flex"}>
+                    <Typography
+                      onClick={handleClearFilters}
+                      fontSize={16}
+                      sx={{
+                        color: "#EA4335",
+                        "&:hover": { cursor: "pointer" },
+                      }}
+                    >
+                      Bersihkan Filter
+                    </Typography>
+                  </Grid>
+                  <Grid display={"flex"} item gap={1}>
+                    <Button
+                      onClick={handleClose}
+                      variant="contained"
+                      sx={{
+                        color: "#01BFBF",
+                        textTransform: "capitalize",
+                        backgroundColor: "white",
+                        boxShadow: "none",
+                        border: "1px solid #01BFBF",
+                        width: "85px",
+                        height: "40px",
+                        "&:hover": {
+                          backgroundColor: "white",
+                          boxShadow: "none",
+                        },
+                      }}
+                    >
+                      Batal
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={handleApplyFilters}
+                      sx={{
+                        textTransform: "capitalize",
+                        backgroundColor: "#01BFBF",
+                        boxShadow: "none",
+                        width: "85px",
+                        height: "40px",
+                        "&:hover": {
+                          backgroundColor: "#01A0A0",
+                          boxShadow: "none",
+                        },
+                      }}
+                    >
+                      Terapkan
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Menu>
+              <FormControl sx={{ m: 1, minWidth: 120, margin: "0px" }}>
+                <Select
+                  value={sort}
+                  onChange={handleChangeSortMobile}
+                  displayEmpty
+                  inputProps={{ "aria-label": "Without label" }}
+                  sx={{ width: "150px", height: "40px", fontSize: "14px" }}
+                >
+                  <MenuItem sx={{ fontSize: "14px" }} value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"nameDesc"}>
+                    Nama Resep A-Z
+                  </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"nameAsc"}>
+                    Nama Resep Z-A
+                  </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"timeDesc"}>
+                    Durasi A-Z
+                  </MenuItem>
+                  <MenuItem sx={{ fontSize: "14px" }} value={"timeAsc"}>
+                    Durasi Z-A
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            <Box paddingBlock={1}>
+              <Link to={"/tambah-resep"}>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  sx={{
+                    width: "320px",
+                    textTransform: "capitalize",
+                    backgroundColor: "#01BFBF",
+                    boxShadow: "none",
+                    "&:hover": {
+                      backgroundColor: "#01A0A0",
+                      boxShadow: "none",
+                    },
+                  }}
+                >
+                  Tambah Resep
+                </Button>
+              </Link>
+            </Box>
+          </Box>
+        </Hidden>
+        <Grid item>
+          <Grid
+            container
+            spacing={6}
+            direction="row"
+            justifyContent="center"
+            alignItems="flex-start"
+            marginBottom={3}
+          >
+            {loading ? (
+              <Box
+                display={"flex"}
+                flexDirection={"column"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                paddingBlock={10}
+              >
+                <CircularProgress />
+                <Typography variant="body1">Loading your recipes...</Typography>
+              </Box>
+            ) : (
+              myRecipes.map((resep) => (
+                <RecipeCard
+                  key={resep.recipeId}
+                  resep={resep}
+                  handleOpenOptions={handleOpenOptions}
+                  option={option}
+                  handleCloseOptions={handleCloseOptions}
+                  handleDeleteRecipe={() =>
+                    handleDeleteRecipe(resep.recipeId, userId, resep.recipeName)
+                  }
+                  userId={userId}
+                  deletionLoading={deletionLoading}
+                />
+              ))
+            )}
+          </Grid>
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Box
+              sx={{
+                maxWidth: "300px",
+                display: "flex",
+                gap: "10px",
+                alignItems: "baseline",
+                flexWrap: "wrap",
+              }}
+            >
+              Entries
+              <Button
+                sx={entries === 8 ? entryButtons(8) : entryButtons(8, true)}
+                onClick={() => handleEntriesClick(8)}
+              >
+                8
+              </Button>
+              <Button
+                sx={entries === 16 ? entryButtons(16) : entryButtons(16, true)}
+                onClick={() => handleEntriesClick(16)}
+              >
+                16
+              </Button>
+              <Button
+                sx={entries === 32 ? entryButtons(32) : entryButtons(32, true)}
+                onClick={() => handleEntriesClick(32)}
+              >
+                32
+              </Button>
+            </Box>
+            <Pagination
+              className="pagination"
+              count={Math.ceil(total / entries)}
+              size="small"
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                "&.MuiPagination-root": {
+                  "& .Mui-selected": {
+                    color: "white", // Change the color for the selected page
+                    backgroundColor: "#01BFBF", // Change the background color for the selected page
+                    "&:hover": {
+                      // Add these lines
+                      backgroundColor: "#01BFBF",
+                      color: "black",
+                    },
+                  },
+                },
+                "& .MuiPaginationItem-root": {
+                  color: "#01BFBF", // Change the color for other pages
+                },
+              }}
+              page={page}
+              onChange={handlePaginationChange}
+            />
+          </Box>
+        </Grid>
+        <br />
+        <br />
+        <Dialog
+          open={openDialogDeleted}
+          onClose={handleCloseDialogDeleted}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogContent>
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <CheckCircleOutline sx={{ color: "#00E696", fontSize: "80px" }} />
+              <Typography
+                sx={{ fontSize: "32px", fontWeight: "bold", color: "#00E696" }}
+              >
+                Success
+              </Typography>
+            </Box>
+            <DialogContentText
+              display="flex"
+              alignItems="center"
+              flexDirection={"column"}
+              id="alert-dialog-description"
+            >
+              Berhasil Menghapus Resep {deletedRecipeName}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              sx={{
+                textTransform: "capitalize",
+                backgroundColor: "#01BFBF",
+                color: "white",
+                boxShadow: "none",
+                "&:hover": {
+                  backgroundColor: "#01A0A0",
+                  boxShadow: "none",
+                },
+              }}
+              onClick={handleCloseDialogDeleted}
+              autoFocus
+            >
+              Continue
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </>
   );
 };
 
-export default ResepSaya;
+export default DaftarResepSaya;
