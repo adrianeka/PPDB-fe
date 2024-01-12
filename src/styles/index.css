@@ -1,4 +1,24 @@
+@font-face {
+  font-family: "Mulish-Black";
+  src: local("Mulish-Black"),
+    url("./assets/fonts/Mulish-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Mulish-BlackItalic";
+  src: local("Mulish-BlackItalic"),
+    url("./assets/fonts/Mulish-BlackItalic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Mulish-Bold";
+  src: local("Mulish-Bold"),
+    url("./assets/fonts/Mulish-Bold.ttf") format("truetype");
+}
+
 * {
   margin: 0;
   padding: 0;
+}
+
+.mulish-black {
+  font-family: "Mulish-Black";
 }

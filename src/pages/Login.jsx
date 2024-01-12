@@ -1,5 +1,5 @@
 import React from "react";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -105,7 +105,8 @@ const Login = () => {
         linkText=" Daftar Disini"
         url="/signup"
         footerText="Belum punya Akun? "
-        showAboutAndContact={true}>
+        showAboutAndContact={true}
+      >
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
           <TextInput
             label="Username"

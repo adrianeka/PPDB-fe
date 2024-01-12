@@ -1,6 +1,6 @@
 import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -38,19 +38,22 @@ const Navbar = () => {
   return (
     <AppBar
       position="static"
-      style={{ background: "#F49881", boxShadow: "none" }}>
+      style={{ background: "#F49881", boxShadow: "none" }}
+    >
       <Toolbar>
         <Box
           display="flex"
           justifyContent="space-between"
           width={{ xs: "100%", md: "75%" }}
-          marginX="auto">
+          marginX="auto"
+        >
           <Link
             href="/daftar-resep"
             sx={{
               color: "inherit",
               textDecoration: "none",
-            }}>
+            }}
+          >
             <Box display="flex" gap={1}>
               <Hidden mdUp>
                 <img src="/svg/logo.svg" alt="logo" style={{ width: "35px" }} />
@@ -63,7 +66,8 @@ const Navbar = () => {
                   marginY: "auto",
                   fontSize: { xs: "16px", md: "24px" },
                   fontWeight: 700,
-                }}>
+                }}
+              >
                 Buku Resep 79
               </Typography>
             </Box>
@@ -84,18 +88,21 @@ const Navbar = () => {
                   width: "75%",
                 },
                 display: { xs: "block", md: "none" },
-              }}>
+              }}
+            >
               <Box
                 sx={{
                   backgroundColor: "#F49881",
                   padding: "10px",
                   height: "100vh",
-                }}>
+                }}
+              >
                 <Box
                   sx={{
                     display: { xs: "flex", md: "none" },
                     justifyContent: "flex-end",
-                  }}>
+                  }}
+                >
                   <IconButton open={isOpen} onClick={toggleDrawer}>
                     <CloseIcon sx={{ color: "white" }} />
                   </IconButton>
@@ -106,7 +113,8 @@ const Navbar = () => {
                     flexDirection: "column",
                     gap: 3,
                     marginTop: 3,
-                  }}>
+                  }}
+                >
                   <Button
                     href="/daftar-resep"
                     sx={{
@@ -114,7 +122,8 @@ const Navbar = () => {
                       color: isOnDaftarResep ? "#01BFBF" : "white",
                       fontSize: "14px",
                       fontWeight: "700",
-                    }}>
+                    }}
+                  >
                     <img
                       src="/svg/DaftarResepMakanan.svg"
                       alt="Daftar Resep Makanan"
@@ -129,7 +138,8 @@ const Navbar = () => {
                       color: isOnResepSaya ? "#01BFBF" : "white",
                       fontSize: "14px",
                       fontWeight: "700",
-                    }}>
+                    }}
+                  >
                     <img
                       src="/svg/ResepSaya.svg"
                       alt="Resep Saya"
@@ -144,7 +154,8 @@ const Navbar = () => {
                       color: isOnResepFavorit ? "#01BFBF" : "white",
                       fontSize: "14px",
                       fontWeight: "700",
-                    }}>
+                    }}
+                  >
                     <img
                       src="/svg/ResepFavorit.svg"
                       alt="Resep Favorit"
@@ -158,7 +169,8 @@ const Navbar = () => {
                       color: "white",
                       fontSize: "14px",
                       fontWeight: "700",
-                    }}>
+                    }}
+                  >
                     <img
                       src="/svg/SignOut.svg"
                       alt="Sign Out"
@@ -180,12 +192,14 @@ const Navbar = () => {
                 color: "inherit",
                 textDecoration: "none",
                 marginY: "auto",
-              }}>
+              }}
+            >
               <Typography
                 sx={{
                   fontWeight: "700",
                   color: isOnDaftarResep ? "#01BFBF" : "white",
-                }}>
+                }}
+              >
                 Daftar Resep Masakan
               </Typography>
             </Link>
@@ -195,7 +209,8 @@ const Navbar = () => {
                 color: isOnResepSaya ? "#01BFBF" : "white",
                 textDecoration: "none",
                 marginY: "auto",
-              }}>
+              }}
+            >
               <Typography sx={{ fontWeight: "700" }}>Resep Saya</Typography>
             </Link>
             <Link
@@ -204,7 +219,8 @@ const Navbar = () => {
                 color: isOnResepFavorit ? "#01BFBF" : "white",
                 textDecoration: "none",
                 marginY: "auto",
-              }}>
+              }}
+            >
               <Typography sx={{ fontWeight: "700" }}>Resep Favorit</Typography>
             </Link>
             <Box sx={{ flexGrow: 0 }}>
@@ -229,7 +245,8 @@ const Navbar = () => {
                   horizontal: "right",
                 }}
                 open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}>
+                onClose={handleCloseUserMenu}
+              >
                 <MenuItem onClick={handleCloseUserMenu}>
                   <Box display="flex" gap={1}>
                     <ExitToAppIcon />

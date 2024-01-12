@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import {Box} from '@mui/material';
 import { CenterBox } from '../styles/style.jsx';
 
 export function Logo() {
