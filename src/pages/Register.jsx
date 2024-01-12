@@ -3,65 +3,70 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import AuthWrapper from "../components/AuthWrapper";
-import { BlueButton } from "../components/Button"
-import { Logo } from '../components/Logo';
+import { BlueButton } from "../components/Button";
+import { Logo } from "../components/Logo";
 import { TextInput, PasswordInput } from "../components/TextField";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import toast from 'react-hot-toast';
-import {
-  cssReset,
-  wrapper,
-  formContentWrapper
-} from '../styles/style.jsx';
+import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import toast from "react-hot-toast";
+import { cssReset, wrapper, formContentWrapper } from "../styles/style.jsx";
 
-export const registerSchema = z.object({
-  username: z
-    .string()
-    .min(1, {
-      message: "Kolom username tidak boleh kosong."
-    })
-    .max(100)
-    .refine((value) => !/\s/.test(value), {
-      message: "Format username belum sesuai."
+export const registerSchema = z
+  .object({
+    username: z
+      .string()
+      .min(1, {
+        message: "Kolom username tidak boleh kosong.",
+      })
+      .max(100)
+      .refine((value) => !/\s/.test(value), {
+        message: "Format username belum sesuai.",
+      }),
+    fullname: z
+      .string()
+      .min(1, {
+        message: "Kolom nama lengkap tidak boleh kosong.",
+      })
+      .max(255)
+      .refine((value) => /^[a-zA-Z0-9\s]*$/.test(value), {
+        message:
+          "Format nama lengkap belum sesuai. (Tidak menggunakan special character dan maksimal 255 charackter).",
+      }),
+    password: z
+      .string()
+      .min(6, {
+        message: "Kata sandi tidak boleh kurang dari 6 karakter.",
+      })
+      .max(50),
+    retypePassword: z.string().min(1, {
+      message: "Kolom Konfirmasi Kata Sandi tidak boleh kosong",
     }),
-  fullname: z
-    .string()
-    .min(1, {
-      message: "Kolom nama lengkap tidak boleh kosong."
-    })
-    .max(255).refine((value) => /^[a-zA-Z0-9\s]*$/.test(value), {
-      message: "Format nama lengkap belum sesuai. (Tidak menggunakan special character dan maksimal 255 charackter)."
-    }),
-  password: z
-    .string()
-    .min(6, {
-      message: "Kata sandi tidak boleh kurang dari 6 karakter."
-    })
-    .max(50),
-  retypePassword: z
-    .string()
-    .min(1, {
-      message: "Kolom Konfirmasi Kata Sandi tidak boleh kosong"
-    }),
-}).refine((data) => data.password === data.retypePassword, {
-  message: "Konfirmasi kata sandi tidak sama dengan kata sandi.",
-  path: ["retypePassword"]
-});
+  })
+  .refine((data) => data.password === data.retypePassword, {
+    message: "Konfirmasi kata sandi tidak sama dengan kata sandi.",
+    path: ["retypePassword"],
+  });
 
 const Register = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(registerSchema),
   });
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post("http://localhost:8080/user-management/users/sign-up", data);
+      const response = await axios.post(
+        "http://localhost:8080/user-management/users/sign-up",
+        data
+      );
       if (response.data.status === "OK") {
-        toast.success('Berhasil daftar!');
-        navigate('/user-management/users/signin');
+        toast.success("Berhasil daftar!");
+        navigate("/user-management/users/signin");
       }
     } catch (error) {
       console.log(error);
@@ -75,8 +80,7 @@ const Register = () => {
       <AuthWrapper
         title="Daftar"
         linkText="Batal, Kembali ke Halaman Login"
-        url="/user-management/users/signin"
-      >
+        url="/">
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
           <TextInput
             label="Username"
@@ -102,7 +106,11 @@ const Register = () => {
             field={register}
             errors={errors}
           />
-          <BlueButton text="Daftar" customStyle={{ width: '100%' }} type='submit' />
+          <BlueButton
+            text="Daftar"
+            customStyle={{ width: "100%" }}
+            type="submit"
+          />
         </form>
       </AuthWrapper>
     </Box>

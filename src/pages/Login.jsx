@@ -1,62 +1,60 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-import toast, { Toaster } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import Box from "@mui/material/Box";
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import AuthWrapper from "../components/AuthWrapper";
-import { BlueButton } from "../components/Button"
-import { Logo } from '../components/Logo';
-import {
-  TextInput,
-  PasswordInput
-} from "../components/TextField";
-import {
-  cssReset,
-  wrapper,
-  formContentWrapper
-} from '../styles/style.jsx';
+import { BlueButton } from "../components/Button";
+import { Logo } from "../components/Logo";
+import { TextInput, PasswordInput } from "../components/TextField";
+import { cssReset, wrapper, formContentWrapper } from "../styles/style.jsx";
 import axios from "axios";
 
 export const loginSchema = z.object({
   username: z
     .string()
     .min(1, {
-      message: "Kolom username tidak boleh kosong."
+      message: "Kolom username tidak boleh kosong.",
     })
     .max(100, {
-      message: "Format username belum sesuai."
+      message: "Format username belum sesuai.",
     })
     .refine((value) => !/\s/.test(value), {
-      message: "Format username belum sesuai."
+      message: "Format username belum sesuai.",
     }),
   password: z
     .string()
     .min(1, {
-      message: "Kolom Kata Sandi tidak boleh kosong."
+      message: "Kolom Kata Sandi tidak boleh kosong.",
     })
     .min(6, {
-      message: "Kata sandi tidak boleh kurang dari 6 karakter."
+      message: "Kata sandi tidak boleh kurang dari 6 karakter.",
     })
     .max(50, {
-      message: "Kata sandi tidak sesuai."
+      message: "Kata sandi tidak sesuai.",
     })
     .refine((value) => /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(value), {
-      message: "Kata sandi harus memiliki minimal 6 karakter kombinasi angka/huruf."
+      message:
+        "Kata sandi harus memiliki minimal 6 karakter kombinasi angka/huruf.",
     }),
 });
 
 const Login = () => {
-
   const navigate = useNavigate();
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(loginSchema),
   });
 
   const client = axios.create({
-    baseURL: "http://localhost:8080/user-management/users/signin"
+    baseURL: "http://localhost:8080/user-management/users/signin",
   });
 
   const onSubmit = (data, e) => {
@@ -65,49 +63,49 @@ const Login = () => {
   };
 
   const addPosts = async (username, password) => {
-    let response = await client.post('', {
+    let response = await client.post("", {
       username: username,
-      password: password
+      password: password,
     });
     notify(response.data.statusCode);
-    handleLoginResponse(response.data)
+    handleLoginResponse(response.data);
   };
 
   const notify = (status) => {
     if (status === 200) {
-      toast.success('Login berhasil!')
+      toast.success("Login berhasil!");
     } else if (status === 401) {
-      toast.error('Username atau Kata sandi yang anda masukkan salah')
+      toast.error("Username atau Kata sandi yang anda masukkan salah");
     } else {
-      toast.error('Terjadi kesalahan server. Silakan coba kembali.')
+      toast.error("Terjadi kesalahan server. Silakan coba kembali.");
     }
-  }
+  };
 
-  const handleLoginResponse =async (data) =>{
+  const handleLoginResponse = async (data) => {
     if (data.statusCode === 200) {
       localStorage.setItem("userId", data.data.id);
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      navigate('/daftar-resep');
+      navigate("/daftar-resep");
     } else if (data.statusCode === 401) {
       reset();
     } else {
       reset();
     }
-  }
-
+  };
 
   return (
-    <Box sx={wrapper} >
+    <Box sx={wrapper}>
       <style>{cssReset}</style>
-      <div><Toaster /></div>
+      <div>
+        <Toaster />
+      </div>
       <Logo />
       <AuthWrapper
         title="Login"
         linkText=" Daftar Disini"
-        url="/user-management/users/signup"
+        url="/signup"
         footerText="Belum punya Akun? "
-        showAboutAndContact={true}
-      >
+        showAboutAndContact={true}>
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
           <TextInput
             label="Username"
@@ -121,10 +119,13 @@ const Login = () => {
             field={register}
             errors={errors}
           />
-          <BlueButton text="Login" customStyle={{ width: '100%' }} type='submit' />
+          <BlueButton
+            text="Login"
+            customStyle={{ width: "100%" }}
+            type="submit"
+          />
         </form>
       </AuthWrapper>
-
     </Box>
   );
 };
