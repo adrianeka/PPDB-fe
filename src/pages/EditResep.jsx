@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
+import PropTypes from "prop-types";
+import { useParams, useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
@@ -8,7 +9,6 @@ import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
 import { GlobalStyles } from "@mui/system";
-import { useNavigate } from "react-router-dom";
 import {
   Container,
   Grid,
@@ -26,8 +26,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import Navigation from "./Navigation";
-import http from "../http-common";
+import http from "../services/axiosConfig";
 import { useDropzone } from "react-dropzone";
 
 function EditResep() {
@@ -346,7 +345,7 @@ function EditResep() {
     [errors]
   );
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps } = useDropzone({
     onDrop,
     accept: "image/jpeg, image/png, image/jpg", // specify valid MIME types here
   });
@@ -634,7 +633,6 @@ function EditResep() {
         </DialogActions>
       </Dialog>
       <div>
-        <Navigation />
         <Container>
           <Typography
             variant="h4"
@@ -708,7 +706,6 @@ function EditResep() {
                   <Box
                     {...getRootProps()}
                     sx={{
-                      border: "2px dashed gray",
                       textAlign: "center",
                       p: 2,
                       my: 2,
@@ -1014,5 +1011,12 @@ function EditResep() {
     </>
   );
 }
+
+EditResep.propTypes = {
+  // other propTypes definitions,
+  error: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
 
 export default EditResep;

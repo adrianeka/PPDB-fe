@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
+import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
@@ -25,8 +26,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import Navigation from "./Navigation";
-import http from "../http-common";
+import http from "../services/axiosConfig";
 import { useDropzone } from "react-dropzone";
 
 function TambahResep() {
@@ -306,7 +306,7 @@ function TambahResep() {
     [errors]
   );
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps } = useDropzone({
     onDrop,
     accept: "image/jpeg, image/png, image/jpg", // specify valid MIME types here
   });
@@ -361,7 +361,6 @@ function TambahResep() {
         setSubmitSuccess(true); // Show the success dialog
         setSubmitMessage(`Resep ${recipeName} berhasil ditambahkan`); // Set the message for the dialog
         setIsSubmitting(false);
-        // navigate("/daftar-resep");
       })
       .catch((error) => {
         console.error(error);
@@ -590,7 +589,6 @@ function TambahResep() {
         </DialogActions>
       </Dialog>
       <div>
-        <Navigation />
         <Container>
           <Typography
             variant="h4"
@@ -664,7 +662,6 @@ function TambahResep() {
                   <Box
                     {...getRootProps()}
                     sx={{
-                      border: "2px dashed gray",
                       textAlign: "center",
                       p: 2,
                       my: 2,
@@ -970,5 +967,12 @@ function TambahResep() {
     </>
   );
 }
+
+TambahResep.propTypes = {
+  // other propTypes definitions,
+  error: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
 
 export default TambahResep;
