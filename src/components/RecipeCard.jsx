@@ -215,7 +215,7 @@ const RecipeCard = ({
 
       {/* Mobile View */}
       <Hidden smUp>
-        <Grid item key={resep.recipeId}>
+        <Grid item key={resep.recipeId} justifyContent="center" alignItems="center" padding={0}>
           <Card sx={{ width: 330, position: "relative" }}>
             <IconButton
               sx={{

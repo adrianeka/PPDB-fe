@@ -73,7 +73,7 @@ const ResepMakananCard = ({
       />
       {resepData.map((data, index) => (
         <Grid item xs={12} sm={6} md={3} key={index}>
-          <Card sx={{ maxWidth: 345 }}>
+          <Card sx={{ maxWidth: 345, marginX: "auto"}}>
             <CardMedia
               component="img"
               src={data.imageUrl}
@@ -138,7 +138,7 @@ const ResepMakananCard = ({
                         checkedIcon={<StarIcon sx={{ color: "#01BFBF" }} />}
                       />
                     }
-                    checked={data.isFavorite}
+                    checked={data.isFavorite || data.is_favorite}
                     onChange={(event) => {
                       handleChange(
                         event,
