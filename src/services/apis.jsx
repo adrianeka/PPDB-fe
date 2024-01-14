@@ -39,6 +39,65 @@ export const getDaftarResepMakanan = (
     });
 };
 
+export const getDaftarResepFavorit = (
+  userId,
+  pageNumber,
+  pageSize,
+  recipeName,
+  level,
+  category,
+  cookMin,
+  cookMax,
+  sort
+) => {
+  let apiUrl = `http://localhost:8080/book-recipe/book-recipes/my-favorite-recipes?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
+
+  if (recipeName) {
+    apiUrl += `&recipeName=${recipeName}`;
+  }
+  if (level) {
+    apiUrl += `&level=${level}`;
+  }
+  if (category) {
+    apiUrl += `&category=${category}`;
+  }
+  if (cookMin) {
+    apiUrl += `&cookMin=${cookMin}`;
+  }
+  if (cookMin) {
+    apiUrl += `&cookMax=${cookMax}`;
+  }
+  if (sort) {
+    apiUrl += `&sort=${sort}`;
+  }
+
+  return axios
+    .get(apiUrl)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log("error getting data daftar resep favorit", error);
+      throw error;
+    });
+};
+
+export const getTotalDaftarResepFavorit = (
+  userId,
+) => {
+  let apiUrl = `http://localhost:8080/book-recipe/book-recipes/my-favorite-recipes?userId=${userId}`;
+  
+  return axios
+    .get(apiUrl)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log("error getting data daftar resep favorit", error);
+      throw error;
+    });
+};
+
 export const putFavoriteResepMasakan = (recipeId, userId) => {
   const apiUrl = `http://localhost:8080/book-recipe/book-recipes/${recipeId}/favorites/${userId}`;
 

@@ -4,7 +4,7 @@ import Register from "./pages/Register";
 import DaftarResepMasakan from "./pages/DaftarResepMasakan";
 import DetailResep from "./pages/DetailResep";
 import ResepSaya from "./pages/ResepSaya";
-import ResepFavorit from "./pages/ResepFavorit";
+import ResepFavorit from "./pages/ResepFavoritgit";
 import TambahResep from "./pages/TambahResep";
 import EditResep from "./pages/EditResep";
 
