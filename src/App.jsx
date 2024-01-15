@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import DaftarResepMasakan from "./pages/DaftarResepMasakan";
 import DetailResep from "./pages/DetailResep";
 import ResepSaya from "./pages/ResepSaya";
+import ResepSayaCopy from "./pages/DaftarResepMasakanSaya";
 import ResepFavorit from "./pages/ResepFavorit";
 import TambahResep from "./pages/TambahResep";
 import EditResep from "./pages/EditResep";
@@ -29,6 +30,7 @@ function App() {
             element={<DetailResep />}
           />
           <Route path="/resep-saya" element={<ResepSaya />} />
+          <Route path="/resep-saya-alt" element={<ResepSayaCopy />} />
           <Route
             path="/resep-saya/detail-resep/:id"
             element={<DetailResep />}

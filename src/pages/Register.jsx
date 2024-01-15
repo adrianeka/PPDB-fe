@@ -57,10 +57,12 @@ const Register = () => {
   });
   const navigate = useNavigate();
 
+  const apiRegister = import.meta.env.VITE_API_REGISTER;
+
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/user-management/users/sign-up",
+        apiRegister,
         data
       );
       if (response.data.status === "OK") {
