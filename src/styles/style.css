@@ -113,16 +113,47 @@ body {
 }
 
 .box {
-  box-sizing: border-box;
+  /* box-sizing: border-box;
   justify-content: space-between;
+  margin: "0 auto";
   align-items: center;
   padding: 1% 2%;
-  width: 100%; /* Menggunakan lebar 100% agar sesuai dengan kontainer induk */
-  max-width: 550px; /* Menetapkan lebar maksimum */
-  height: auto; /* Mengatur tinggi ke otomatis untuk menyesuaikan konten */
+  width: 100%;
+  max-width: 550px;
+  height: auto; 
   border: 1px solid #01bfbf;
   border-radius: 4px;
+  margin-bottom: 17px; */
+  box-sizing: border-box;
+  border: 1px solid #01bfbf;
+  border-radius: 4px;
+  width: 100%;
+  padding: 1% 2% 1% 2%;
+  height: auto;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 17px;
+}
+
+.box2 {
+  border: 1px solid #01bfbf;
+  border-radius: 4px;
+  width: 100%;
+  padding: 1% 2% 1% 2%;
+  height: auto;
+  justify-content: space-between;
+  margin: "0 auto";
+  align-items: center;
+  margin-bottom: 17px;
+}
+
+.imgDetail {
+  display: block;
+  margin: 0 auto;
+  width: 85%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 18px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -132,11 +163,12 @@ body {
   }
 
   .box {
-    flex-direction: column; /* Mengubah arah flexbox pada layar kecil */
-    text-align: center; /* Pusatkan teks pada layar kecil */
+    text-align: center;
+    margin-left: 20px;
+    margin-right: 20px;
   }
 
   .item {
-    margin-top: 8px; /* Menambahkan margin atas pada item pada layar kecil */
+    margin-top: 8px;
   }
 }
