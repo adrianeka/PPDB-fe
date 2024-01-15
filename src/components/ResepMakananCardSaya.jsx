@@ -335,7 +335,7 @@ const ResepMakananCard = ({
               <Grid container>
                 <Grid item xs={12}>
                   <Link
-                    href={`/daftar-resep/detail-resep/${data.recipeId}`}
+                    href={`/resep-saya/detail-resep/${data.recipeId}`}
                     sx={{
                       textDecoration: "none",
                       textAlign: "center",

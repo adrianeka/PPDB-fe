@@ -405,9 +405,9 @@ const DaftarResepMasakan = () => {
                               value={tempCookingTime}
                               onChange={handleChangeCookingTime}>
                               <MenuItem value="">ALL</MenuItem>
-                              <MenuItem value="0-30">0-30 Menit</MenuItem>
-                              <MenuItem value="30-60">30-60 Menit</MenuItem>
-                              <MenuItem value="60">{">"}60 Menit</MenuItem>
+                              <MenuItem value="30">0-30 Menit</MenuItem>
+                              <MenuItem value="60">30-60 Menit</MenuItem>
+                              <MenuItem value="90">{">"}60 Menit</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -469,12 +469,12 @@ const DaftarResepMasakan = () => {
                       label="Sort By"
                       onChange={handleChangeSortByMobile}>
                       <MenuItem value="">None</MenuItem>
-                      <MenuItem value="recipeName-ASC">Nama Resep A-Z</MenuItem>
-                      <MenuItem value="recipeName-DESC">
+                      <MenuItem value="nameAsc">Nama Resep A-Z</MenuItem>
+                      <MenuItem value="nameDesc">
                         Nama Resep Z-A
                       </MenuItem>
-                      <MenuItem value="time-ASC">Waktu Memasak A-Z</MenuItem>
-                      <MenuItem value="time-DESC">Waktu Memasak Z-A</MenuItem>
+                      <MenuItem value="timeAsc">Waktu Memasak A-Z</MenuItem>
+                      <MenuItem value="timeDesc">Waktu Memasak Z-A</MenuItem>
                     </Select>
                   </FormControl>
                 </Stack>
@@ -668,9 +668,9 @@ const DaftarResepMasakan = () => {
                           value={tempCookingTime}
                           onChange={handleChangeCookingTime}>
                           <MenuItem value="">ALL</MenuItem>
-                          <MenuItem value="0-30">0-30 Menit</MenuItem>
-                          <MenuItem value="30-60">30-60 Menit</MenuItem>
-                          <MenuItem value="60">{">"}60 Menit</MenuItem>
+                          <MenuItem value="30">0-30 Menit</MenuItem>
+                          <MenuItem value="60">30-60 Menit</MenuItem>
+                          <MenuItem value="90">{">"}60 Menit</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -684,16 +684,16 @@ const DaftarResepMasakan = () => {
                           id="sortBy"
                           value={tempSortBy}
                           onChange={handleChangeSortBy}>
-                          <MenuItem value="recipeName-ASC">
+                          <MenuItem value="nameAsc">
                             Nama Resep A-Z
                           </MenuItem>
-                          <MenuItem value="recipeName-DESC">
+                          <MenuItem value="nameDesc">
                             Nama Resep Z-A
                           </MenuItem>
-                          <MenuItem value="time-ASC">
+                          <MenuItem value="timeAsc">
                             Waktu Memasak A-Z
                           </MenuItem>
-                          <MenuItem value="time-DESC">
+                          <MenuItem value="timeDesc">
                             Waktu Memasak Z-A
                           </MenuItem>
                         </Select>
