@@ -54,8 +54,12 @@ const DaftarResepFavorit = () => {
     setFilterMenu(null);
   };
 
-  //   const userId = localStorage.getItem("userId");
-  const userId = 101;
+  // Example function to get the authentication token from wherever you store it.
+  const getAuthToken = () => {
+    return localStorage.getItem("token");
+    // Replace 'yourAuthTokenKey' with the actual key used to store the token.
+  };
+  const userId = localStorage.getItem("userId");
 
   const [filterMenuMobile, setFilterMenuMobile] = useState(null);
   const openFilterMenuMobile = Boolean(filterMenuMobile);
@@ -99,21 +103,13 @@ const DaftarResepFavorit = () => {
   const [timeMin, setTimeMin] = useState("");
   const [timeMax, setTimeMax] = useState("");
   const handleChangeCookingTime = (event) => {
-    setCookingTime(event.target.value);
-    if (event.target.value == 1) {
-      console.log(
-        `opsi nomer: ${event.target.value} bertipe ${typeof event.target.value}`
-      );
-      console.log("Set time 1 di klik");
+    setTempCookingTime(event.target.value);
+    if (event.target.value === 1) {
       setTempTimeMin(1);
       setTempTimeMax(30);
     }
 
-    if (event.target.value == 2) {
-      console.log(
-        `opsi nomer: ${event.target.value} bertipe ${typeof event.target.value}`
-      );
-      console.log("Set time 2 di klik");
+    if (event.target.value === 2) {
       setTempTimeMin(30);
       setTempTimeMax(60);
     }
@@ -123,6 +119,7 @@ const DaftarResepFavorit = () => {
   const handleChangeSortBy = (event) => {
     setTempSortBy(event.target.value);
   };
+
   const handleChangeSortByMobile = (event) => {
     setSortBy(event.target.value);
   };
@@ -136,26 +133,30 @@ const DaftarResepFavorit = () => {
 
   const handleApplySearch = () => {
     setRecipeName(tempRecipeName);
-    setPage(0);
+    setPage(1);
   };
 
   const handleApplyFilter = () => {
     setFoodLevel(tempFoodLevel);
     setFoodCategory(tempFoodCategory);
     setCookingTime(tempCookingTime);
+    setTimeMin(tempTimeMin);
+    setTimeMax(tempTimeMax);
     setSortBy(tempSortBy);
-    setPage(0);
+    setPage(1);
   };
 
   const handleApplyFilterMobile = () => {
     setFoodLevel(tempFoodLevel);
     setFoodCategory(tempFoodCategory);
     setCookingTime(tempCookingTime);
-    setPage(0);
+    setTimeMin(tempTimeMin);
+    setTimeMax(tempTimeMax);
+    setPage(1);
   };
 
   const [entries, setEntries] = useState(8);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   const handleClickEntries = (value) => {
     if (value === entries) {
@@ -187,6 +188,7 @@ const DaftarResepFavorit = () => {
     sortBy
   ) {
     try {
+      const authToken = getAuthToken();
       
       const response = await getDaftarResepFavorit(
         userId,
@@ -197,12 +199,10 @@ const DaftarResepFavorit = () => {
         foodCategory,
         timeMin,
         timeMax,
-        sortBy
+        sortBy,
+        authToken
       );
       setResepData(response.data.data);
-      console.log(response.data.data);
-      //   setTotalData(response.data.total);
-      //   console.log(`total data resep: ${response.data.total}`)
 
       if (response.data.total === 0) {
         setIsDataEmpty(true);
@@ -221,10 +221,11 @@ const DaftarResepFavorit = () => {
 
   async function fetchTotalDataResepFavorit(userId) {
     try {
-      const response = await getTotalDaftarResepFavorit(userId);
+      const authToken = getAuthToken();
+
+      const response = await getTotalDaftarResepFavorit(userId, authToken);
 
       setTotalData(response.data.total);
-      console.log(`total data resep: ${response.data.total}`);
 
       if (response.data.total === 0) {
         setIsDataEmpty(true);
@@ -269,7 +270,6 @@ const DaftarResepFavorit = () => {
 
   useEffect(() => {
     const total = Math.ceil(totalData / entries);
-    console.log(`total data resep: ${total}`);
     setTotalPage(total);
   }, [totalData, entries]);
 
@@ -861,6 +861,7 @@ const DaftarResepFavorit = () => {
                 Array.from({ length: 8 }).map((_, index) => (
                   <Grid item xs={12} sm={6} md={3} key={index}>
                     <CardSkeletonLoading />
+                    
                   </Grid>
                 ))
               ) : (

@@ -48,7 +48,8 @@ export const getDaftarResepFavorit = (
   category,
   cookMin,
   cookMax,
-  sort
+  sort,
+  authToken
 ) => {
   let apiUrl = `http://localhost:8080/book-recipe/book-recipes/my-favorite-recipes?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
 
@@ -72,7 +73,11 @@ export const getDaftarResepFavorit = (
   }
 
   return axios
-    .get(apiUrl)
+    .get(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
     .then((response) => {
       return response;
     })
@@ -82,13 +87,15 @@ export const getDaftarResepFavorit = (
     });
 };
 
-export const getTotalDaftarResepFavorit = (
-  userId,
-) => {
+export const getTotalDaftarResepFavorit = (userId, authToken) => {
   let apiUrl = `http://localhost:8080/book-recipe/book-recipes/my-favorite-recipes?userId=${userId}`;
-  
+
   return axios
-    .get(apiUrl)
+    .get(apiUrl, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
     .then((response) => {
       return response;
     })
@@ -97,6 +104,7 @@ export const getTotalDaftarResepFavorit = (
       throw error;
     });
 };
+
 
 export const putFavoriteResepMasakan = (recipeId, userId) => {
   const apiUrl = `http://localhost:8080/book-recipe/book-recipes/${recipeId}/favorites/${userId}`;

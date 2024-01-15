@@ -83,6 +83,7 @@ const Login = () => {
   const handleLoginResponse = async (data) => {
     if (data.statusCode === 200) {
       localStorage.setItem("userId", data.data.id);
+      localStorage.setItem("token", data.data.token);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate("/daftar-resep");
     } else if (data.statusCode === 401) {
