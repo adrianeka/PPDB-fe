@@ -11,8 +11,7 @@ export function BlueButton({ text, customStyle, type, url }) {
       }}
       type={type}
       {...(type === "submit" ? null : { href: url })}
-      variant="contained"
-    >
+      variant="contained">
       {text}
     </Button>
   );
