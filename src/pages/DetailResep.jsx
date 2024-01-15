@@ -128,7 +128,6 @@ function DetailResep() {
                 className="imgDetail"
                 src={resepData.imageUrl}
                 alt={resepData.recipeName}
-                style={{ width: "100%", height: "auto" }}
               />
             </Grid>
             <Grid item></Grid>
