@@ -8,6 +8,7 @@ import ResepSayaCopy from "./pages/DaftarResepMasakanSaya";
 import ResepFavorit from "./pages/ResepFavorit";
 import TambahResep from "./pages/TambahResep";
 import EditResep from "./pages/EditResep";
+import PrivateRoute from "./services/PrivateRoute";
 
 import "./styles/index.css";
 import { ThemeProvider } from "@mui/material";
@@ -23,24 +24,25 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Register />} />
-          <Route path="/tambah-resep" element={<TambahResep />} />
-          <Route path="/daftar-resep" element={<DaftarResepMasakan />} />
-          <Route
-            path="/daftar-resep/detail-resep/:id"
-            element={<DetailResep />}
-          />
-          <Route path="/resep-saya" element={<ResepSaya />} />
-          <Route path="/resep-saya-alt" element={<ResepSayaCopy />} />
-          <Route
-            path="/resep-saya/detail-resep/:id"
-            element={<DetailResep />}
-          />
-          <Route path="/resep-saya/edit-resep/:id" element={<EditResep />} />
-          <Route path="/resep-favorit" element={<ResepFavorit />} />
-          <Route
-            path="/resep-favorit/detail-resep/:id"
-            element={<DetailResep />}
-          />
+          <Route path="/*" element={<PrivateRoute />}>
+            <Route path="tambah-resep" element={<TambahResep />} />
+            <Route path="daftar-resep" element={<DaftarResepMasakan />} />
+            <Route
+              path="daftar-resep/detail-resep/:id"
+              element={<DetailResep />}
+            />
+            <Route path="resep-saya" element={<ResepSaya />} />
+            <Route
+              path="resep-saya/detail-resep/:id"
+              element={<DetailResep />}
+            />
+            <Route path="resep-saya/edit-resep/:id" element={<EditResep />} />
+            <Route path="resep-favorit" element={<ResepFavorit />} />
+            <Route
+              path="resep-favorit/detail-resep/:id"
+              element={<DetailResep />}
+            />
+          </Route>
         </Routes>
       </Router>
     </ThemeProvider>

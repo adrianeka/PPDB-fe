@@ -10,6 +10,7 @@ import { Logo } from "../components/Logo";
 import { TextInput, PasswordInput } from "../components/TextField";
 import { cssReset, wrapper, formContentWrapper } from "../styles/style.jsx";
 import axios from "axios";
+import useToken from "../services/AuthProvider.js";
 
 export const loginSchema = z.object({
   username: z
@@ -42,6 +43,7 @@ export const loginSchema = z.object({
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setToken, setUserId } = useToken();
 
   const {
     register,
@@ -72,9 +74,9 @@ const Login = () => {
 
       toast.success("Login berhasil!");
 
-      localStorage.setItem("userId", response.data.data.id);
-      localStorage.setItem("token", response.data.data.token);
-      
+      setUserId(response.data.data.id);
+      setToken(response.data.data.token);
+
       await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate("/daftar-resep");
     } catch (error) {
@@ -85,7 +87,6 @@ const Login = () => {
       }
       reset();
     }
-    
   };
 
   return (
@@ -100,8 +101,7 @@ const Login = () => {
         linkText=" Daftar Disini"
         url="/signup"
         footerText="Belum punya Akun? "
-        showAboutAndContact={true}
-      >
+        showAboutAndContact={true}>
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
           <TextInput
             label="Username"
