@@ -73,7 +73,7 @@ const ResepMakananCard = ({
       />
       {resepData.map((data, index) => (
         <Grid item xs={12} sm={6} md={3} key={index}>
-          <Card sx={{ maxWidth: 345, marginX: "auto"}}>
+          <Card sx={{ maxWidth: 345, marginX: "auto" }}>
             <CardMedia
               component="img"
               src={data.imageUrl}
@@ -88,13 +88,15 @@ const ResepMakananCard = ({
               <Box
                 display="flex"
                 justifyContent="space-between"
-                marginBottom={1}>
+                marginBottom={1}
+              >
                 <Typography
                   sx={{
                     fontSize: "12px",
                     fontWeight: "400",
                     color: "#01BFBF",
-                  }}>
+                  }}
+                >
                   {data.categories.categoryName}
                 </Typography>
                 <Typography
@@ -102,7 +104,8 @@ const ResepMakananCard = ({
                     fontSize: "12px",
                     fontWeight: "400",
                     color: "#01BFBF",
-                  }}>
+                  }}
+                >
                   {data.levels.levelName}
                 </Typography>
               </Box>
@@ -118,7 +121,8 @@ const ResepMakananCard = ({
                     display: "flex",
                     gap: 0.5,
                     alignItems: "center",
-                  }}>
+                  }}
+                >
                   <AccessTimeIcon />
                   {data.time} Menit
                 </Typography>
@@ -130,7 +134,8 @@ const ResepMakananCard = ({
                       position: "relative",
                       right: -17,
                     },
-                  }}>
+                  }}
+                >
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -154,7 +159,8 @@ const ResepMakananCard = ({
                           fontSize: "12px",
                           fontWeight: "400",
                           color: "#01BFBF",
-                        }}>
+                        }}
+                      >
                         Favorit
                       </Typography>
                     }
@@ -170,13 +176,15 @@ const ResepMakananCard = ({
                     sx={{
                       textDecoration: "none",
                       textAlign: "center",
-                    }}>
+                    }}
+                  >
                     <Typography
                       sx={{
                         fontSize: "12px",
                         fontWeight: "400",
                         color: "#01BFBF",
-                      }}>
+                      }}
+                    >
                       Lihat Detail Resep
                     </Typography>
                     <Divider
