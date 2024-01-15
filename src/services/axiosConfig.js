@@ -4,7 +4,7 @@ const accessToken = localStorage.getItem("token");
 console.log(accessToken);
 
 export default axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     Authorization: `Bearer ${accessToken}`,
   },

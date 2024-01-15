@@ -1,5 +1,15 @@
 import axios from "axios";
 
+const baseUrl = import.meta.env.VITE_API_URL;
+const apiGetDaftarResepMakanan = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
+const apiGetMyRecipes = import.meta.env.VITE_API_GETMYRECIPES;
+const apiGetMyFavoriteRecipes = import.meta.env.VITE_API_GETMYFAVORITERECIPES;
+
+//Register
+
+//Login
+
+//Get Daftar Resep
 export const getDaftarResepMakanan = (
   userId,
   pageNumber,
@@ -10,7 +20,7 @@ export const getDaftarResepMakanan = (
   time,
   sortBy
 ) => {
-  let apiUrl = `http://localhost:8080/book-recipe/book-recipes?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
+  let apiUrl = `${apiGetDaftarResepMakanan}?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
 
   if (recipeName) {
     apiUrl += `&recipeName=${recipeName}`;
@@ -39,6 +49,47 @@ export const getDaftarResepMakanan = (
     });
 };
 
+//Get Resep Saya
+export const getMyRecipes = (
+  userId,
+  pageNumber,
+  pageSize,
+  recipeName,
+  levelId,
+  categoryId,
+  time,
+  sortBy
+) => {
+  let apiUrl = `${apiGetMyRecipes}?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
+
+  if (recipeName) {
+    apiUrl += `&recipeName=${recipeName}`;
+  }
+  if (levelId) {
+    apiUrl += `&levelId=${levelId}`;
+  }
+  if (categoryId) {
+    apiUrl += `&categoryId=${categoryId}`;
+  }
+  if (time) {
+    apiUrl += `&time=${time}`;
+  }
+  if (sortBy) {
+    apiUrl += `&sortBy=${sortBy}`;
+  }
+
+  return axios
+    .get(apiUrl)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log("error getting data daftar resep makanan", error);
+      throw error;
+    });
+};
+
+//Get Daftar Resep Favorit
 export const getDaftarResepFavorit = (
   userId,
   pageNumber,
@@ -51,7 +102,7 @@ export const getDaftarResepFavorit = (
   sort,
   authToken
 ) => {
-  let apiUrl = `http://localhost:8080/book-recipe/book-recipes/my-favorite-recipes?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
+  let apiUrl = `${apiGetMyFavoriteRecipes}?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
 
   if (recipeName) {
     apiUrl += `&recipeName=${recipeName}`;
@@ -87,8 +138,9 @@ export const getDaftarResepFavorit = (
     });
 };
 
+//Get Total Daftar Resep Favorit
 export const getTotalDaftarResepFavorit = (userId, authToken) => {
-  let apiUrl = `http://localhost:8080/book-recipe/book-recipes/my-favorite-recipes?userId=${userId}`;
+  let apiUrl = `${apiGetMyFavoriteRecipes}?userId=${userId}`;
 
   return axios
     .get(apiUrl, {
@@ -105,9 +157,9 @@ export const getTotalDaftarResepFavorit = (userId, authToken) => {
     });
 };
 
-
+//Add/Remove to favorite
 export const putFavoriteResepMasakan = (recipeId, userId) => {
-  const apiUrl = `http://localhost:8080/book-recipe/book-recipes/${recipeId}/favorites/${userId}`;
+  const apiUrl = `${baseUrl}/book-recipe/book-recipes/${recipeId}/favorites/${userId}`;
 
   return axios
     .put(apiUrl)
@@ -118,4 +170,23 @@ export const putFavoriteResepMasakan = (recipeId, userId) => {
       console.log("error edit favorite resep masakan", error);
       throw error;
     });
+};
+
+//Delete My Recipe
+export const deleteRecipe = async (recipeId, userId) => {
+  try {
+    const response = await axios.put(
+      `${apiGetDaftarResepMakanan}/${recipeId}?userId=${userId}`
+    );
+
+    return {
+      success: response.status === 200,
+      errorMessage: response.status === 200 ? null : "Failed to delete recipe",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      errorMessage: `Error deleting recipe: ${error.message}`,
+    };
+  }
 };
