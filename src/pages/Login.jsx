@@ -62,35 +62,28 @@ const Login = () => {
   };
 
   const addPosts = async (username, password) => {
-    let response = await client.post("", {
-      username: username,
-      password: password,
-    });
-    notify(response.data.statusCode);
-    handleLoginResponse(response.data);
-  };
+    try {
+      let response = await client.post("", {
+        username: username,
+        password: password,
+      });
 
-  const notify = (status) => {
-    if (status === 200) {
       toast.success("Login berhasil!");
-    } else if (status === 401) {
-      toast.error("Username atau Kata sandi yang anda masukkan salah");
-    } else {
-      toast.error("Terjadi kesalahan server. Silakan coba kembali.");
-    }
-  };
 
-  const handleLoginResponse = async (data) => {
-    if (data.statusCode === 200) {
-      localStorage.setItem("userId", data.data.id);
-      localStorage.setItem("token", data.data.token);
+      localStorage.setItem("userId", response.data.data.id);
+      localStorage.setItem("token", response.data.data.token);
+      
       await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate("/daftar-resep");
-    } else if (data.statusCode === 401) {
-      reset();
-    } else {
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast.error("Username atau Kata sandi yang anda masukkan salah");
+      } else {
+        toast.error("Terjadi kesalahan server. Silahkan coba kembali.");
+      }
       reset();
     }
+    
   };
 
   return (
