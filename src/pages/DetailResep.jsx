@@ -32,20 +32,34 @@ import Nasgor from "../public/nasgor.jpg";
 
 function DetailResep() {
   const { id } = useParams();
+  const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [openFavoriteDialog, setOpenFavoriteDialog] = useState(false);
   const [favoriteMessage, setFavoriteMessage] = useState("");
 
+  const getAuthToken = () => {
+    return localStorage.getItem("token");
+    // Replace 'yourAuthTokenKey' with the actual key used to store the token.
+  };
+
   useEffect(() => {
     getDetailResep();
+    setResepData();
   }, [id]);
 
   const [resepData, setResepData] = useState();
   const getDetailResep = async () => {
     try {
+      const authToken = getAuthToken();
       const response = await axios.get(
-        `http://localhost:8080/book-recipe/book-recipes/${id}`
+        `http://localhost:8080/book-recipe/book-recipes/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
       );
+      console.log(`token: ${authToken}`);
       setResepData(response.data.data);
     } catch (error) {
       console.log(error.message);
@@ -54,6 +68,8 @@ function DetailResep() {
 
   const handleChange = async (event, recipeId, recipeName, statusFavorite) => {
     try {
+      const authToken = getAuthToken();
+      console.log(`token: ${authToken}`);
       const updatedResepData = {
         ...resepData,
         isFavorite: !resepData.isFavorite,
@@ -67,18 +83,9 @@ function DetailResep() {
       setFavoriteMessage(message);
       setOpenFavoriteDialog(true);
 
-      await putFavoriteResepMasakan(resepData.recipeId, resepData.userId);
-
-      fetchDataResepMasakan(
-        userId,
-        page,
-        entries,
-        recipeNameProps,
-        foodLevel,
-        foodCategory,
-        cookingTime,
-        sortBy
-      );
+      await putFavoriteResepMasakan(resepData.recipeId, userId);
+      console.log(`isFavorite : ${resepData.isFavorite}`);
+      console.log("berhasil");
     } catch (error) {
       console.log("error change favorite data", error);
       // Handle error jika diperlukan
@@ -208,9 +215,9 @@ function DetailResep() {
                   onChange={(event) => {
                     handleChange(
                       event,
-                      data.recipeId,
-                      data.recipeName,
-                      data.isFavorite
+                      resepData.recipeId,
+                      resepData.recipeName,
+                      resepData.isFavorite
                     );
                   }}
                   value="favorite"
