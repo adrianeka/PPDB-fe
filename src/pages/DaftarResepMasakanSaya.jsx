@@ -153,7 +153,7 @@ const DaftarResepMasakan = () => {
   const [isDataEmpty, setIsDataEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function fetchDataResepMasakan(
+  async function fetchDataResepMasakanSaya(
     userId,
     page,
     entries,
@@ -193,7 +193,7 @@ const DaftarResepMasakan = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetchDataResepMasakan(
+    fetchDataResepMasakanSaya(
       userId,
       page,
       entries,
@@ -773,7 +773,7 @@ const DaftarResepMasakan = () => {
                   resepData={resepData}
                   setIsPageError={setIsPageError}
                   userId={userId}
-                  fetchDataResepMasakan={fetchDataResepMasakan}
+                  fetchDataResepMasakanSaya={fetchDataResepMasakanSaya}
                   cookingTime={cookingTime}
                   entries={entries}
                   foodCategory={foodCategory}

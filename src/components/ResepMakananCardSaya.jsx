@@ -41,7 +41,7 @@ const ResepMakananCard = ({
   resepData,
   setIsPageError,
   userId,
-  fetchDataResepMasakan,
+  fetchDataResepMasakanSaya,
   cookingTime,
   entries,
   foodCategory,
@@ -70,7 +70,7 @@ const ResepMakananCard = ({
       }
     }
     putFavorite();
-    fetchDataResepMasakan(
+    fetchDataResepMasakanSaya(
       userId,
       page,
       entries,
@@ -92,10 +92,10 @@ const ResepMakananCard = ({
 
   const [option, setOption] = useState(null);
 
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(null);
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
+  const handleOpenDialog = (recipeId) => {
+    setOpenDialog(recipeId);
   };
 
   const handleCloseDialog = () => {
@@ -115,14 +115,24 @@ const ResepMakananCard = ({
 
       if (success) {
         setDeletedRecipeName(recipeName);
-        console.log("Recipe deleted successfully!");
+        setDeletionSuccess(true);
+        console.log(`Recipe ${recipeName} deleted successfully!`);
       } else {
         console.error(`Failed to delete recipe: ${errorMessage}`);
       }
     } catch (error) {
       console.error("Error deleting recipe:", error.message);
     } finally {
-      // fetchMyRecipes();
+      fetchDataResepMasakanSaya(
+        userId,
+        page,
+        entries,
+        recipeNameProps,
+        foodLevel,
+        foodCategory,
+        cookingTime,
+        sortBy
+      );
       setDeletionLoading(false);
       setDeletionSuccess(true);
     }
@@ -182,7 +192,7 @@ const ResepMakananCard = ({
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  handleOpenDialog();
+                  handleOpenDialog(data.recipeId);
                   handleCloseOptions();
                 }}
               >
@@ -192,7 +202,10 @@ const ResepMakananCard = ({
             </Menu>
 
             {/* Dialog for confirmation */}
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <Dialog
+              open={openDialog === data.recipeId}
+              onClose={handleCloseDialog}
+            >
               <DialogTitle sx={{ textAlign: "center" }}>
                 <ErrorOutline sx={{ fontSize: 96, color: "#FBBC04" }} />
               </DialogTitle>
