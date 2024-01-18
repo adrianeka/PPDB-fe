@@ -9,7 +9,7 @@ export function Logo() {
         sx={{ fontSize: "25px", fontWeight: 700, lineHeight: " 28px" }}>
         Buku Resep 79
       </Typography>
-      <img src="/svg/logo.svg" style={{ width: "50px" }} />
+      <img src="/logo.svg" style={{ width: "50px" }} />
     </Box>
   );
 }
