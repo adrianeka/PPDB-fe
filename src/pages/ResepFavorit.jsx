@@ -1,4 +1,3 @@
-import Navbar from "../components/Navbar";
 import ResepMakananCard from "../components/ResepMakananCard";
 import { useEffect, useState } from "react";
 import {
@@ -24,7 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ClearIcon from "@mui/icons-material/Clear";
-import { getTotalDaftarResepFavorit, getDaftarResepFavorit } from "../services/apis";
+import { getDaftarResepFavorit } from "../services/apis";
 import ErrorSnackbar from "../components/ErrorSnackbar";
 import CardSkeletonLoading from "../components/CardSkeletonLoading";
 
@@ -74,8 +73,6 @@ const DaftarResepFavorit = () => {
   const [tempFoodLevel, setTempFoodLevel] = useState("");
   const [tempFoodCategory, setTempFoodCategory] = useState("");
   const [tempCookingTime, setTempCookingTime] = useState("");
-  const [tempTimeMin, setTempTimeMin] = useState("");
-  const [tempTimeMax, setTempTimeMax] = useState("");
   const [tempSortBy, setTempSortBy] = useState("");
 
   const [recipeName, setRecipeName] = useState("");
@@ -92,27 +89,18 @@ const DaftarResepFavorit = () => {
   const [foodLevel, setFoodLevel] = useState("");
   const handleChangeFoodLevel = (event) => {
     setTempFoodLevel(event.target.value);
+    setPage(1);
   };
 
   const [foodCategory, setFoodCategory] = useState("");
   const handleChangeFoodCategory = (event) => {
     setTempFoodCategory(event.target.value);
+    setPage(1);
   };
 
   const [cookingTime, setCookingTime] = useState("");
-  const [timeMin, setTimeMin] = useState("");
-  const [timeMax, setTimeMax] = useState("");
   const handleChangeCookingTime = (event) => {
     setTempCookingTime(event.target.value);
-    if (event.target.value === 1) {
-      setTempTimeMin(1);
-      setTempTimeMax(30);
-    }
-
-    if (event.target.value === 2) {
-      setTempTimeMin(30);
-      setTempTimeMax(60);
-    }
   };
 
   const [sortBy, setSortBy] = useState("");
@@ -140,8 +128,6 @@ const DaftarResepFavorit = () => {
     setFoodLevel(tempFoodLevel);
     setFoodCategory(tempFoodCategory);
     setCookingTime(tempCookingTime);
-    setTimeMin(tempTimeMin);
-    setTimeMax(tempTimeMax);
     setSortBy(tempSortBy);
     setPage(1);
   };
@@ -150,8 +136,6 @@ const DaftarResepFavorit = () => {
     setFoodLevel(tempFoodLevel);
     setFoodCategory(tempFoodCategory);
     setCookingTime(tempCookingTime);
-    setTimeMin(tempTimeMin);
-    setTimeMax(tempTimeMax);
     setPage(1);
   };
 
@@ -183,13 +167,12 @@ const DaftarResepFavorit = () => {
     recipeName,
     foodLevel,
     foodCategory,
-    timeMin,
-    timeMax,
+    cookingTime,
     sortBy
   ) {
     try {
       const authToken = getAuthToken();
-      
+
       const response = await getDaftarResepFavorit(
         userId,
         page,
@@ -197,12 +180,12 @@ const DaftarResepFavorit = () => {
         recipeName,
         foodLevel,
         foodCategory,
-        timeMin,
-        timeMax,
+        cookingTime,
         sortBy,
         authToken
       );
       setResepData(response.data.data);
+      setTotalData(response.data.total);
 
       if (response.data.total === 0) {
         setIsDataEmpty(true);
@@ -219,32 +202,8 @@ const DaftarResepFavorit = () => {
     }
   }
 
-  async function fetchTotalDataResepFavorit(userId) {
-    try {
-      const authToken = getAuthToken();
-
-      const response = await getTotalDaftarResepFavorit(userId, authToken);
-
-      setTotalData(response.data.total);
-
-      if (response.data.total === 0) {
-        setIsDataEmpty(true);
-      } else {
-        setIsDataEmpty(false);
-      }
-
-      setIsLoading(false);
-      setIsPageError(false);
-    } catch (error) {
-      console.error(`error fetch total data ${error}`);
-      setIsPageError(true);
-      setIsLoading(true);
-    }
-  }
-
   useEffect(() => {
     setIsLoading(true);
-    fetchTotalDataResepFavorit(userId)
     fetchDataResepFavorit(
       userId,
       page,
@@ -252,19 +211,17 @@ const DaftarResepFavorit = () => {
       recipeName,
       foodLevel,
       foodCategory,
-      timeMin,
-      timeMax,
+      cookingTime,
       sortBy
     );
   }, [
     userId,
-    timeMin,
-    timeMax,
     entries,
     foodCategory,
     foodLevel,
     page,
     recipeName,
+    cookingTime,
     sortBy,
   ]);
 
@@ -288,7 +245,6 @@ const DaftarResepFavorit = () => {
 
   return (
     <>
-      <Navbar />
       {isPageError && (
         <ErrorSnackbar message="Terjadi kesalahan server. Silahkan coba kembali" />
       )}
@@ -423,12 +379,10 @@ const DaftarResepFavorit = () => {
                               <MenuItem value="">
                                 <em>None</em>
                               </MenuItem>
-                              <MenuItem value="Easy">Easy</MenuItem>
-                              <MenuItem value="Medium">Medium</MenuItem>
-                              <MenuItem value="Hard">Hard</MenuItem>
-                              <MenuItem value="Master Chef">
-                                Master Chef
-                              </MenuItem>
+                              <MenuItem value={3}>Easy</MenuItem>
+                              <MenuItem value={2}>Medium</MenuItem>
+                              <MenuItem value={1}>Hard</MenuItem>
+                              <MenuItem value={0}>Master Chef</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -451,10 +405,10 @@ const DaftarResepFavorit = () => {
                               <MenuItem value="">
                                 <em>None</em>
                               </MenuItem>
-                              <MenuItem value="Lunch">Breakfast</MenuItem>
-                              <MenuItem value="Breakfast">Lunch</MenuItem>
-                              <MenuItem value="Dinner">Dinner</MenuItem>
-                              <MenuItem value="Snack">Snack</MenuItem>
+                              <MenuItem value={1}>Breakfast</MenuItem>
+                              <MenuItem value={0}>Lunch</MenuItem>
+                              <MenuItem value={2}>Dinner</MenuItem>
+                              <MenuItem value={3}>Snack</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -479,9 +433,8 @@ const DaftarResepFavorit = () => {
                               <MenuItem value="">
                                 <em>None</em>
                               </MenuItem>
-                              <MenuItem value={1}>0-30 Menit</MenuItem>
-                              <MenuItem value={2}>30-60 Menit</MenuItem>
-                              {/* <MenuItem value="60">{">"}60 Menit</MenuItem> */}
+                              <MenuItem value={30}>0-30 Menit</MenuItem>
+                              <MenuItem value={60}>30-60 Menit</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -549,10 +502,18 @@ const DaftarResepFavorit = () => {
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value={1}>Nama Resep A-Z</MenuItem>
-                      <MenuItem value={2}>Nama Resep Z-A</MenuItem>
-                      {/* <MenuItem value="time-ASC">Waktu Memasak A-Z</MenuItem>
-                      <MenuItem value="time-DESC">Waktu Memasak Z-A</MenuItem> */}
+                      <MenuItem value="recipes.recipeName,asc">
+                        Nama Resep A-Z
+                      </MenuItem>
+                      <MenuItem value="recipes.recipeName,desc">
+                        Nama Resep Z-A
+                      </MenuItem>
+                      <MenuItem value="recipes.timeCook,asc">
+                        Waktu Memasak A-Z
+                      </MenuItem>
+                      <MenuItem value="recipes.timeCook,desc">
+                        Waktu Memasak Z-A
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 </Stack>
@@ -580,11 +541,17 @@ const DaftarResepFavorit = () => {
                   </Box>
                 </Button>
               </Grid>
-              {/* <Grid item xs={12}>
-                <Typography sx={{ fontSize: "14px", fontWeight: "400", textAlign: "center" }}>
-                  Menampilkan yang cocok untuk anda
+              <Grid item xs={12}>
+                <Typography
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: "400",
+                    textAlign: "center",
+                  }}
+                >
+                  Menampilkan seluruh resep favorit Anda
                 </Typography>
-              </Grid> */}
+              </Grid>
             </Grid>
           </Box>
         </Hidden>
@@ -714,10 +681,10 @@ const DaftarResepFavorit = () => {
                           <MenuItem value="">
                             <em>None</em>
                           </MenuItem>
-                          <MenuItem value="Easy">Easy</MenuItem>
-                          <MenuItem value="Medium">Medium</MenuItem>
-                          <MenuItem value="Hard">Hard</MenuItem>
-                          <MenuItem value="Master Chef">Master Chef</MenuItem>
+                          <MenuItem value={3}>Easy</MenuItem>
+                          <MenuItem value={2}>Medium</MenuItem>
+                          <MenuItem value={1}>Hard</MenuItem>
+                          <MenuItem value={0}>Master Chef</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -737,10 +704,10 @@ const DaftarResepFavorit = () => {
                           <MenuItem value="">
                             <em>None</em>
                           </MenuItem>
-                          <MenuItem value="Breakfast">Breakfast</MenuItem>
-                          <MenuItem value="Lunch">Lunch</MenuItem>
-                          <MenuItem value="Dinner">Dinner</MenuItem>
-                          <MenuItem value="Snack">Snack</MenuItem>
+                          <MenuItem value={1}>Breakfast</MenuItem>
+                          <MenuItem value={0}>Lunch</MenuItem>
+                          <MenuItem value={2}>Dinner</MenuItem>
+                          <MenuItem value={3}>Snack</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -762,9 +729,8 @@ const DaftarResepFavorit = () => {
                           <MenuItem value="">
                             <em>None</em>
                           </MenuItem>
-                          <MenuItem value={1}>0-30 Menit</MenuItem>
-                          <MenuItem value={2}>30-60 Menit</MenuItem>
-                          {/* <MenuItem value="60">{">"}60 Menit</MenuItem> */}
+                          <MenuItem value={30}>0-30 Menit</MenuItem>
+                          <MenuItem value={60}>30-60 Menit</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -782,10 +748,18 @@ const DaftarResepFavorit = () => {
                           <MenuItem value="">
                             <em>None</em>
                           </MenuItem>
-                          <MenuItem value={1}>Nama Resep A-Z</MenuItem>
-                          <MenuItem value={2}>Nama Resep Z-A</MenuItem>
-                          {/* <MenuItem value="time-ASC">Waktu Memasak A-Z</MenuItem>
-                          <MenuItem value="time-DESC">Waktu Memasak Z-A</MenuItem> */}
+                          <MenuItem value="recipes.recipeName,asc">
+                            Nama Resep A-Z
+                          </MenuItem>
+                          <MenuItem value="recipes.recipeName,desc">
+                            Nama Resep Z-A
+                          </MenuItem>
+                          <MenuItem value="recipes.timeCook,asc">
+                            Waktu Memasak A-Z
+                          </MenuItem>
+                          <MenuItem value="recipes.timeCook,desc">
+                            Waktu Memasak Z-A
+                          </MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -861,7 +835,6 @@ const DaftarResepFavorit = () => {
                 Array.from({ length: 8 }).map((_, index) => (
                   <Grid item xs={12} sm={6} md={3} key={index}>
                     <CardSkeletonLoading />
-                    
                   </Grid>
                 ))
               ) : (

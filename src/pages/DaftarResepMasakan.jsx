@@ -1,4 +1,3 @@
-import Navbar from "../components/Navbar";
 import ResepMakananCard from "../components/ResepMakananCard";
 import { useEffect, useState } from "react";
 import {
@@ -234,7 +233,6 @@ const DaftarResepMasakan = () => {
 
   return (
     <>
-      <Navbar />
       {isPageError && (
         <ErrorSnackbar message="Terjadi kesalahan server. Silahkan coba kembali" />
       )}

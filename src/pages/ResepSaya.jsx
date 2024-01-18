@@ -25,7 +25,6 @@ import { Link } from "react-router-dom";
 import { CheckCircleOutline, FilterList, Search } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Navbar from "../components/Navbar";
 import RecipeCard from "../components/RecipeCard";
 
 const DaftarResepSaya = () => {
@@ -230,7 +229,6 @@ const DaftarResepSaya = () => {
 
   return (
     <>
-      <Navbar />
       <Container>
         {/* Desktop view */}
         <Hidden smDown>

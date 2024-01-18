@@ -29,7 +29,7 @@ export default function useToken() {
   useEffect(() => {
     if (!token && location.pathname !== "/") {
       navigate("/");
-    } else if (token && location.pathname === "/") {
+    } else if (token && (location.pathname === "/" || location.pathname === "/signup")) {
       navigate("/daftar-resep");
     }
   }, [token, location, navigate]);

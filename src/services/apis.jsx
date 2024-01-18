@@ -95,11 +95,10 @@ export const getDaftarResepFavorit = (
   pageNumber,
   pageSize,
   recipeName,
-  level,
-  category,
-  cookMin,
-  cookMax,
-  sort,
+  levelId,
+  categoryId,
+  time,
+  sortBy,
   authToken
 ) => {
   let apiUrl = `${apiGetMyFavoriteRecipes}?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
@@ -107,20 +106,17 @@ export const getDaftarResepFavorit = (
   if (recipeName) {
     apiUrl += `&recipeName=${recipeName}`;
   }
-  if (level) {
-    apiUrl += `&level=${level}`;
+  if (levelId) {
+    apiUrl += `&levelId=${levelId}`;
   }
-  if (category) {
-    apiUrl += `&category=${category}`;
+  if (categoryId) {
+    apiUrl += `&categoryId=${categoryId}`;
   }
-  if (cookMin) {
-    apiUrl += `&cookMin=${cookMin}`;
+  if (time) {
+    apiUrl += `&time=${time}`;
   }
-  if (cookMin) {
-    apiUrl += `&cookMax=${cookMax}`;
-  }
-  if (sort) {
-    apiUrl += `&sort=${sort}`;
+  if (sortBy) {
+    apiUrl += `&sortBy=${sortBy}`;
   }
 
   return axios
@@ -138,24 +134,6 @@ export const getDaftarResepFavorit = (
     });
 };
 
-//Get Total Daftar Resep Favorit
-export const getTotalDaftarResepFavorit = (userId, authToken) => {
-  let apiUrl = `${apiGetMyFavoriteRecipes}?userId=${userId}`;
-
-  return axios
-    .get(apiUrl, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    })
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log("error getting data daftar resep favorit", error);
-      throw error;
-    });
-};
 
 //Add/Remove to favorite
 export const putFavoriteResepMasakan = (recipeId, userId) => {

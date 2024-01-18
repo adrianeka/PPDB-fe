@@ -19,16 +19,11 @@ import {
   FormGroup,
   Link,
 } from "@mui/material";
-import Navigation from "../components/Navbar.jsx";
-import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import axios from "axios";
 import { putFavoriteResepMasakan } from "../services/apis";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
-import FavoritDialog from "../components/FavoritDialog";
-import Nasgor from "../public/img/nasgor.jpg";
 
 function DetailResep() {
   const { id } = useParams();
@@ -96,7 +91,6 @@ function DetailResep() {
 
   return (
     <div>
-      <Navigation />
       {resepData ? (
         <Container maxWidth="sm" sx={{ paddingBottom: 3 }}>
           <Grid
