@@ -48,11 +48,13 @@ function DetailResep() {
   }, [id]);
 
   const [resepData, setResepData] = useState();
+
+  const apiUrl = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
   const getDetailResep = async () => {
     try {
       const authToken = getAuthToken();
       const response = await axios.get(
-        `http://localhost:8080/book-recipe/book-recipes/${id}`,
+        `${apiUrl}/${id}`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
