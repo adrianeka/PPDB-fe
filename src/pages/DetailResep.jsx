@@ -28,7 +28,7 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import FavoritDialog from "../components/FavoritDialog";
-import Nasgor from "../public/nasgor.jpg";
+import Nasgor from "../public/img/nasgor.jpg";
 
 function DetailResep() {
   const { id } = useParams();
