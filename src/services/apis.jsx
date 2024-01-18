@@ -159,10 +159,10 @@ export const getTotalDaftarResepFavorit = (userId, authToken) => {
 
 //Add/Remove to favorite
 export const putFavoriteResepMasakan = (recipeId, userId) => {
-  const apiUrl = `${baseUrl}/book-recipe/book-recipes/${recipeId}/favorites/${userId}`;
+  const apiUrl = `${baseUrl}/book-recipe/book-recipes/${recipeId}/favorites/`;
 
   return axios
-    .put(apiUrl)
+    .put(apiUrl, { userId: userId })
     .then((response) => {
       return response;
     })
