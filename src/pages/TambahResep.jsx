@@ -28,8 +28,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import http from "../services/axiosConfig";
 import { useDropzone } from "react-dropzone";
+import { getCategory, getLevels, postTambahResep } from "../services/apis";
 
 function TambahResep() {
   const navigate = useNavigate();
@@ -59,37 +59,32 @@ function TambahResep() {
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
-    // Fetch categories and levels data from backend
-    // When setting the state, ensure it's an array
-    http
-      .get("/book-recipe-masters/category-option-lists")
-      .then((response) => {
+    async function fetchCategoryData() {
+      try {
+        const response = await getCategory();
         if (response.data && Array.isArray(response.data.data)) {
           setCategories(response.data.data);
-        } else {
-          console.error(
-            "Expected an array for categories, but got:",
-            response.data
-          );
-          setServerError(true);
         }
-      })
-      .catch((error) => console.error(error));
+      } catch (error) {
+        console.log("Error fetching category data", error);
+        setServerError(true);
+      }
+    }
 
-    http
-      .get("/book-recipe-masters/level-option-lists")
-      .then((response) => {
+    async function fetchLevelsData() {
+      try {
+        const response = await getLevels();
         if (response.data && Array.isArray(response.data.data)) {
           setLevels(response.data.data);
-        } else {
-          console.error(
-            "Expected an array for levels, but got:",
-            response.data
-          );
-          setServerError(true);
         }
-      })
-      .catch((error) => console.error(error));
+      } catch (error) {
+        console.log("Error fetching level data", error);
+        setServerError(true);
+      }
+    }
+
+    fetchCategoryData();
+    fetchLevelsData();
   }, []);
 
   const handleRecipeNameChange = (e) => {
@@ -122,7 +117,6 @@ function TambahResep() {
   const handleCategoryChange = (event) => {
     const value = event.target.value;
     setSelectedCategory(value);
-    // Use the actual invalid value here, for example "", null, or "0"
     setErrors({
       ...errors,
       selectedCategory:
@@ -325,7 +319,9 @@ function TambahResep() {
     );
     const level = levels.find((l) => l.levelId.toString() === selectedLevel);
 
+    const userId = localStorage.getItem("userId");
     const jsonPart = JSON.stringify({
+      userId: userId,
       recipeName: recipeName,
       categories: {
         categoryId: selectedCategory,
@@ -352,23 +348,21 @@ function TambahResep() {
       })
     );
 
-    // Log to see the structure (for debugging purposes)
-    console.log("FormData", Array.from(formData.entries()));
-
     // Perform the HTTP POST request
-    http
-      .post("/book-recipe/book-recipes", formData)
-      .then((response) => {
+    async function saveResep() {
+      try {
+        const response = await postTambahResep(formData);
         console.log(response);
-        setSubmitSuccess(true); // Show the success dialog
-        setSubmitMessage(`Resep ${recipeName} berhasil ditambahkan`); // Set the message for the dialog
+        setSubmitSuccess(true);
+        setSubmitMessage(`Resep ${recipeName} berhasil ditambahkan`);
         setIsSubmitting(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error(error);
         setServerError(true);
         setIsSubmitting(false);
-      });
+      }
+    }
+    saveResep();
   };
 
   const handleClose = () => {
@@ -424,8 +418,7 @@ function TambahResep() {
 
         position: "absolute", // Use absolute positioning
         marginTop: "2px",
-      }}
-    >
+      }}>
       {error}
     </Typography>
   );
@@ -444,8 +437,7 @@ function TambahResep() {
     <Dialog
       open={open}
       onClose={onClose}
-      sx={{ "& .MuiDialog-paper": { backgroundColor: "red" } }}
-    >
+      sx={{ "& .MuiDialog-paper": { backgroundColor: "red" } }}>
       <DialogTitle sx={{ color: "white" }}>Error</DialogTitle>
       <DialogContent>
         <DialogContentText sx={{ color: "white" }}>
@@ -456,8 +448,7 @@ function TambahResep() {
         <Button
           onClick={onClose}
           sx={{ color: "white", borderColor: "white" }}
-          variant="outlined"
-        >
+          variant="outlined">
           Close
         </Button>
       </DialogActions>
@@ -486,8 +477,7 @@ function TambahResep() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-          }}
-        >
+          }}>
           <AddPhotoAlternateOutlinedIcon
             color="disabled"
             style={{ fontSize: 60 }}
@@ -498,8 +488,7 @@ function TambahResep() {
               textAlign: "center",
 
               marginTop: "5px",
-            }}
-          >
+            }}>
             <strong>Click to upload</strong> or drag and drop
             <br />
             PNG, JPG, JPEG (Max 1MB)
@@ -554,8 +543,7 @@ function TambahResep() {
         onClose={handleClose}
         aria-labelledby="success-dialog-title"
         aria-describedby="success-dialog-description"
-        sx={successDialogStyles}
-      >
+        sx={successDialogStyles}>
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -563,8 +551,7 @@ function TambahResep() {
             position: "absolute",
             right: 8,
             top: 8,
-          }}
-        >
+          }}>
           <CloseIcon />
         </IconButton>
         <DialogContent>
@@ -579,15 +566,13 @@ function TambahResep() {
                 fontWeight: "bold",
                 color: "#00E696",
                 // fontSize: "5rem",
-              }}
-            >
+              }}>
               Sukses
             </Typography>
           </DialogTitle>
           <DialogContentText
             id="success-dialog-description"
-            sx={{ color: "black" }}
-          >
+            sx={{ color: "black" }}>
             {submitMessage}
           </DialogContentText>
         </DialogContent>
@@ -596,8 +581,7 @@ function TambahResep() {
             onClick={handleClose}
             color="primary"
             variant="contained"
-            sx={{ mt: 0, fontSize: "1.2rem" }}
-          >
+            sx={{ mt: 0, fontSize: "1.2rem" }}>
             Continue
           </Button>
         </DialogActions>
@@ -611,8 +595,7 @@ function TambahResep() {
             marginTop={6}
             sx={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Buat Resep Masakan Baru
           </Typography>
           <form onSubmit={handleSubmit}>
@@ -623,8 +606,7 @@ function TambahResep() {
               paddingTop={3}
               paddingRight={5}
               paddingLeft={5}
-              paddingBottom={7}
-            >
+              paddingBottom={7}>
               {/* Left Column */}
               <Grid item xs={12} md={6}>
                 {/* Recipe Name */}
@@ -633,8 +615,7 @@ function TambahResep() {
                     marginBottom: 1,
                     textAlign: "left",
                     color: "gray",
-                  }}
-                >
+                  }}>
                   Nama Resep Masakan <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
@@ -657,14 +638,12 @@ function TambahResep() {
                     marginTop: 2,
                     textAlign: "left",
                     color: "gray",
-                  }}
-                >
+                  }}>
                   Gambar Makanan{" "}
                   <span
                     style={{
                       color: "red",
-                    }}
-                  >
+                    }}>
                     *
                   </span>
                 </Typography>
@@ -688,8 +667,7 @@ function TambahResep() {
                       border: errors.imageFile
                         ? "2px dashed #dd2727"
                         : "2px dashed gray",
-                    }}
-                  >
+                    }}>
                     {renderDropzoneContent()}
                   </Box>
                   {errors.imageFile && (
@@ -702,8 +680,7 @@ function TambahResep() {
 
                         marginTop: 0,
                         fontSize: "0.70rem",
-                      }}
-                    >
+                      }}>
                       {errors.imageFile}
                     </Typography>
                   )}
@@ -715,8 +692,7 @@ function TambahResep() {
                     marginBottom: 1,
                     textAlign: "left",
                     color: "gray",
-                  }}
-                >
+                  }}>
                   Bahan - Bahan <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <div className="ingredients-editor">
@@ -727,8 +703,7 @@ function TambahResep() {
                         : "0px solid rgba(0, 0, 0, 0.23)", // Assuming this is your default border
                       borderRadius: "2px", // Match the border radius with TextField
                       // ... other styles for the box
-                    }}
-                  >
+                    }}>
                     <ReactQuill
                       theme="snow"
                       placeholder="Write a description..."
@@ -753,8 +728,7 @@ function TambahResep() {
                     display: "flex",
                     flexDirection: "column",
                     gap: isMobile ? 1 : 2,
-                  }}
-                >
+                  }}>
                   {/* Category Selection */}
                   <Box>
                     <Typography
@@ -762,23 +736,20 @@ function TambahResep() {
                         marginBottom: 1,
                         textAlign: "left",
                         color: "gray",
-                      }}
-                    >
+                      }}>
                       Kategori Masakan <span style={{ color: "red" }}>*</span>
                     </Typography>
                     <FormControl
                       fullWidth
                       error={!!errors.selectedCategory}
                       variant="outlined"
-                      sx={{ background: "white" }}
-                    >
+                      sx={{ background: "white" }}>
                       <Select
                         value={selectedCategory}
                         onChange={handleCategoryChange}
                         displayEmpty
                         inputProps={{ "aria-label": "Without label" }}
-                        sx={{ textAlign: "center" }}
-                      >
+                        sx={{ textAlign: "center" }}>
                         <MenuItem value="" disabled>
                           Pilih Kategori
                         </MenuItem>
@@ -786,8 +757,7 @@ function TambahResep() {
                           <MenuItem
                             key={category.categoryId}
                             value={category.categoryId.toString()}
-                            sx={{ textAlign: "center" }}
-                          >
+                            sx={{ textAlign: "center" }}>
                             {category.categoryName}
                           </MenuItem>
                         ))}
@@ -805,8 +775,7 @@ function TambahResep() {
                       display: "flex",
                       gap: isMobile ? 1 : 2,
                       flexDirection: isMobile ? "column" : "row",
-                    }}
-                  >
+                    }}>
                     {/* Time Cook */}
                     <Box sx={{ flex: 1, minWidth: "150px" }}>
                       <Typography
@@ -816,8 +785,7 @@ function TambahResep() {
                           textAlign: "left",
                           color: "gray",
                           fontSize: dynamicStyles.headingFontSize,
-                        }}
-                      >
+                        }}>
                         Waktu Memasak (Menit){" "}
                         <span style={{ color: "red" }}>*</span>
                       </Typography>
@@ -846,8 +814,7 @@ function TambahResep() {
                           textAlign: "left",
                           color: "gray",
                           fontSize: dynamicStyles.headingFontSize,
-                        }}
-                      >
+                        }}>
                         Tingkat Kesulitan{" "}
                         <span style={{ color: "red" }}>*</span>
                       </Typography>
@@ -855,15 +822,13 @@ function TambahResep() {
                         fullWidth
                         error={!!errors.selectedLevel}
                         variant="outlined"
-                        sx={{ background: "white" }}
-                      >
+                        sx={{ background: "white" }}>
                         <Select
                           value={selectedLevel}
                           onChange={handleLevelChange}
                           displayEmpty
                           inputProps={{ "aria-label": "Without label" }}
-                          sx={{ textAlign: "center" }}
-                        >
+                          sx={{ textAlign: "center" }}>
                           <MenuItem value="" disabled>
                             Pilih Tingkat Kesulitan
                           </MenuItem>
@@ -871,8 +836,7 @@ function TambahResep() {
                             <MenuItem
                               key={level.levelId}
                               value={level.levelId.toString()}
-                              sx={{ textAlign: "center" }}
-                            >
+                              sx={{ textAlign: "center" }}>
                               {level.levelName}
                             </MenuItem>
                           ))}
@@ -894,8 +858,7 @@ function TambahResep() {
                         marginBottom: 1,
                         textAlign: "left",
                         color: "gray",
-                      }}
-                    >
+                      }}>
                       Cara Masak <span style={{ color: "red" }}>*</span>
                     </Typography>
                     <div className="how-to-cook-editor">
@@ -906,8 +869,7 @@ function TambahResep() {
                             : "0px solid rgba(0, 0, 0, 0.23)", // Assuming this is your default border
                           borderRadius: "2px", // Match the border radius with TextField
                           // ... other styles for the box
-                        }}
-                      >
+                        }}>
                         <ReactQuill
                           theme="snow"
                           placeholder="Write a description..."
@@ -931,8 +893,7 @@ function TambahResep() {
                     container
                     justifyContent="flex-end"
                     spacing={isMobile ? 1 : 6}
-                    paddingTop={isMobile ? 2 : 1}
-                  >
+                    paddingTop={isMobile ? 2 : 1}>
                     {/* Batal Button */}
                     <Grid item>
                       <Button
@@ -969,8 +930,7 @@ function TambahResep() {
                           "&:hover": {
                             backgroundColor: "#077d7d", // Replace with a slightly darker color code
                           },
-                        }}
-                      >
+                        }}>
                         {isSubmitting ? (
                           <CircularProgress size={24} />
                         ) : (

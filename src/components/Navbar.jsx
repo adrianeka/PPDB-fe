@@ -14,6 +14,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import logo from "../public/svg/logo.svg";
+import daftarResepMakananIcon from "../public/svg/DaftarResepMakanan.svg";
+import resepSayaIcon from "../public/svg/ResepSaya.svg";
+import resepFavoritIcon from "../public/svg/ResepFavorit.svg";
+import signOutIcon from "../public/svg/SignOut.svg";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleDrawer = () => {
@@ -58,10 +64,10 @@ const Navbar = () => {
             }}>
             <Box display="flex" gap={1}>
               <Hidden mdUp>
-                <img src="/svg/logo.svg" alt="logo" style={{ width: "35px" }} />
+                <img src={logo} alt="logo" style={{ width: "35px" }} />
               </Hidden>
               <Hidden mdDown>
-                <img src="/svg/logo.svg" alt="logo" style={{ width: "48px" }} />
+                <img src={logo} alt="logo" style={{ width: "48px" }} />
               </Hidden>
               <Typography
                 sx={{
@@ -121,7 +127,7 @@ const Navbar = () => {
                       fontWeight: "700",
                     }}>
                     <img
-                      src="/svg/DaftarResepMakanan.svg"
+                      src={daftarResepMakananIcon}
                       alt="Daftar Resep Makanan"
                       style={{ marginRight: 5 }}
                     />
@@ -136,7 +142,7 @@ const Navbar = () => {
                       fontWeight: "700",
                     }}>
                     <img
-                      src="/svg/ResepSaya.svg"
+                      src={resepSayaIcon}
                       alt="Resep Saya"
                       style={{ marginRight: 5 }}
                     />
@@ -151,7 +157,7 @@ const Navbar = () => {
                       fontWeight: "700",
                     }}>
                     <img
-                      src="/svg/ResepFavorit.svg"
+                      src={resepFavoritIcon}
                       alt="Resep Favorit"
                       style={{ marginRight: 5 }}
                     />
@@ -166,7 +172,7 @@ const Navbar = () => {
                       fontWeight: "700",
                     }}>
                     <img
-                      src="/svg/SignOut.svg"
+                      src={signOutIcon}
                       alt="Sign Out"
                       style={{ marginRight: 5 }}
                     />

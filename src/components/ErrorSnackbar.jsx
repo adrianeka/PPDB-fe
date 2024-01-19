@@ -1,4 +1,4 @@
-import { Backdrop, Snackbar } from "@mui/material";
+import { Backdrop, Snackbar, Typography } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 import { forwardRef, useState } from "react";
 
@@ -29,7 +29,7 @@ const ErrorSnackbar = ({ message }) => {
             fontWeight: "700",
             textAlign: "center",
           }}>
-          {message}
+          <Typography sx={{ fontWeight: 600 }}>{message}</Typography>
         </Alert>
       </Snackbar>
     </Backdrop>

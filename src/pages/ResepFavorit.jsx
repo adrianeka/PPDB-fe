@@ -54,11 +54,11 @@ const DaftarResepFavorit = () => {
     setFilterMenu(null);
   };
 
-  // Example function to get the authentication token from wherever you store it.
-  const getAuthToken = () => {
-    return localStorage.getItem("token");
-    // Replace 'yourAuthTokenKey' with the actual key used to store the token.
-  };
+  // // Example function to get the authentication token from wherever you store it.
+  // const getAuthToken = () => {
+  //   return localStorage.getItem("token");
+  //   // Replace 'yourAuthTokenKey' with the actual key used to store the token.
+  // };
   const { userId } = useToken();
 
   const [filterMenuMobile, setFilterMenuMobile] = useState(null);
@@ -172,7 +172,7 @@ const DaftarResepFavorit = () => {
     sortBy
   ) {
     try {
-      const authToken = getAuthToken();
+      // const authToken = getAuthToken();
 
       const response = await getDaftarResepFavorit(
         userId,
@@ -182,13 +182,13 @@ const DaftarResepFavorit = () => {
         foodLevel,
         foodCategory,
         cookingTime,
-        sortBy,
-        authToken
+        sortBy
+        // authToken
       );
       setResepData(response.data.data);
       setTotalData(response.data.total);
 
-      if (response.data.total === 0) {
+      if (response.data.total === 0 || response.status === 404) {
         setIsDataEmpty(true);
       } else {
         setIsDataEmpty(false);
@@ -197,9 +197,13 @@ const DaftarResepFavorit = () => {
       setIsLoading(false);
       setIsPageError(false);
     } catch (error) {
-      console.error(error);
-      setIsPageError(true);
-      setIsLoading(true);
+      if (error.response.status === 404) {
+        setIsDataEmpty(true);
+      } else {
+        console.error(error);
+        setIsPageError(true);
+        setIsLoading(true);
+      }
     }
   }
 
@@ -252,8 +256,7 @@ const DaftarResepFavorit = () => {
       <Box
         width="100%"
         paddingY={{ xs: "16px", md: "32px" }}
-        sx={{ backgroundColor: "#F0F9F9" }}
-      >
+        sx={{ backgroundColor: "#F0F9F9" }}>
         {/* Mobile Filter */}
         <Hidden mdUp>
           <Box marginX={2}>
@@ -264,8 +267,7 @@ const DaftarResepFavorit = () => {
                     fontSize: "22px",
                     fontWeight: "700",
                     textAlign: "center",
-                  }}
-                >
+                  }}>
                   Resep Favorit
                 </Typography>
               </Grid>
@@ -288,8 +290,7 @@ const DaftarResepFavorit = () => {
                       <IconButton
                         onClick={() => {
                           setTempRecipeName(""), setRecipeName("");
-                        }}
-                      >
+                        }}>
                         <ClearIcon />
                       </IconButton>
                     ),
@@ -317,8 +318,7 @@ const DaftarResepFavorit = () => {
                       justifyContent: "space-between",
                       gap: 2,
                     },
-                  }}
-                >
+                  }}>
                   <Typography>Filter</Typography>
                   <FilterListIcon />
                 </Button>
@@ -352,15 +352,13 @@ const DaftarResepFavorit = () => {
                     },
                   }}
                   transformOrigin={{ horizontal: "center", vertical: "top" }}
-                  anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-                >
+                  anchorOrigin={{ horizontal: "center", vertical: "bottom" }}>
                   <Box
                     padding={3}
                     display="flex"
                     flexDirection="column"
                     justifyContent="space-between"
-                    gap={3}
-                  >
+                    gap={3}>
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
                         <Stack spacing={1}>
@@ -369,21 +367,17 @@ const DaftarResepFavorit = () => {
                           </Typography>
                           <FormControl
                             sx={{ m: 1, minWidth: 120 }}
-                            size="small"
-                          >
+                            size="small">
                             <Select
                               labelId="level"
                               id="level"
                               value={tempFoodLevel}
-                              onChange={handleChangeFoodLevel}
-                            >
-                              <MenuItem value="">
-                                <em>None</em>
-                              </MenuItem>
-                              <MenuItem value={3}>Easy</MenuItem>
-                              <MenuItem value={2}>Medium</MenuItem>
-                              <MenuItem value={1}>Hard</MenuItem>
-                              <MenuItem value={0}>Master Chef</MenuItem>
+                              onChange={handleChangeFoodLevel}>
+                              <MenuItem value="">ALL</MenuItem>
+                              <MenuItem value="3">Easy</MenuItem>
+                              <MenuItem value="2">Medium</MenuItem>
+                              <MenuItem value="1">Hard</MenuItem>
+                              <MenuItem value="0">Master Chef</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -395,21 +389,17 @@ const DaftarResepFavorit = () => {
                           </Typography>
                           <FormControl
                             sx={{ m: 1, minWidth: 120 }}
-                            size="small"
-                          >
+                            size="small">
                             <Select
                               labelId="foodCategory"
                               id="foodCategory"
                               value={tempFoodCategory}
-                              onChange={handleChangeFoodCategory}
-                            >
-                              <MenuItem value="">
-                                <em>None</em>
-                              </MenuItem>
-                              <MenuItem value={1}>Breakfast</MenuItem>
-                              <MenuItem value={0}>Lunch</MenuItem>
-                              <MenuItem value={2}>Dinner</MenuItem>
-                              <MenuItem value={3}>Snack</MenuItem>
+                              onChange={handleChangeFoodCategory}>
+                              <MenuItem value="">ALL</MenuItem>
+                              <MenuItem value="1">Breakfast</MenuItem>
+                              <MenuItem value="0">Lunch</MenuItem>
+                              <MenuItem value="2">Dinner</MenuItem>
+                              <MenuItem value="3">Snack</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -423,14 +413,12 @@ const DaftarResepFavorit = () => {
                           </Typography>
                           <FormControl
                             sx={{ m: 1, minWidth: 120 }}
-                            size="small"
-                          >
+                            size="small">
                             <Select
                               labelId="cookingTime"
                               id="cookingTime"
                               value={tempCookingTime}
-                              onChange={handleChangeCookingTime}
-                            >
+                              onChange={handleChangeCookingTime}>
                               <MenuItem value="">
                                 <em>None</em>
                               </MenuItem>
@@ -446,8 +434,7 @@ const DaftarResepFavorit = () => {
                         <Button
                           onClick={handleClickResetFilter}
                           variant="text"
-                          sx={{ textTransform: "none", color: "#EA4335" }}
-                        >
+                          sx={{ textTransform: "none", color: "#EA4335" }}>
                           <Typography>Bersihkan filter</Typography>
                         </Button>
                       </Grid>
@@ -461,8 +448,7 @@ const DaftarResepFavorit = () => {
                               color: "#01BFBF",
                               textTransform: "none",
                               fontWeight: "700",
-                            }}
-                          >
+                            }}>
                             Batal
                           </Button>
                           <Button
@@ -479,8 +465,7 @@ const DaftarResepFavorit = () => {
                               "&:hover": { backgroundColor: "#01BFBF" },
                               color: "white",
                               fontWeight: "700",
-                            }}
-                          >
+                            }}>
                             Terapkan
                           </Button>
                         </Box>
@@ -498,21 +483,18 @@ const DaftarResepFavorit = () => {
                       id="sortBy"
                       value={sortBy}
                       label="Sort By"
-                      onChange={handleChangeSortByMobile}
-                    >
+                      onChange={handleChangeSortByMobile}>
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      <MenuItem value="recipes.recipeName,asc">
-                        Nama Resep A-Z
-                      </MenuItem>
-                      <MenuItem value="recipes.recipeName,desc">
+                      <MenuItem value="recipeName,asc">Nama Resep A-Z</MenuItem>
+                      <MenuItem value="recipeName,desc">
                         Nama Resep Z-A
                       </MenuItem>
-                      <MenuItem value="recipes.timeCook,asc">
+                      <MenuItem value="timeCook,asc">
                         Waktu Memasak A-Z
                       </MenuItem>
-                      <MenuItem value="recipes.timeCook,desc">
+                      <MenuItem value="timeCook,desc">
                         Waktu Memasak Z-A
                       </MenuItem>
                     </Select>
@@ -532,8 +514,7 @@ const DaftarResepFavorit = () => {
                     "&:hover": {
                       backgroundColor: "#01BFBF",
                     },
-                  }}
-                >
+                  }}>
                   <Box display="flex" gap={2}>
                     <AddIcon />
                     <Typography sx={{ fontWeight: "700" }}>
@@ -548,8 +529,7 @@ const DaftarResepFavorit = () => {
                     fontSize: "14px",
                     fontWeight: "400",
                     textAlign: "center",
-                  }}
-                >
+                  }}>
                   Menampilkan seluruh resep favorit Anda
                 </Typography>
               </Grid>
@@ -564,8 +544,7 @@ const DaftarResepFavorit = () => {
           justifyContent="space-between"
           gap={1}
           width="50vw"
-          marginX="auto"
-        >
+          marginX="auto">
           <Button
             href="/tambah-resep"
             variant="contained"
@@ -576,8 +555,7 @@ const DaftarResepFavorit = () => {
               "&:hover": {
                 backgroundColor: "#01BFBF",
               },
-            }}
-          >
+            }}>
             <Box display="flex" gap={2}>
               <AddIcon />
               <Typography sx={{ fontWeight: "700" }}>Tambah Resep</Typography>
@@ -600,8 +578,7 @@ const DaftarResepFavorit = () => {
                 <IconButton
                   onClick={() => {
                     setTempRecipeName(""), setRecipeName("");
-                  }}
-                >
+                  }}>
                   <ClearIcon />
                 </IconButton>
               ),
@@ -621,8 +598,7 @@ const DaftarResepFavorit = () => {
                 textTransform: "none",
                 color: "#9696A0",
                 "&.MuiButton-outlined": { borderColor: "#9696A0" },
-              }}
-            >
+              }}>
               <Box display="flex" gap={2}>
                 <Typography>Filter</Typography>
                 <FilterListIcon />
@@ -657,15 +633,13 @@ const DaftarResepFavorit = () => {
                 },
               }}
               transformOrigin={{ horizontal: "center", vertical: "top" }}
-              anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-            >
+              anchorOrigin={{ horizontal: "center", vertical: "bottom" }}>
               <Box
                 padding={3}
                 display="flex"
                 flexDirection="column"
                 justifyContent="space-between"
-                gap={3}
-              >
+                gap={3}>
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
                     <Stack spacing={1}>
@@ -677,15 +651,12 @@ const DaftarResepFavorit = () => {
                           labelId="level"
                           id="level"
                           value={tempFoodLevel}
-                          onChange={handleChangeFoodLevel}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={3}>Easy</MenuItem>
-                          <MenuItem value={2}>Medium</MenuItem>
-                          <MenuItem value={1}>Hard</MenuItem>
-                          <MenuItem value={0}>Master Chef</MenuItem>
+                          onChange={handleChangeFoodLevel}>
+                          <MenuItem value="">ALL</MenuItem>
+                          <MenuItem value="3">Easy</MenuItem>
+                          <MenuItem value="2">Medium</MenuItem>
+                          <MenuItem value="1">Hard</MenuItem>
+                          <MenuItem value="0">Master Chef</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -700,15 +671,12 @@ const DaftarResepFavorit = () => {
                           labelId="foodCategory"
                           id="foodCategory"
                           value={tempFoodCategory}
-                          onChange={handleChangeFoodCategory}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={1}>Breakfast</MenuItem>
-                          <MenuItem value={0}>Lunch</MenuItem>
-                          <MenuItem value={2}>Dinner</MenuItem>
-                          <MenuItem value={3}>Snack</MenuItem>
+                          onChange={handleChangeFoodCategory}>
+                          <MenuItem value="">ALL</MenuItem>
+                          <MenuItem value="1">Breakfast</MenuItem>
+                          <MenuItem value="0">Lunch</MenuItem>
+                          <MenuItem value="2">Dinner</MenuItem>
+                          <MenuItem value="3">Snack</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -725,8 +693,7 @@ const DaftarResepFavorit = () => {
                           labelId="cookingTime"
                           id="cookingTime"
                           value={tempCookingTime}
-                          onChange={handleChangeCookingTime}
-                        >
+                          onChange={handleChangeCookingTime}>
                           <MenuItem value="">
                             <em>None</em>
                           </MenuItem>
@@ -744,21 +711,20 @@ const DaftarResepFavorit = () => {
                           labelId="sortBy"
                           id="sortBy"
                           value={tempSortBy}
-                          onChange={handleChangeSortBy}
-                        >
+                          onChange={handleChangeSortBy}>
                           <MenuItem value="">
                             <em>None</em>
                           </MenuItem>
-                          <MenuItem value="recipes.recipeName,asc">
+                          <MenuItem value="recipeName,asc">
                             Nama Resep A-Z
                           </MenuItem>
-                          <MenuItem value="recipes.recipeName,desc">
+                          <MenuItem value="recipeName,desc">
                             Nama Resep Z-A
                           </MenuItem>
-                          <MenuItem value="recipes.timeCook,asc">
+                          <MenuItem value="timeCook,asc">
                             Waktu Memasak A-Z
                           </MenuItem>
-                          <MenuItem value="recipes.timeCook,desc">
+                          <MenuItem value="timeCook,desc">
                             Waktu Memasak Z-A
                           </MenuItem>
                         </Select>
@@ -771,8 +737,7 @@ const DaftarResepFavorit = () => {
                     <Button
                       onClick={handleClickResetFilter}
                       variant="text"
-                      sx={{ textTransform: "none", color: "#EA4335" }}
-                    >
+                      sx={{ textTransform: "none", color: "#EA4335" }}>
                       <Typography>Bersihkan filter</Typography>
                     </Button>
                   </Grid>
@@ -785,8 +750,7 @@ const DaftarResepFavorit = () => {
                           color: "#01BFBF",
                           textTransform: "none",
                           fontWeight: "700",
-                        }}
-                      >
+                        }}>
                         Batal
                       </Button>
                       <Button
@@ -801,8 +765,7 @@ const DaftarResepFavorit = () => {
                           "&:hover": { backgroundColor: "#01BFBF" },
                           color: "white",
                           fontWeight: "700",
-                        }}
-                      >
+                        }}>
                         Terapkan
                       </Button>
                     </Box>
@@ -817,8 +780,7 @@ const DaftarResepFavorit = () => {
         <Box
           width={{ xs: "90%", md: "75%" }}
           marginX="auto"
-          marginTop={{ xs: 2, md: 3 }}
-        >
+          marginTop={{ xs: 2, md: 3 }}>
           <Typography
             sx={{
               display: { xs: "none", md: "block" },
@@ -826,12 +788,23 @@ const DaftarResepFavorit = () => {
               fontWeight: "600",
               textAlign: "center",
               marginBottom: 3,
-            }}
-          >
+            }}>
             Resep Favorit
           </Typography>
           <Grid container spacing={3} sx={{ marginBottom: 3 }}>
-            {resepData ? (
+            {isDataEmpty ? (
+              <Box display="flex" flexDirection="column" marginX="auto">
+                <img src="/svg/SearchNotFound.svg" alt="notFound" width={500} />
+                <Typography
+                  sx={{
+                    fontSize: "24px",
+                    textAlign: "center",
+                    fontWeight: "700",
+                  }}>
+                  Data Tidak Ditemukan
+                </Typography>
+              </Box>
+            ) : resepData ? (
               isLoading ? (
                 Array.from({ length: 8 }).map((_, index) => (
                   <Grid item xs={12} sm={6} md={3} key={index}>
@@ -856,20 +829,6 @@ const DaftarResepFavorit = () => {
             ) : (
               setIsLoading(true)
             )}
-            {isDataEmpty && (
-              <Box display="flex" flexDirection="column" marginX="auto">
-                <img src="/svg/SearchNotFound.svg" alt="notFound" width={500} />
-                <Typography
-                  sx={{
-                    fontSize: "24px",
-                    textAlign: "center",
-                    fontWeight: "700",
-                  }}
-                >
-                  Data Tidak Ditemukan
-                </Typography>
-              </Box>
-            )}
           </Grid>
           <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
@@ -880,8 +839,7 @@ const DaftarResepFavorit = () => {
                       color: "#787885",
                       fontWeight: "400",
                       fontSize: { xs: "14px", md: "16px" },
-                    }}
-                  >
+                    }}>
                     Entries
                   </Typography>
                   <IconButton
@@ -889,8 +847,7 @@ const DaftarResepFavorit = () => {
                     size="small"
                     onClick={() => {
                       handleClickEntries(8);
-                    }}
-                  >
+                    }}>
                     <Typography
                       sx={{
                         backgroundColor: entries === 8 ? "#01BFBF" : "initial",
@@ -899,8 +856,7 @@ const DaftarResepFavorit = () => {
                         paddingY: 0.5,
                         paddingX: 1,
                         borderRadius: entries === 8 ? "4px" : "initial",
-                      }}
-                    >
+                      }}>
                       8
                     </Typography>
                   </IconButton>
@@ -909,8 +865,7 @@ const DaftarResepFavorit = () => {
                     size="small"
                     onClick={() => {
                       handleClickEntries(16);
-                    }}
-                  >
+                    }}>
                     <Typography
                       sx={{
                         backgroundColor: entries === 16 ? "#01BFBF" : "initial",
@@ -919,8 +874,7 @@ const DaftarResepFavorit = () => {
                         paddingY: 0.5,
                         paddingX: 1,
                         borderRadius: entries === 16 ? "4px" : "initial",
-                      }}
-                    >
+                      }}>
                       16
                     </Typography>
                   </IconButton>
@@ -929,8 +883,7 @@ const DaftarResepFavorit = () => {
                     size="small"
                     onClick={() => {
                       handleClickEntries(48);
-                    }}
-                  >
+                    }}>
                     <Typography
                       sx={{
                         backgroundColor: entries === 48 ? "#01BFBF" : "initial",
@@ -939,8 +892,7 @@ const DaftarResepFavorit = () => {
                         paddingY: 0.5,
                         paddingX: 1,
                         borderRadius: entries === 48 ? "4px" : "initial",
-                      }}
-                    >
+                      }}>
                       48
                     </Typography>
                   </IconButton>
@@ -951,8 +903,7 @@ const DaftarResepFavorit = () => {
             <Grid item xs={12} md={6}>
               <Box
                 display="flex"
-                justifyContent={{ xs: "center", md: "right" }}
-              >
+                justifyContent={{ xs: "center", md: "right" }}>
                 <MyPagination
                   count={totalPage}
                   onChange={handlePaginationChange}

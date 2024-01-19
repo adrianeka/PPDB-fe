@@ -110,6 +110,7 @@ const ResepMakananCard = ({
   const handleDeleteRecipe = async (recipeId, userId, recipeName) => {
     try {
       setDeletionLoading(true);
+      setDeletionSuccess(false);
 
       const { success, errorMessage } = await deleteRecipe(recipeId, userId);
 
@@ -134,7 +135,6 @@ const ResepMakananCard = ({
         sortBy
       );
       setDeletionLoading(false);
-      setDeletionSuccess(true);
     }
   };
 
@@ -172,8 +172,7 @@ const ResepMakananCard = ({
                   backgroundColor: "rgba(0, 0, 0, 0.1)",
                 },
               }}
-              onClick={(event) => handleOpenOptions(event, data.recipeId)}
-            >
+              onClick={(event) => handleOpenOptions(event, data.recipeId)}>
               <MoreHoriz />
             </IconButton>
             <Menu
@@ -181,12 +180,10 @@ const ResepMakananCard = ({
                 option === data.recipeId ? document.activeElement : null
               }
               open={option === data.recipeId}
-              onClose={handleCloseOptions}
-            >
+              onClose={handleCloseOptions}>
               <MenuItem
                 component="a"
-                href={`/resep-saya/edit-resep/${data.recipeId}`}
-              >
+                href={`/resep-saya/edit-resep/${data.recipeId}`}>
                 <Edit sx={{ color: "#01BFBF" }} />
                 <Typography sx={{ color: "#01BFBF" }}>Edit</Typography>
               </MenuItem>
@@ -194,8 +191,7 @@ const ResepMakananCard = ({
                 onClick={() => {
                   handleOpenDialog(data.recipeId);
                   handleCloseOptions();
-                }}
-              >
+                }}>
                 <DeleteSweep sx={{ color: "red" }} />
                 <Typography sx={{ color: "red" }}>Hapus</Typography>
               </MenuItem>
@@ -204,8 +200,7 @@ const ResepMakananCard = ({
             {/* Dialog for confirmation */}
             <Dialog
               open={openDialog === data.recipeId}
-              onClose={handleCloseDialog}
-            >
+              onClose={handleCloseDialog}>
               <DialogTitle sx={{ textAlign: "center" }}>
                 <ErrorOutline sx={{ fontSize: 96, color: "#FBBC04" }} />
               </DialogTitle>
@@ -224,8 +219,7 @@ const ResepMakananCard = ({
                     boxShadow: "none",
                     border: "1px solid #01BFBF",
                     width: "145px",
-                  }}
-                >
+                  }}>
                   Tidak
                 </Button>
                 <Button
@@ -243,8 +237,7 @@ const ResepMakananCard = ({
                       backgroundColor: "#01A0A0",
                       boxShadow: "none",
                     },
-                  }}
-                >
+                  }}>
                   {deletionLoading ? <CircularProgress size={25} /> : "Ya"}
                 </Button>
               </DialogActions>
@@ -264,15 +257,13 @@ const ResepMakananCard = ({
               <Box
                 display="flex"
                 justifyContent="space-between"
-                marginBottom={1}
-              >
+                marginBottom={1}>
                 <Typography
                   sx={{
                     fontSize: "12px",
                     fontWeight: "400",
                     color: "#01BFBF",
-                  }}
-                >
+                  }}>
                   {data.categories.categoryName}
                 </Typography>
                 <Typography
@@ -280,8 +271,7 @@ const ResepMakananCard = ({
                     fontSize: "12px",
                     fontWeight: "400",
                     color: "#01BFBF",
-                  }}
-                >
+                  }}>
                   {data.levels.levelName}
                 </Typography>
               </Box>
@@ -297,8 +287,7 @@ const ResepMakananCard = ({
                     display: "flex",
                     gap: 0.5,
                     alignItems: "center",
-                  }}
-                >
+                  }}>
                   <AccessTimeIcon />
                   {data.time} Menit
                 </Typography>
@@ -310,8 +299,7 @@ const ResepMakananCard = ({
                       position: "relative",
                       right: -17,
                     },
-                  }}
-                >
+                  }}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -319,7 +307,7 @@ const ResepMakananCard = ({
                         checkedIcon={<StarIcon sx={{ color: "#01BFBF" }} />}
                       />
                     }
-                    checked={data.isFavorite || data.is_favorite}
+                    checked={data.isFavorite}
                     onChange={(event) => {
                       handleChange(
                         event,
@@ -335,8 +323,7 @@ const ResepMakananCard = ({
                           fontSize: "12px",
                           fontWeight: "400",
                           color: "#01BFBF",
-                        }}
-                      >
+                        }}>
                         Favorit
                       </Typography>
                     }
@@ -352,15 +339,13 @@ const ResepMakananCard = ({
                     sx={{
                       textDecoration: "none",
                       textAlign: "center",
-                    }}
-                  >
+                    }}>
                     <Typography
                       sx={{
                         fontSize: "12px",
                         fontWeight: "400",
                         color: "#01BFBF",
-                      }}
-                    >
+                      }}>
                       Lihat Detail Resep
                     </Typography>
                     <Divider
@@ -382,14 +367,12 @@ const ResepMakananCard = ({
         open={openDialogDeleted}
         onClose={handleCloseDialogDeleted}
         aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
+        aria-describedby="alert-dialog-description">
         <DialogContent>
           <Box display="flex" flexDirection="column" alignItems="center">
             <CheckCircleOutline sx={{ color: "#00E696", fontSize: "80px" }} />
             <Typography
-              sx={{ fontSize: "32px", fontWeight: "bold", color: "#00E696" }}
-            >
+              sx={{ fontSize: "32px", fontWeight: "bold", color: "#00E696" }}>
               Success
             </Typography>
           </Box>
@@ -397,8 +380,7 @@ const ResepMakananCard = ({
             display="flex"
             alignItems="center"
             flexDirection={"column"}
-            id="alert-dialog-description"
-          >
+            id="alert-dialog-description">
             Berhasil Menghapus Resep {deletedRecipeName}
           </DialogContentText>
         </DialogContent>
@@ -415,8 +397,7 @@ const ResepMakananCard = ({
               },
             }}
             onClick={handleCloseDialogDeleted}
-            autoFocus
-          >
+            autoFocus>
             Continue
           </Button>
         </DialogActions>

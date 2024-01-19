@@ -472,8 +472,12 @@ const DaftarResepMasakan = () => {
                       <MenuItem value="recipeName,desc">
                         Nama Resep Z-A
                       </MenuItem>
-                      <MenuItem value="timeCook,asc">Waktu Memasak A-Z</MenuItem>
-                      <MenuItem value="timeCook,desc">Waktu Memasak Z-A</MenuItem>
+                      <MenuItem value="timeCook,asc">
+                        Waktu Memasak A-Z
+                      </MenuItem>
+                      <MenuItem value="timeCook,desc">
+                        Waktu Memasak Z-A
+                      </MenuItem>
                     </Select>
                   </FormControl>
                 </Stack>
@@ -760,7 +764,19 @@ const DaftarResepMasakan = () => {
             Daftar Resep Makanan
           </Typography>
           <Grid container spacing={3} sx={{ marginBottom: 3 }}>
-            {resepData ? (
+            {isDataEmpty ? (
+              <Box display="flex" flexDirection="column" marginX="auto">
+                <img src="/svg/SearchNotFound.svg" alt="notFound" width={500} />
+                <Typography
+                  sx={{
+                    fontSize: "24px",
+                    textAlign: "center",
+                    fontWeight: "700",
+                  }}>
+                  Data Tidak Ditemukan
+                </Typography>
+              </Box>
+            ) : resepData ? (
               isLoading ? (
                 Array.from({ length: 8 }).map((_, index) => (
                   <Grid item xs={12} sm={6} md={3} key={index}>
@@ -784,19 +800,6 @@ const DaftarResepMasakan = () => {
               )
             ) : (
               setIsLoading(true)
-            )}
-            {isDataEmpty && (
-              <Box display="flex" flexDirection="column" marginX="auto">
-                <img src="/svg/SearchNotFound.svg" alt="notFound" width={500} />
-                <Typography
-                  sx={{
-                    fontSize: "24px",
-                    textAlign: "center",
-                    fontWeight: "700",
-                  }}>
-                  Data Tidak Ditemukan
-                </Typography>
-              </Box>
             )}
           </Grid>
           <Grid container spacing={1}>

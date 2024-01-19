@@ -11,7 +11,7 @@ import PrivateRoute from "../services/PrivateRoute";
 
 import Navbar from "../components/Navbar";
 
-function layout() {
+function Layout() {
   const location = useLocation();
   const path = location.pathname;
 
@@ -45,4 +45,4 @@ function layout() {
   );
 }
 
-export default layout;
+export default Layout;

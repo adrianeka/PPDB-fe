@@ -8,9 +8,9 @@ import AuthWrapper from "../components/AuthWrapper";
 import { BlueButton } from "../components/Button";
 import { Logo } from "../components/Logo";
 import { TextInput, PasswordInput } from "../components/TextField";
-import { cssReset, wrapper, formContentWrapper } from "../styles/style.jsx";
-import axios from "axios";
+import { cssReset, wrapper, formContentWrapper } from "../styles/index.jsx";
 import useToken from "../services/AuthProvider.js";
+import { userLogin } from "../services/apis.jsx";
 
 export const loginSchema = z.object({
   username: z
@@ -54,12 +54,6 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const apiLogin = import.meta.env.VITE_API_SIGNIN;
-
-  const client = axios.create({
-    baseURL: apiLogin,
-  });
-
   const onSubmit = (data, e) => {
     e.preventDefault();
     addPosts(data.username, data.password);
@@ -67,11 +61,7 @@ const Login = () => {
 
   const addPosts = async (username, password) => {
     try {
-      let response = await client.post("", {
-        username: username,
-        password: password,
-      });
-
+      const response = await userLogin(username, password);
       toast.success("Login berhasil!");
 
       setUserId(response.data.data.id);

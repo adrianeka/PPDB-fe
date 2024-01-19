@@ -9,7 +9,7 @@ import {
   footerTextStyle,
   footerStyle,
   FooterLink,
-} from "../styles/style.jsx";
+} from "../styles/index.jsx";
 
 const AuthWrapper = ({
   children,

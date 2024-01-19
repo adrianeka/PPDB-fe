@@ -36,6 +36,7 @@ const ResepMakananCard = ({
   const [favoriteMessage, setFavoriteMessage] = useState("");
 
   const handleChange = (event, recipeId, recipeName, statusFavorite) => {
+    console.log("status", statusFavorite);
     async function putFavorite() {
       try {
         if (statusFavorite === false) {
@@ -88,15 +89,13 @@ const ResepMakananCard = ({
               <Box
                 display="flex"
                 justifyContent="space-between"
-                marginBottom={1}
-              >
+                marginBottom={1}>
                 <Typography
                   sx={{
                     fontSize: "12px",
                     fontWeight: "400",
                     color: "#01BFBF",
-                  }}
-                >
+                  }}>
                   {data.categories.categoryName}
                 </Typography>
                 <Typography
@@ -104,8 +103,7 @@ const ResepMakananCard = ({
                     fontSize: "12px",
                     fontWeight: "400",
                     color: "#01BFBF",
-                  }}
-                >
+                  }}>
                   {data.levels.levelName}
                 </Typography>
               </Box>
@@ -121,8 +119,7 @@ const ResepMakananCard = ({
                     display: "flex",
                     gap: 0.5,
                     alignItems: "center",
-                  }}
-                >
+                  }}>
                   <AccessTimeIcon />
                   {data.time} Menit
                 </Typography>
@@ -134,8 +131,7 @@ const ResepMakananCard = ({
                       position: "relative",
                       right: -17,
                     },
-                  }}
-                >
+                  }}>
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -143,7 +139,7 @@ const ResepMakananCard = ({
                         checkedIcon={<StarIcon sx={{ color: "#01BFBF" }} />}
                       />
                     }
-                    checked={data.isFavorite || data.is_favorite}
+                    checked={data.isFavorite}
                     onChange={(event) => {
                       handleChange(
                         event,
@@ -159,8 +155,7 @@ const ResepMakananCard = ({
                           fontSize: "12px",
                           fontWeight: "400",
                           color: "#01BFBF",
-                        }}
-                      >
+                        }}>
                         Favorit
                       </Typography>
                     }
@@ -176,15 +171,13 @@ const ResepMakananCard = ({
                     sx={{
                       textDecoration: "none",
                       textAlign: "center",
-                    }}
-                  >
+                    }}>
                     <Typography
                       sx={{
                         fontSize: "12px",
                         fontWeight: "400",
                         color: "#01BFBF",
-                      }}
-                    >
+                      }}>
                       Lihat Detail Resep
                     </Typography>
                     <Divider

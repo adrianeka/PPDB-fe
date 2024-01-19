@@ -1,4 +1,3 @@
-import axios from "axios";
 import instance from "./axiosConfig";
 
 const baseUrl = import.meta.env.VITE_API_URL;
@@ -7,7 +6,7 @@ const apiGetMyRecipes = import.meta.env.VITE_API_GETMYRECIPES;
 const apiGetMyFavoriteRecipes = import.meta.env.VITE_API_GETMYFAVORITERECIPES;
 
 const buildUrl = (base, params) => {
-  let url = base + '?';
+  let url = base + "?";
   for (const key in params) {
     if (params[key]) {
       url += `${key}=${params[key]}&`;
@@ -19,8 +18,71 @@ const buildUrl = (base, params) => {
 };
 
 //Register
+export const userRegister = (formData) => {
+  const apiRegister = import.meta.env.VITE_API_REGISTER;
+  return instance
+    .post(apiRegister, formData)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      throw error;
+    });
+};
 
 //Login
+export const userLogin = (username, password) => {
+  const apiLogin = import.meta.env.VITE_API_SIGNIN;
+  return instance
+    .post(apiLogin, { username: username, password: password })
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      throw error;
+    });
+};
+
+//Get Master Category
+export const getCategory = () => {
+  return instance
+    .get("/book-recipe-masters/category-option-lists")
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      throw error;
+    });
+};
+
+//Get Master Level
+export const getLevels = () => {
+  return instance
+    .get("/book-recipe-masters/level-option-lists")
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error(error);
+      throw error;
+    });
+};
+
+//Post Tambah Resep
+export const postTambahResep = (formData) => {
+  return instance
+    .post("/book-recipe/book-recipes", formData)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error(error);
+      throw error;
+    });
+};
 
 //Get Daftar Resep
 export const getDaftarResepMakanan = (
@@ -123,9 +185,9 @@ export const getDaftarResepFavorit = (
 
 //Add/Remove to favorite
 export const putFavoriteResepMasakan = (recipeId, userId) => {
-  const apiUrl = `${baseUrl}/book-recipe/book-recipes/${recipeId}/favorites/`;
+  const apiUrl = `${baseUrl}/book-recipe/book-recipes/${recipeId}/favorites`;
 
-  return axios
+  return instance
     .put(apiUrl, { userId: userId })
     .then((response) => {
       return response;
@@ -153,4 +215,19 @@ export const deleteRecipe = async (recipeId, userId) => {
       errorMessage: `Error deleting recipe: ${error.message}`,
     };
   }
+};
+
+//Get Detail Resep
+export const getDetailResep = (recipeId) => {
+  const apiUrl = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
+  return instance
+    .get(`${apiUrl}/${recipeId}`)
+    .then((response) => {
+      console.log("response", response);
+      return response;
+    })
+    .catch((error) => {
+      console.log(error);
+      throw error;
+    });
 };

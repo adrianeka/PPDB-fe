@@ -1,29 +1,19 @@
 // DetailResep.js
-import { Container } from "@mui/system";
+import { Box, Container } from "@mui/system";
 import { useEffect, useState } from "react";
-import "../styles/style.css";
-import "../styles/index.css";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Grid,
   IconButton,
   Typography,
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
   Checkbox,
-  Divider,
   FormControlLabel,
-  FormGroup,
-  Link,
 } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import axios from "axios";
-import { putFavoriteResepMasakan } from "../services/apis";
+import { getDetailResep, putFavoriteResepMasakan } from "../services/apis";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
+import FavoritDialog from "../components/FavoritDialog";
 
 function DetailResep() {
   const { id } = useParams();
@@ -31,42 +21,24 @@ function DetailResep() {
   const navigate = useNavigate();
   const [openFavoriteDialog, setOpenFavoriteDialog] = useState(false);
   const [favoriteMessage, setFavoriteMessage] = useState("");
-
-  const getAuthToken = () => {
-    return localStorage.getItem("token");
-    // Replace 'yourAuthTokenKey' with the actual key used to store the token.
-  };
-
-  useEffect(() => {
-    getDetailResep();
-    setResepData();
-  }, [id]);
-
   const [resepData, setResepData] = useState();
 
-  const apiUrl = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
-  const getDetailResep = async () => {
-    try {
-      const authToken = getAuthToken();
-      const response = await axios.get(
-        `${apiUrl}/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      console.log(`token: ${authToken}`);
-      setResepData(response.data.data);
-    } catch (error) {
-      console.log(error.message);
+  console.log("id", id);
+
+  useEffect(() => {
+    async function fetchDetailResep() {
+      try {
+        const response = await getDetailResep(id);
+        setResepData(response.data.data);
+      } catch (error) {
+        console.log(error.message);
+      }
     }
-  };
+    fetchDetailResep();
+  }, [id]);
 
   const handleChange = async (event, recipeId, recipeName, statusFavorite) => {
     try {
-      const authToken = getAuthToken();
-      console.log(`token: ${authToken}`);
       const updatedResepData = {
         ...resepData,
         isFavorite: !resepData.isFavorite,
@@ -81,16 +53,18 @@ function DetailResep() {
       setOpenFavoriteDialog(true);
 
       await putFavoriteResepMasakan(resepData.recipeId, userId);
-      console.log(`isFavorite : ${resepData.isFavorite}`);
-      console.log("berhasil");
     } catch (error) {
       console.log("error change favorite data", error);
-      // Handle error jika diperlukan
     }
   };
 
   return (
     <div>
+      <FavoritDialog
+        open={openFavoriteDialog}
+        setOpen={setOpenFavoriteDialog}
+        message={favoriteMessage}
+      />
       {resepData ? (
         <Container maxWidth="sm" sx={{ paddingBottom: 3 }}>
           <Grid
@@ -100,27 +74,27 @@ function DetailResep() {
             alignItems="center"
             paddingTop={7}
             marginBottom={2}
-            wrap="nowrap"
-          >
-            <Grid item>
+            wrap="nowrap">
+            <Grid item sx={{ marginBottom: 3 }}>
               <Grid
                 container
                 direction="row"
                 justifyContent="space-between"
-                alignItems="center"
-              >
+                alignItems="center">
                 <Grid item>
                   <IconButton aria-label="Example" onClick={() => navigate(-1)}>
-                    <ArrowBackIosNewIcon fontSize="large" color="black" />
+                    <ArrowBackIosNewIcon
+                      color="black"
+                      sx={{ fontSize: { xs: "24px", md: "32px" } }}
+                    />
                   </IconButton>
                 </Grid>
                 <Grid item>
                   <Typography
                     sx={{
-                      fontSize: 36,
+                      fontSize: { xs: 24, md: 36 },
                       fontWeight: "600",
-                    }}
-                  >
+                    }}>
                     {resepData.recipeName}
                   </Typography>
                 </Grid>
@@ -135,28 +109,31 @@ function DetailResep() {
             </Grid>
             <Grid item></Grid>
           </Grid>
-          <div className="box">
+          <Box
+            sx={{
+              border: "1px solid #01bfbf",
+              borderRadius: "4px",
+              padding: 2,
+              marginBottom: 3,
+            }}>
             <Grid
               spacing={2}
               container
               direction="row"
               justifyContent="space-between"
-              alignItems="center"
-            >
+              alignItems="center">
               <Grid item>
                 <Grid
                   container
                   direction="column"
                   justifyContent="center"
-                  alignItems="flex-start"
-                >
+                  alignItems="flex-start">
                   <Grid item>
                     <Typography
                       sx={{
                         Size: 14,
                         color: "#01bfbf",
-                      }}
-                    >
+                      }}>
                       Kategori
                     </Typography>
                   </Grid>
@@ -170,15 +147,14 @@ function DetailResep() {
                   container
                   direction="column"
                   justifyContent="center"
-                  alignItems="flex-start"
-                >
+                  alignItems="flex-start">
                   <Grid item>
                     <Typography sx={{ fontSize: 14, color: "#01bfbf" }}>
                       Waktu Masak
                     </Typography>
                   </Grid>
                   <Grid item className="item">
-                    {resepData.time} menit
+                    {resepData.timeCook} menit
                   </Grid>
                 </Grid>
               </Grid>
@@ -187,8 +163,7 @@ function DetailResep() {
                   container
                   direction="column"
                   justifyContent="center"
-                  alignItems="flex-start"
-                >
+                  alignItems="flex-start">
                   <Grid item>
                     <Typography sx={{ fontSize: 14, color: "#01bfbf" }}>
                       Kesulitan
@@ -223,24 +198,22 @@ function DetailResep() {
                         fontSize: "12px",
                         fontWeight: "400",
                         color: "#01BFBF",
-                      }}
-                    >
+                      }}>
                       Favorit
                     </Typography>
                   }
                 />
               </Grid>
             </Grid>
-          </div>
+          </Box>
 
           <Grid
             container
-            spacing={0}
             direction="column"
             justifyContent="center"
             alignItems="stretch"
             marginBottom={4}
-          >
+            paddingX={{ xs: 1, md: 0 }}>
             <Grid item textAlign={"left"}>
               <Typography
                 sx={{
@@ -248,8 +221,7 @@ function DetailResep() {
                   fontWeight: 600,
                   lineHeight: "27px",
                   color: "#01bfbf",
-                }}
-              >
+                }}>
                 Bahan-Bahan
               </Typography>
             </Grid>
@@ -263,10 +235,9 @@ function DetailResep() {
                   fontWeight: 400,
                   lineHeight: "20px",
                   marginBottom: "17px",
-                }}
-              >
+                }}>
                 <div
-                  dangerouslySetInnerHTML={{ __html: resepData.ingredient }}
+                  dangerouslySetInnerHTML={{ __html: resepData.ingridient }}
                 />
               </Typography>
             </Grid>
@@ -277,8 +248,7 @@ function DetailResep() {
                   fontWeight: 600,
                   lineHeight: "27px",
                   color: "#01bfbf",
-                }}
-              >
+                }}>
                 Cara memasak
               </Typography>
             </Grid>
@@ -293,8 +263,7 @@ function DetailResep() {
                   color: "#586A84",
                   textAlign: "justify",
                   lineHeight: "20px",
-                }}
-              >
+                }}>
                 <div
                   dangerouslySetInnerHTML={{ __html: resepData.howToCook }}
                 />

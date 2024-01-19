@@ -5,11 +5,11 @@ import AuthWrapper from "../components/AuthWrapper";
 import { BlueButton } from "../components/Button.jsx";
 import { Logo } from "../components/Logo";
 import { TextInput, PasswordInput } from "../components/TextField";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import toast from "react-hot-toast";
-import { cssReset, wrapper, formContentWrapper } from "../styles/style.jsx";
+import { cssReset, wrapper, formContentWrapper } from "../styles/index.jsx";
+import { userRegister } from "../services/apis.jsx";
 
 export const registerSchema = z
   .object({
@@ -37,7 +37,11 @@ export const registerSchema = z
       .min(6, {
         message: "Kata sandi tidak boleh kurang dari 6 karakter.",
       })
-      .max(50),
+      .max(50)
+      .refine((value) => /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(value), {
+        message:
+          "Kata sandi harus memiliki minimal 6 karakter kombinasi angka/huruf.",
+      }),
     retypePassword: z.string().min(1, {
       message: "Kolom Konfirmasi Kata Sandi tidak boleh kosong",
     }),
@@ -57,14 +61,9 @@ const Register = () => {
   });
   const navigate = useNavigate();
 
-  const apiRegister = import.meta.env.VITE_API_REGISTER;
-
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(
-        apiRegister,
-        data
-      );
+      const response = await userRegister(data);
       if (response.data.status === "OK") {
         toast.success("Berhasil daftar!");
         navigate("/user-management/users/signin");
@@ -81,8 +80,7 @@ const Register = () => {
       <AuthWrapper
         title="Daftar"
         linkText="Batal, Kembali ke Halaman Login"
-        url="/"
-      >
+        url="/">
         <form onSubmit={handleSubmit(onSubmit)} style={formContentWrapper}>
           <TextInput
             label="Username"

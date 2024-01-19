@@ -105,16 +105,15 @@ function EditResep() {
           .get(`/book-recipe/book-recipes/${id}`)
           .then((response) => {
             const recipeData = response.data.data; // Mengakses data dari properti 'data' dalam respons
-
             setRecipeName(recipeData.recipeName);
-            setSelectedCategory(recipeData.category.categoryId.toString()); // Akses categoryId dari category
+            setSelectedCategory(recipeData.categories.categoryId); // Akses categoryId dari category
             setSelectedLevel(recipeData.levels.levelId.toString()); // Akses levelId dari levels
-            setTimeCook(recipeData.time.toString()); // Mengubah time menjadi string
-            setIngridient(recipeData.ingredient); // Menggunakan 'ingredient', bukan 'ingridient'
+            setTimeCook(recipeData.timeCook); // Mengubah time menjadi string
+            setIngridient(recipeData.ingridient); // Menggunakan 'ingredient', bukan 'ingridient'
             setHowToCook(recipeData.howToCook);
 
-            if (recipeData.imageUrl) {
-              setImagePreview(recipeData.imageUrl);
+            if (recipeData.imageFilename) {
+              setImagePreview(recipeData.imageFilename);
             }
           })
           .catch((error) => {
@@ -360,9 +359,11 @@ function EditResep() {
     }
 
     const formData = new FormData();
+    const userId = localStorage.getItem("userId");
 
     // Membuat objek JSON dengan data yang diinginkan oleh API
     const jsonData = {
+      userId: userId,
       recipeId: parseInt(id), // Menggunakan parseInt untuk memastikan format angka
       categories: {
         categoryId: parseInt(selectedCategory),
@@ -417,7 +418,7 @@ function EditResep() {
 
   const handleClose = () => {
     setSubmitSuccess(false);
-    navigate("/daftar-resep"); // Navigate after closing the dialog
+    navigate("/resep-saya"); // Navigate after closing the dialog
   };
 
   const successDialogStyles = {
@@ -468,8 +469,7 @@ function EditResep() {
 
         position: "absolute", // Use absolute positioning
         marginTop: "2px",
-      }}
-    >
+      }}>
       {error}
     </Typography>
   );
@@ -488,8 +488,7 @@ function EditResep() {
     <Dialog
       open={open}
       onClose={onClose}
-      sx={{ "& .MuiDialog-paper": { backgroundColor: "red" } }}
-    >
+      sx={{ "& .MuiDialog-paper": { backgroundColor: "red" } }}>
       <DialogTitle sx={{ color: "white" }}>Error</DialogTitle>
       <DialogContent>
         <DialogContentText sx={{ color: "white" }}>
@@ -500,8 +499,7 @@ function EditResep() {
         <Button
           onClick={onClose}
           sx={{ color: "white", borderColor: "white" }}
-          variant="outlined"
-        >
+          variant="outlined">
           Close
         </Button>
       </DialogActions>
@@ -530,8 +528,7 @@ function EditResep() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-          }}
-        >
+          }}>
           <AddPhotoAlternateOutlinedIcon
             color="disabled"
             style={{ fontSize: 60 }}
@@ -542,8 +539,7 @@ function EditResep() {
               textAlign: "center",
 
               marginTop: "5px",
-            }}
-          >
+            }}>
             <strong>Click to upload</strong> or drag and drop
             <br />
             PNG, JPG, JPEG (Max 1MB)
@@ -598,8 +594,7 @@ function EditResep() {
         onClose={handleClose}
         aria-labelledby="success-dialog-title"
         aria-describedby="success-dialog-description"
-        sx={successDialogStyles}
-      >
+        sx={successDialogStyles}>
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -607,8 +602,7 @@ function EditResep() {
             position: "absolute",
             right: 8,
             top: 8,
-          }}
-        >
+          }}>
           <CloseIcon />
         </IconButton>
         <DialogContent>
@@ -623,15 +617,13 @@ function EditResep() {
                 fontWeight: "bold",
                 color: "#00E696",
                 // fontSize: "5rem",
-              }}
-            >
+              }}>
               Sukses
             </Typography>
           </DialogTitle>
           <DialogContentText
             id="success-dialog-description"
-            sx={{ color: "black" }}
-          >
+            sx={{ color: "black" }}>
             {submitMessage}
           </DialogContentText>
         </DialogContent>
@@ -640,8 +632,7 @@ function EditResep() {
             onClick={handleClose}
             color="primary"
             variant="contained"
-            sx={{ mt: 0, fontSize: "1.2rem" }}
-          >
+            sx={{ mt: 0, fontSize: "1.2rem" }}>
             Continue
           </Button>
         </DialogActions>
@@ -654,8 +645,7 @@ function EditResep() {
             marginTop={6}
             sx={{
               fontWeight: "bold",
-            }}
-          >
+            }}>
             Edit Resep Masakan
           </Typography>
           <form onSubmit={handleSubmit}>
@@ -666,8 +656,7 @@ function EditResep() {
               paddingTop={3}
               paddingRight={5}
               paddingLeft={5}
-              paddingBottom={7}
-            >
+              paddingBottom={7}>
               {/* Left Column */}
               <Grid item xs={12} md={6}>
                 {/* Recipe Name */}
@@ -676,8 +665,7 @@ function EditResep() {
                     marginBottom: 1,
                     textAlign: "left",
                     color: "gray",
-                  }}
-                >
+                  }}>
                   Nama Resep Masakan <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <TextField
@@ -700,14 +688,12 @@ function EditResep() {
                     marginTop: 2,
                     textAlign: "left",
                     color: "gray",
-                  }}
-                >
+                  }}>
                   Gambar Makanan{" "}
                   <span
                     style={{
                       color: "red",
-                    }}
-                  >
+                    }}>
                     *
                   </span>
                 </Typography>
@@ -731,8 +717,7 @@ function EditResep() {
                       border: errors.imageFile
                         ? "2px dashed #dd2727"
                         : "2px dashed gray",
-                    }}
-                  >
+                    }}>
                     {renderDropzoneContent()}
                   </Box>
                   {errors.imageFile && (
@@ -745,8 +730,7 @@ function EditResep() {
 
                         marginTop: 0,
                         fontSize: "0.70rem",
-                      }}
-                    >
+                      }}>
                       {errors.imageFile}
                     </Typography>
                   )}
@@ -758,8 +742,7 @@ function EditResep() {
                     marginBottom: 1,
                     textAlign: "left",
                     color: "gray",
-                  }}
-                >
+                  }}>
                   Bahan - Bahan <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <div className="ingredients-editor">
@@ -770,8 +753,7 @@ function EditResep() {
                         : "0px solid rgba(0, 0, 0, 0.23)", // Assuming this is your default border
                       borderRadius: "2px", // Match the border radius with TextField
                       // ... other styles for the box
-                    }}
-                  >
+                    }}>
                     <ReactQuill
                       theme="snow"
                       placeholder="Write a description..."
@@ -796,8 +778,7 @@ function EditResep() {
                     display: "flex",
                     flexDirection: "column",
                     gap: isMobile ? 1 : 2,
-                  }}
-                >
+                  }}>
                   {/* Category Selection */}
                   <Box>
                     <Typography
@@ -805,23 +786,20 @@ function EditResep() {
                         marginBottom: 1,
                         textAlign: "left",
                         color: "gray",
-                      }}
-                    >
+                      }}>
                       Kategori Masakan <span style={{ color: "red" }}>*</span>
                     </Typography>
                     <FormControl
                       fullWidth
                       error={!!errors.selectedCategory}
                       variant="outlined"
-                      sx={{ background: "white" }}
-                    >
+                      sx={{ background: "white" }}>
                       <Select
                         value={selectedCategory}
                         onChange={handleCategoryChange}
                         displayEmpty
                         inputProps={{ "aria-label": "Without label" }}
-                        sx={{ textAlign: "center" }}
-                      >
+                        sx={{ textAlign: "center" }}>
                         <MenuItem value="" disabled>
                           Pilih Kategori
                         </MenuItem>
@@ -829,8 +807,7 @@ function EditResep() {
                           <MenuItem
                             key={category.categoryId}
                             value={category.categoryId.toString()}
-                            sx={{ textAlign: "center" }}
-                          >
+                            sx={{ textAlign: "center" }}>
                             {category.categoryName}
                           </MenuItem>
                         ))}
@@ -848,8 +825,7 @@ function EditResep() {
                       display: "flex",
                       gap: isMobile ? 1 : 2,
                       flexDirection: isMobile ? "column" : "row",
-                    }}
-                  >
+                    }}>
                     {/* Time Cook */}
                     <Box sx={{ flex: 1, minWidth: "150px" }}>
                       <Typography
@@ -859,8 +835,7 @@ function EditResep() {
                           textAlign: "left",
                           color: "gray",
                           fontSize: dynamicStyles.headingFontSize,
-                        }}
-                      >
+                        }}>
                         Waktu Memasak (Menit){" "}
                         <span style={{ color: "red" }}>*</span>
                       </Typography>
@@ -889,8 +864,7 @@ function EditResep() {
                           textAlign: "left",
                           color: "gray",
                           fontSize: dynamicStyles.headingFontSize,
-                        }}
-                      >
+                        }}>
                         Tingkat Kesulitan{" "}
                         <span style={{ color: "red" }}>*</span>
                       </Typography>
@@ -898,15 +872,13 @@ function EditResep() {
                         fullWidth
                         error={!!errors.selectedLevel}
                         variant="outlined"
-                        sx={{ background: "white" }}
-                      >
+                        sx={{ background: "white" }}>
                         <Select
                           value={selectedLevel}
                           onChange={handleLevelChange}
                           displayEmpty
                           inputProps={{ "aria-label": "Without label" }}
-                          sx={{ textAlign: "center" }}
-                        >
+                          sx={{ textAlign: "center" }}>
                           <MenuItem value="" disabled>
                             Pilih Tingkat Kesulitan
                           </MenuItem>
@@ -914,8 +886,7 @@ function EditResep() {
                             <MenuItem
                               key={level.levelId}
                               value={level.levelId.toString()}
-                              sx={{ textAlign: "center" }}
-                            >
+                              sx={{ textAlign: "center" }}>
                               {level.levelName}
                             </MenuItem>
                           ))}
@@ -937,8 +908,7 @@ function EditResep() {
                         marginBottom: 1,
                         textAlign: "left",
                         color: "gray",
-                      }}
-                    >
+                      }}>
                       Cara Masak <span style={{ color: "red" }}>*</span>
                     </Typography>
                     <div className="how-to-cook-editor">
@@ -949,8 +919,7 @@ function EditResep() {
                             : "0px solid rgba(0, 0, 0, 0.23)", // Assuming this is your default border
                           borderRadius: "2px", // Match the border radius with TextField
                           // ... other styles for the box
-                        }}
-                      >
+                        }}>
                         <ReactQuill
                           theme="snow"
                           placeholder="Write a description..."
@@ -974,8 +943,7 @@ function EditResep() {
                     container
                     justifyContent="flex-end"
                     spacing={isMobile ? 1 : 6}
-                    paddingTop={isMobile ? 2 : 1}
-                  >
+                    paddingTop={isMobile ? 2 : 1}>
                     {/* Batal Button */}
                     <Grid item>
                       <Button
@@ -993,7 +961,7 @@ function EditResep() {
                             backgroundColor: "white",
                           },
                         }}
-                        onClick={() => navigate("/daftar-resep")} // Assuming you want to navigate back on cancel
+                        onClick={() => navigate("/resep-saya")} // Assuming you want to navigate back on cancel
                       >
                         Batal
                       </Button>
@@ -1012,8 +980,7 @@ function EditResep() {
                           "&:hover": {
                             backgroundColor: "#077d7d", // Replace with a slightly darker color code
                           },
-                        }}
-                      >
+                        }}>
                         {isSubmitting ? (
                           <CircularProgress size={24} />
                         ) : (
