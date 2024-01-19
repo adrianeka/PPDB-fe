@@ -24,6 +24,7 @@ import axios from "axios";
 import { putFavoriteResepMasakan } from "../services/apis";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
+import http from "../services/axiosConfig";
 
 function DetailResep() {
   const { id } = useParams();
@@ -48,15 +49,9 @@ function DetailResep() {
   const getDetailResep = async () => {
     try {
       const authToken = getAuthToken();
-      const response = await axios.get(
-        `${apiUrl}/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
+      const response = await http.get(
+        `${apiUrl}/${id}`
       );
-      console.log(`token: ${authToken}`);
       setResepData(response.data.data);
     } catch (error) {
       console.log(error.message);

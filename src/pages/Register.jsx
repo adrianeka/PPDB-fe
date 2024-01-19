@@ -37,7 +37,11 @@ export const registerSchema = z
       .min(6, {
         message: "Kata sandi tidak boleh kurang dari 6 karakter.",
       })
-      .max(50),
+      .max(50)
+      .refine((value) => /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(value), {
+        message:
+          "Kata sandi harus memiliki minimal 6 karakter kombinasi angka/huruf.",
+      }),
     retypePassword: z.string().min(1, {
       message: "Kolom Konfirmasi Kata Sandi tidak boleh kosong",
     }),
@@ -68,6 +72,10 @@ const Register = () => {
       if (response.data.status === "OK") {
         toast.success("Berhasil daftar!");
         navigate("/user-management/users/signin");
+      }
+
+      if (response.data.status === "ERROR") {
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.log(error);
