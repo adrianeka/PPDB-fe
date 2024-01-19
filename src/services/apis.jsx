@@ -4,6 +4,8 @@ const baseUrl = import.meta.env.VITE_API_URL;
 const apiGetDaftarResepMakanan = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
 const apiGetMyRecipes = import.meta.env.VITE_API_GETMYRECIPES;
 const apiGetMyFavoriteRecipes = import.meta.env.VITE_API_GETMYFAVORITERECIPES;
+const apiLogin = import.meta.env.VITE_API_SIGNIN;
+const apiRegister = import.meta.env.VITE_API_REGISTER;
 
 const buildUrl = (base, params) => {
   let url = base + "?";
@@ -19,7 +21,6 @@ const buildUrl = (base, params) => {
 
 //Register
 export const userRegister = (formData) => {
-  const apiRegister = import.meta.env.VITE_API_REGISTER;
   return instance
     .post(apiRegister, formData)
     .then((response) => {
@@ -33,7 +34,6 @@ export const userRegister = (formData) => {
 
 //Login
 export const userLogin = (username, password) => {
-  const apiLogin = import.meta.env.VITE_API_SIGNIN;
   return instance
     .post(apiLogin, { username: username, password: password })
     .then((response) => {
@@ -219,9 +219,8 @@ export const deleteRecipe = async (recipeId, userId) => {
 
 //Get Detail Resep
 export const getDetailResep = (recipeId) => {
-  const apiUrl = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
   return instance
-    .get(`${apiUrl}/${recipeId}`)
+    .get(`${apiGetDaftarResepMakanan}/${recipeId}`)
     .then((response) => {
       console.log("response", response);
       return response;

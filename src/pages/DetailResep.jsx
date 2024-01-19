@@ -23,8 +23,6 @@ function DetailResep() {
   const [favoriteMessage, setFavoriteMessage] = useState("");
   const [resepData, setResepData] = useState();
 
-  console.log("id", id);
-
   useEffect(() => {
     async function fetchDetailResep() {
       try {
@@ -37,6 +35,7 @@ function DetailResep() {
     fetchDetailResep();
   }, [id]);
 
+  // handle change isFavorite
   const handleChange = async (event, recipeId, recipeName, statusFavorite) => {
     try {
       const updatedResepData = {
@@ -154,7 +153,7 @@ function DetailResep() {
                     </Typography>
                   </Grid>
                   <Grid item className="item">
-                    {resepData.timeCook} menit
+                    {resepData.timeCook} Menit
                   </Grid>
                 </Grid>
               </Grid>

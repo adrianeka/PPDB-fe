@@ -68,6 +68,10 @@ const Register = () => {
         toast.success("Berhasil daftar!");
         navigate("/user-management/users/signin");
       }
+
+      if (response.data.status === "ERROR") {
+        toast.error(response.data.message);
+      }
     } catch (error) {
       console.log(error);
     }
