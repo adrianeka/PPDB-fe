@@ -27,6 +27,7 @@ import { getMyRecipes } from "../services/apis";
 import ErrorSnackbar from "../components/ErrorSnackbar";
 import CardSkeletonLoading from "../components/CardSkeletonLoading";
 import useToken from "../services/AuthProvider";
+import notFoundImage from "../public/svg/SearchNotFound.svg";
 
 const MyPagination = styled(Pagination)({
   "&.MuiPagination-root": {
@@ -770,7 +771,7 @@ const DaftarResepMasakan = () => {
           <Grid container spacing={3} sx={{ marginBottom: 3 }}>
             {isDataEmpty ? (
               <Box display="flex" flexDirection="column" marginX="auto">
-                <img src="/svg/SearchNotFound.svg" alt="notFound" width={500} />
+                <img src={notFoundImage} alt="notFound" width={500} />
                 <Typography
                   sx={{
                     fontSize: "24px",
