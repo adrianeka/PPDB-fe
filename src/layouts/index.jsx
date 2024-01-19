@@ -1,8 +1,7 @@
-import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import DaftarResepMasakan from "../pages/DaftarResepMasakan";
 import DetailResep from "../pages/DetailResep";
-import ResepSaya from "../pages/ResepSaya";
+import ResepSaya from "../pages/DaftarResepMasakanSaya";
 import ResepFavorit from "../pages/ResepFavorit";
 import TambahResep from "../pages/TambahResep";
 import EditResep from "../pages/EditResep";

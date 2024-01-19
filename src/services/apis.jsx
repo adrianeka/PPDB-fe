@@ -1,9 +1,22 @@
 import axios from "axios";
+import instance from "./axiosConfig";
 
 const baseUrl = import.meta.env.VITE_API_URL;
 const apiGetDaftarResepMakanan = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
 const apiGetMyRecipes = import.meta.env.VITE_API_GETMYRECIPES;
 const apiGetMyFavoriteRecipes = import.meta.env.VITE_API_GETMYFAVORITERECIPES;
+
+const buildUrl = (base, params) => {
+  let url = base + '?';
+  for (const key in params) {
+    if (params[key]) {
+      url += `${key}=${params[key]}&`;
+    }
+  }
+  // Remove the trailing '&'
+  url = url.slice(0, -1);
+  return url;
+};
 
 //Register
 
@@ -20,25 +33,18 @@ export const getDaftarResepMakanan = (
   time,
   sortBy
 ) => {
-  let apiUrl = `${apiGetDaftarResepMakanan}?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
+  const apiUrl = buildUrl(apiGetDaftarResepMakanan, {
+    pageNumber,
+    pageSize,
+    userId,
+    recipeName,
+    levelId,
+    categoryId,
+    time,
+    sortBy,
+  });
 
-  if (recipeName) {
-    apiUrl += `&recipeName=${recipeName}`;
-  }
-  if (levelId) {
-    apiUrl += `&levelId=${levelId}`;
-  }
-  if (categoryId) {
-    apiUrl += `&categoryId=${categoryId}`;
-  }
-  if (time) {
-    apiUrl += `&time=${time}`;
-  }
-  if (sortBy) {
-    apiUrl += `&sortBy=${sortBy}`;
-  }
-
-  return axios
+  return instance
     .get(apiUrl)
     .then((response) => {
       return response;
@@ -60,25 +66,18 @@ export const getMyRecipes = (
   time,
   sortBy
 ) => {
-  let apiUrl = `${apiGetMyRecipes}?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
+  const apiUrl = buildUrl(apiGetMyRecipes, {
+    pageNumber,
+    pageSize,
+    userId,
+    recipeName,
+    levelId,
+    categoryId,
+    time,
+    sortBy,
+  });
 
-  if (recipeName) {
-    apiUrl += `&recipeName=${recipeName}`;
-  }
-  if (levelId) {
-    apiUrl += `&levelId=${levelId}`;
-  }
-  if (categoryId) {
-    apiUrl += `&categoryId=${categoryId}`;
-  }
-  if (time) {
-    apiUrl += `&time=${time}`;
-  }
-  if (sortBy) {
-    apiUrl += `&sortBy=${sortBy}`;
-  }
-
-  return axios
+  return instance
     .get(apiUrl)
     .then((response) => {
       return response;
@@ -98,42 +97,29 @@ export const getDaftarResepFavorit = (
   levelId,
   categoryId,
   time,
-  sortBy,
-  authToken
+  sortBy
 ) => {
-  let apiUrl = `${apiGetMyFavoriteRecipes}?pageNumber=${pageNumber}&pageSize=${pageSize}&userId=${userId}`;
+  const apiUrl = buildUrl(apiGetMyFavoriteRecipes, {
+    pageNumber,
+    pageSize,
+    userId,
+    recipeName,
+    levelId,
+    categoryId,
+    time,
+    sortBy,
+  });
 
-  if (recipeName) {
-    apiUrl += `&recipeName=${recipeName}`;
-  }
-  if (levelId) {
-    apiUrl += `&levelId=${levelId}`;
-  }
-  if (categoryId) {
-    apiUrl += `&categoryId=${categoryId}`;
-  }
-  if (time) {
-    apiUrl += `&time=${time}`;
-  }
-  if (sortBy) {
-    apiUrl += `&sortBy=${sortBy}`;
-  }
-
-  return axios
-    .get(apiUrl, {
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    })
+  return instance
+    .get(apiUrl)
     .then((response) => {
       return response;
     })
     .catch((error) => {
-      console.log("error getting data daftar resep favorit", error);
+      console.log("error getting data daftar resep makanan", error);
       throw error;
     });
 };
-
 
 //Add/Remove to favorite
 export const putFavoriteResepMasakan = (recipeId, userId) => {
@@ -153,7 +139,7 @@ export const putFavoriteResepMasakan = (recipeId, userId) => {
 //Delete My Recipe
 export const deleteRecipe = async (recipeId, userId) => {
   try {
-    const response = await axios.put(
+    const response = await instance.put(
       `${apiGetDaftarResepMakanan}/${recipeId}?userId=${userId}`
     );
 

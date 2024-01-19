@@ -26,6 +26,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { getDaftarResepFavorit } from "../services/apis";
 import ErrorSnackbar from "../components/ErrorSnackbar";
 import CardSkeletonLoading from "../components/CardSkeletonLoading";
+import useToken from "../services/AuthProvider";
 
 const MyPagination = styled(Pagination)({
   "&.MuiPagination-root": {
@@ -58,7 +59,7 @@ const DaftarResepFavorit = () => {
     return localStorage.getItem("token");
     // Replace 'yourAuthTokenKey' with the actual key used to store the token.
   };
-  const userId = localStorage.getItem("userId");
+  const { userId } = useToken();
 
   const [filterMenuMobile, setFilterMenuMobile] = useState(null);
   const openFilterMenuMobile = Boolean(filterMenuMobile);

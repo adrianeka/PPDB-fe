@@ -129,7 +129,7 @@ function DetailResep() {
             <Grid item>
               <img
                 className="imgDetail"
-                src={resepData.imageUrl}
+                src={resepData.imageFilename}
                 alt={resepData.recipeName}
               />
             </Grid>
@@ -161,7 +161,7 @@ function DetailResep() {
                     </Typography>
                   </Grid>
                   <Grid item className="item">
-                    {resepData.category.categoryName}
+                    {resepData.categories.categoryName}
                   </Grid>
                 </Grid>
               </Grid>

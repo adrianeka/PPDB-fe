@@ -26,6 +26,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { getMyRecipes } from "../services/apis";
 import ErrorSnackbar from "../components/ErrorSnackbar";
 import CardSkeletonLoading from "../components/CardSkeletonLoading";
+import useToken from "../services/AuthProvider";
 
 const MyPagination = styled(Pagination)({
   "&.MuiPagination-root": {
@@ -53,7 +54,7 @@ const DaftarResepMasakan = () => {
     setFilterMenu(null);
   };
 
-  const userId = localStorage.getItem("userId");
+  const { userId } = useToken();
 
   const [filterMenuMobile, setFilterMenuMobile] = useState(null);
   const openFilterMenuMobile = Boolean(filterMenuMobile);
@@ -467,12 +468,12 @@ const DaftarResepMasakan = () => {
                       label="Sort By"
                       onChange={handleChangeSortByMobile}>
                       <MenuItem value="">None</MenuItem>
-                      <MenuItem value="nameAsc">Nama Resep A-Z</MenuItem>
-                      <MenuItem value="nameDesc">
+                      <MenuItem value="recipeName,asc">Nama Resep A-Z</MenuItem>
+                      <MenuItem value="recipeName,desc">
                         Nama Resep Z-A
                       </MenuItem>
-                      <MenuItem value="timeAsc">Waktu Memasak A-Z</MenuItem>
-                      <MenuItem value="timeDesc">Waktu Memasak Z-A</MenuItem>
+                      <MenuItem value="timeCook,asc">Waktu Memasak A-Z</MenuItem>
+                      <MenuItem value="timeCook,desc">Waktu Memasak Z-A</MenuItem>
                     </Select>
                   </FormControl>
                 </Stack>
@@ -682,16 +683,16 @@ const DaftarResepMasakan = () => {
                           id="sortBy"
                           value={tempSortBy}
                           onChange={handleChangeSortBy}>
-                          <MenuItem value="nameAsc">
+                          <MenuItem value="recipeName,asc">
                             Nama Resep A-Z
                           </MenuItem>
-                          <MenuItem value="nameDesc">
+                          <MenuItem value="recipeName,desc">
                             Nama Resep Z-A
                           </MenuItem>
-                          <MenuItem value="timeAsc">
+                          <MenuItem value="timeCook,asc">
                             Waktu Memasak A-Z
                           </MenuItem>
-                          <MenuItem value="timeDesc">
+                          <MenuItem value="timeCook,desc">
                             Waktu Memasak Z-A
                           </MenuItem>
                         </Select>
