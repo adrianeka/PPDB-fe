@@ -24,13 +24,16 @@ import axios from "axios";
 import { putFavoriteResepMasakan } from "../services/apis";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
+import { getDetailRecipe } from "../services/apis";
+import useToken from "../services/AuthProvider";
 
 function DetailResep() {
   const { id } = useParams();
-  const userId = localStorage.getItem("userId");
+  // const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   const [openFavoriteDialog, setOpenFavoriteDialog] = useState(false);
   const [favoriteMessage, setFavoriteMessage] = useState("");
+  const { token, userId } = useToken();
 
   const getAuthToken = () => {
     return localStorage.getItem("token");
@@ -38,28 +41,22 @@ function DetailResep() {
   };
 
   useEffect(() => {
-    getDetailResep();
+    fetchDataDetailRecipe();
     setResepData();
   }, [id]);
 
   const [resepData, setResepData] = useState();
 
   const apiUrl = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
-  const getDetailResep = async () => {
+  const fetchDataDetailRecipe = async () => {
+    const authToken = getAuthToken();
     try {
-      const authToken = getAuthToken();
-      const response = await axios.get(
-        `${apiUrl}/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      console.log(`token: ${authToken}`);
-      setResepData(response.data.data);
+      const detailRecipe = await getDetailRecipe(id, authToken);
+      conole.log(authToken);
+      setResepData(detailRecipe);
+      console.log(detailRecipe);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
 
@@ -129,7 +126,7 @@ function DetailResep() {
             <Grid item>
               <img
                 className="imgDetail"
-                src={resepData.imageUrl}
+                src={resepData.imageFilename}
                 alt={resepData.recipeName}
               />
             </Grid>
@@ -161,7 +158,7 @@ function DetailResep() {
                     </Typography>
                   </Grid>
                   <Grid item className="item">
-                    {resepData.category.categoryName}
+                    {resepData.categories.categoryName}
                   </Grid>
                 </Grid>
               </Grid>
@@ -266,7 +263,7 @@ function DetailResep() {
                 }}
               >
                 <div
-                  dangerouslySetInnerHTML={{ __html: resepData.ingredient }}
+                  dangerouslySetInnerHTML={{ __html: resepData.ingridient }}
                 />
               </Typography>
             </Grid>
