@@ -5,9 +5,11 @@ const baseUrl = import.meta.env.VITE_API_URL;
 const apiGetDaftarResepMakanan = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
 const apiGetMyRecipes = import.meta.env.VITE_API_GETMYRECIPES;
 const apiGetMyFavoriteRecipes = import.meta.env.VITE_API_GETMYFAVORITERECIPES;
+const apiLogin = import.meta.env.VITE_API_SIGNIN;
+
 
 const buildUrl = (base, params) => {
-  let url = base + '?';
+  let url = base + "?";
   for (const key in params) {
     if (params[key]) {
       url += `${key}=${params[key]}&`;
@@ -21,6 +23,12 @@ const buildUrl = (base, params) => {
 //Register
 
 //Login
+export const postLogin = async (username, password) =>{
+  try{
+    instance.post 
+  }
+  catch(error){}
+}
 
 //Get Daftar Resep
 export const getDaftarResepMakanan = (
@@ -123,10 +131,9 @@ export const getDaftarResepFavorit = (
 
 //Add/Remove to favorite
 export const putFavoriteResepMasakan = (recipeId, userId) => {
-  const apiUrl = `${baseUrl}/book-recipe/book-recipes/${recipeId}/favorites/`;
-
-  return axios
-    .put(apiUrl, { userId: userId })
+  const apiUrl = `${apiGetDaftarResepMakanan}/${recipeId}/favorites`;
+  return instance
+    .put(apiUrl, { userId: userId, type: "application/json" })
     .then((response) => {
       return response;
     })
@@ -155,13 +162,12 @@ export const deleteRecipe = async (recipeId, userId) => {
   }
 };
 
-
 // Get Detail Recipe
 export const getDetailRecipe = async (recipeId, authToken) => {
   try {
-    const response = await axios.get(`${apiGetDaftarResepMakanan}/${recipeId}`, {
-      header: { Authorization: `Bearer ${authToken}` },
-    });
+    const response = await instance.get(
+      `${apiGetDaftarResepMakanan}/${recipeId}`
+    );
     return response.data.data;
   } catch (error) {
     console.log(error);

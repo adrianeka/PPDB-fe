@@ -21,10 +21,10 @@ import {
 } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import axios from "axios";
-import { putFavoriteResepMasakan } from "../services/apis";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
-import { getDetailRecipe } from "../services/apis";
+import http from "../services/axiosConfig";
+import { getDetailRecipe, putFavoriteResepMasakan } from "../services/apis";
 import useToken from "../services/AuthProvider";
 
 function DetailResep() {
@@ -47,23 +47,22 @@ function DetailResep() {
 
   const [resepData, setResepData] = useState();
 
+  // fetch data detail recipe
   const apiUrl = import.meta.env.VITE_API_GETDAFTARRESEPMAKANAN;
   const fetchDataDetailRecipe = async () => {
     const authToken = getAuthToken();
     try {
       const detailRecipe = await getDetailRecipe(id, authToken);
-      conole.log(authToken);
       setResepData(detailRecipe);
-      console.log(detailRecipe);
     } catch (error) {
       console.log(error);
     }
   };
 
+  // handle change isFavorite
   const handleChange = async (event, recipeId, recipeName, statusFavorite) => {
     try {
       const authToken = getAuthToken();
-      console.log(`token: ${authToken}`);
       const updatedResepData = {
         ...resepData,
         isFavorite: !resepData.isFavorite,
@@ -78,8 +77,6 @@ function DetailResep() {
       setOpenFavoriteDialog(true);
 
       await putFavoriteResepMasakan(resepData.recipeId, userId);
-      console.log(`isFavorite : ${resepData.isFavorite}`);
-      console.log("berhasil");
     } catch (error) {
       console.log("error change favorite data", error);
       // Handle error jika diperlukan
@@ -175,6 +172,7 @@ function DetailResep() {
                     </Typography>
                   </Grid>
                   <Grid item className="item">
+                    {resepData.time ? `${resepData.time} menit` : "-"}
                     {resepData.time} menit
                   </Grid>
                 </Grid>

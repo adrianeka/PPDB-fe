@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import "./styles/index.css";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "./styles";
