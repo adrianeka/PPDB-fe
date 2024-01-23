@@ -30,3 +30,4 @@ ENV TZ="Asia/Jakarta"
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html/book-recipe
+CMD ["nginx", "-g", "daemon off;"]
