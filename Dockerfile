@@ -25,9 +25,7 @@ RUN npm run build --prefer-offline --no-audit
 
 # RUNNER IMAGE
 FROM harbor.cloudias79.com/devops-tools/nginx:stable
-
 ENV TZ="Asia/Jakarta"
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html/book-recipe
 CMD ["nginx", "-g", "daemon off;"]
