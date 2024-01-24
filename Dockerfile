@@ -31,4 +31,5 @@ COPY --from=builder /usr/src/app/dist /usr/share/nginx/html/book-recipe
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx 
 RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
 USER nginx
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
