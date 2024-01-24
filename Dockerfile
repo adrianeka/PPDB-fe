@@ -28,4 +28,7 @@ FROM harbor.cloudias79.com/devops-tools/nginx:stable
 ENV TZ="Asia/Jakarta"
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /usr/src/app/dist /usr/share/nginx/html/book-recipe
+RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx 
+RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
+USER nginx
 CMD ["nginx", "-g", "daemon off;"]
