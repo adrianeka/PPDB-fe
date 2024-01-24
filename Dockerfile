@@ -15,7 +15,6 @@ RUN apk --update --no-cache add \
     zlib \
     zlib-dev
 USER root
-ENV TZ="Asia/Jakarta"
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 COPY . /usr/src/app
 RUN rm -f package-lock.json
