@@ -39,7 +39,7 @@ function TambahResep() {
   const [selectedLevel, setSelectedLevel] = useState("");
   const [recipeName, setRecipeName] = useState("");
   const [timeCook, setTimeCook] = useState("");
-  const [ingridient, setIngridient] = useState("");
+  const [ingredient, setingredient] = useState("");
   const [howToCook, setHowToCook] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
@@ -51,7 +51,7 @@ function TambahResep() {
     selectedCategory: "",
     selectedLevel: "",
     timeCook: "",
-    ingridient: "",
+    ingredient: "",
     howToCook: "",
     imageFile: "",
   });
@@ -163,24 +163,24 @@ function TambahResep() {
     });
   };
 
-  const handleIngridientChange = (value) => {
-    setIngridient(value);
+  const handleingredientChange = (value) => {
+    setingredient(value);
 
     // Checking if the content is empty or just white spaces
     if (!value || value.replace(/<(.|\n)*?>/g, "").trim() === "") {
       setErrors({
         ...errors,
-        ingridient: "Bahan - Bahan tidak boleh kosong",
+        ingredient: "Bahan - Bahan tidak boleh kosong",
       });
     } else if (value.length > 255) {
       setErrors({
         ...errors,
-        ingridient: "Panjang kolom tidak boleh melebihi 255 karakter",
+        ingredient: "Panjang kolom tidak boleh melebihi 255 karakter",
       });
     } else {
       setErrors({
         ...errors,
-        ingridient: "",
+        ingredient: "",
       });
     }
   };
@@ -232,12 +232,12 @@ function TambahResep() {
         : "Hanya boleh berisi angka 1-999"
       : "Waktu tidak boleh kosong";
 
-    // Validation for ingridient
+    // Validation for ingredient
     const isIngredientEmpty =
-      !ingridient || ingridient.replace(/<(.|\n)*?>/g, "").trim() === "";
-    tempErrors.ingridient = isIngredientEmpty
+      !ingredient || ingredient.replace(/<(.|\n)*?>/g, "").trim() === "";
+    tempErrors.ingredient = isIngredientEmpty
       ? "Bahan - Bahan tidak boleh kosong"
-      : ingridient.length > 255
+      : ingredient.length > 255
       ? "Panjang kolom tidak boleh melebihi 255 karakter"
       : "";
 
@@ -332,7 +332,7 @@ function TambahResep() {
         levelName: level ? level.levelName : "", // Handle the case when level is not found
       },
       timeCook: timeCook,
-      ingridient: ingridient,
+      ingredient: ingredient,
       howToCook: howToCook,
     });
 
@@ -698,7 +698,7 @@ function TambahResep() {
                 <div className="ingredients-editor">
                   <Box
                     sx={{
-                      border: errors.ingridient
+                      border: errors.ingredient
                         ? "1px solid #dd2727"
                         : "0px solid rgba(0, 0, 0, 0.23)", // Assuming this is your default border
                       borderRadius: "2px", // Match the border radius with TextField
@@ -707,15 +707,15 @@ function TambahResep() {
                     <ReactQuill
                       theme="snow"
                       placeholder="Write a description..."
-                      value={ingridient}
-                      onChange={handleIngridientChange}
+                      value={ingredient}
+                      onChange={handleingredientChange}
                       style={{
                         background: "white",
                         marginBottom: "0px",
                       }} // Additional styling if needed
                     />
-                    {errors.ingridient && (
-                      <QuillHelperText error={errors.ingridient} />
+                    {errors.ingredient && (
+                      <QuillHelperText error={errors.ingredient} />
                     )}
                   </Box>
                 </div>

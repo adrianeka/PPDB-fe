@@ -236,7 +236,7 @@ function DetailResep() {
                   marginBottom: "17px",
                 }}>
                 <div
-                  dangerouslySetInnerHTML={{ __html: resepData.ingridient }}
+                  dangerouslySetInnerHTML={{ __html: resepData.ingredient }}
                 />
               </Typography>
             </Grid>
