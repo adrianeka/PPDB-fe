@@ -65,7 +65,7 @@ const Register = () => {
     try {
       const response = await userRegister(data);
       if (response.data.status === "OK") {
-        toast.success("Berhasil daftar!");
+        toast.success(response.data.message);
         navigate("/user-management/users/signin");
       }
 

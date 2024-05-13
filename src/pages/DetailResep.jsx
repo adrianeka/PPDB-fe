@@ -14,6 +14,7 @@ import { getDetailResep, putFavoriteResepMasakan } from "../services/apis";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import FavoritDialog from "../components/FavoritDialog";
+import notFoundImage from "../public/svg/SearchNotFound.svg";
 
 function DetailResep() {
   const { id } = useParams();
@@ -22,6 +23,7 @@ function DetailResep() {
   const [openFavoriteDialog, setOpenFavoriteDialog] = useState(false);
   const [favoriteMessage, setFavoriteMessage] = useState("");
   const [resepData, setResepData] = useState();
+  const [isDataEmpty, setIsDataEmpty] = useState(false);
 
   useEffect(() => {
     async function fetchDetailResep() {
@@ -30,6 +32,9 @@ function DetailResep() {
         setResepData(response.data.data);
       } catch (error) {
         console.log(error.message);
+        if (error.response.status === 404) {
+          setIsDataEmpty(true);
+        }
       }
     }
     fetchDetailResep();
@@ -64,7 +69,21 @@ function DetailResep() {
         setOpen={setOpenFavoriteDialog}
         message={favoriteMessage}
       />
-      {resepData ? (
+      {isDataEmpty ? (
+        <Container maxWidth="sm" sx={{ paddingBottom: 3 }}>
+          <Box display="flex" flexDirection="column" marginX="auto">
+            <img src={notFoundImage} alt="notFound" width={500} />
+            <Typography
+              sx={{
+                fontSize: "24px",
+                textAlign: "center",
+                fontWeight: "700",
+              }}>
+              Data Tidak Ditemukan
+            </Typography>
+          </Box>
+        </Container>
+      ) : resepData ? (
         <Container maxWidth="sm" sx={{ paddingBottom: 3 }}>
           <Grid
             container

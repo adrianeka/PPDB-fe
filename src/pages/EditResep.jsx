@@ -40,7 +40,7 @@ function EditResep() {
   const [selectedLevel, setSelectedLevel] = useState("");
   const [recipeName, setRecipeName] = useState("");
   const [timeCook, setTimeCook] = useState("");
-  const [ingridient, setIngridient] = useState("");
+  const [ingredient, setIngredient] = useState("");
   const [howToCook, setHowToCook] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
@@ -52,7 +52,7 @@ function EditResep() {
     selectedCategory: "",
     selectedLevel: "",
     timeCook: "",
-    ingridient: "",
+    ingredient: "",
     howToCook: "",
     imageFile: "",
   });
@@ -65,7 +65,7 @@ function EditResep() {
     setSelectedCategory("");
     setSelectedLevel("");
     setTimeCook("");
-    setIngridient("");
+    setIngredient("");
     setHowToCook("");
     setImageFile(null);
     setImagePreview(null);
@@ -109,7 +109,7 @@ function EditResep() {
             setSelectedCategory(recipeData.categories.categoryId); // Akses categoryId dari category
             setSelectedLevel(recipeData.levels.levelId.toString()); // Akses levelId dari levels
             setTimeCook(recipeData.timeCook); // Mengubah time menjadi string
-            setIngridient(recipeData.ingridient); // Menggunakan 'ingredient', bukan 'ingridient'
+            setIngredient(recipeData.ingredient); // Menggunakan 'ingredient', bukan 'ingredient'
             setHowToCook(recipeData.howToCook);
 
             if (recipeData.imageFilename) {
@@ -204,24 +204,24 @@ function EditResep() {
     });
   };
 
-  const handleIngridientChange = (value) => {
-    setIngridient(value);
+  const handleIngredientChange = (value) => {
+    setIngredient(value);
 
     // Checking if the content is empty or just white spaces
     if (!value || value.replace(/<(.|\n)*?>/g, "").trim() === "") {
       setErrors({
         ...errors,
-        ingridient: "Bahan - Bahan tidak boleh kosong",
+        ingredient: "Bahan - Bahan tidak boleh kosong",
       });
     } else if (value.length > 255) {
       setErrors({
         ...errors,
-        ingridient: "Panjang kolom tidak boleh melebihi 255 karakter",
+        ingredient: "Panjang kolom tidak boleh melebihi 255 karakter",
       });
     } else {
       setErrors({
         ...errors,
-        ingridient: "",
+        ingredient: "",
       });
     }
   };
@@ -273,12 +273,12 @@ function EditResep() {
         : "Hanya boleh berisi angka 1-999"
       : "Waktu tidak boleh kosong";
 
-    // Validation for ingridient
+    // Validation for ingredient
     const isIngredientEmpty =
-      !ingridient || ingridient.replace(/<(.|\n)*?>/g, "").trim() === "";
-    tempErrors.ingridient = isIngredientEmpty
+      !ingredient || ingredient.replace(/<(.|\n)*?>/g, "").trim() === "";
+    tempErrors.ingredient = isIngredientEmpty
       ? "Bahan - Bahan tidak boleh kosong"
-      : ingridient.length > 255
+      : ingredient.length > 255
       ? "Panjang kolom tidak boleh melebihi 255 karakter"
       : "";
 
@@ -346,7 +346,7 @@ function EditResep() {
     [errors]
   );
 
-  const { getRootProps } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: "image/jpeg, image/png, image/jpg", // specify valid MIME types here
   });
@@ -378,7 +378,7 @@ function EditResep() {
       },
       recipeName: recipeName,
       timeCook: parseInt(timeCook), // Konversi ke integer
-      ingridient: ingridient, // Pastikan ini mengacu pada state yang benar
+      ingredient: ingredient, // Pastikan ini mengacu pada state yang benar
       howToCook: howToCook,
     };
 
@@ -718,6 +718,7 @@ function EditResep() {
                         ? "2px dashed #dd2727"
                         : "2px dashed gray",
                     }}>
+                    <input {...getInputProps()} />
                     {renderDropzoneContent()}
                   </Box>
                   {errors.imageFile && (
@@ -748,7 +749,7 @@ function EditResep() {
                 <div className="ingredients-editor">
                   <Box
                     sx={{
-                      border: errors.ingridient
+                      border: errors.ingredient
                         ? "1px solid #dd2727"
                         : "0px solid rgba(0, 0, 0, 0.23)", // Assuming this is your default border
                       borderRadius: "2px", // Match the border radius with TextField
@@ -757,15 +758,15 @@ function EditResep() {
                     <ReactQuill
                       theme="snow"
                       placeholder="Write a description..."
-                      value={ingridient}
-                      onChange={handleIngridientChange}
+                      value={ingredient}
+                      onChange={handleIngredientChange}
                       style={{
                         background: "white",
                         marginBottom: "0px",
                       }} // Additional styling if needed
                     />
-                    {errors.ingridient && (
-                      <QuillHelperText error={errors.ingridient} />
+                    {errors.ingredient && (
+                      <QuillHelperText error={errors.ingredient} />
                     )}
                   </Box>
                 </div>
