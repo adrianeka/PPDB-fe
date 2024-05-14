@@ -40,7 +40,7 @@ function EditResep() {
   const [selectedLevel, setSelectedLevel] = useState("");
   const [recipeName, setRecipeName] = useState("");
   const [timeCook, setTimeCook] = useState("");
-  const [ingredient, setingredient] = useState("");
+  const [ingredient, setIngredient] = useState("");
   const [howToCook, setHowToCook] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
@@ -65,7 +65,7 @@ function EditResep() {
     setSelectedCategory("");
     setSelectedLevel("");
     setTimeCook("");
-    setingredient("");
+    setIngredient("");
     setHowToCook("");
     setImageFile(null);
     setImagePreview(null);
@@ -109,7 +109,7 @@ function EditResep() {
             setSelectedCategory(recipeData.categories.categoryId.toString()); // Akses categoryId dari category
             setSelectedLevel(recipeData.levels.levelId.toString()); // Akses levelId dari levels
             setTimeCook(recipeData.timeCook); // Mengubah time menjadi string
-            setingredient(recipeData.ingredient); // Menggunakan 'ingredient', bukan 'ingredient'
+            setIngredient(recipeData.ingredient); // Menggunakan 'ingredient', bukan 'ingredient'
             setHowToCook(recipeData.howToCook);
 
             if (recipeData.imageFilename) {
@@ -204,8 +204,8 @@ function EditResep() {
     });
   };
 
-  const handleingredientChange = (value) => {
-    setingredient(value);
+  const handleIngredientChange = (value) => {
+    setIngredient(value);
 
     // Checking if the content is empty or just white spaces
     if (!value || value.replace(/<(.|\n)*?>/g, "").trim() === "") {
@@ -791,7 +791,7 @@ function EditResep() {
                       theme="snow"
                       placeholder="Write a description..."
                       value={ingredient}
-                      onChange={handleingredientChange}
+                      onChange={handleIngredientChange}
                       style={{
                         background: "white",
                         marginBottom: "0px",

@@ -18,7 +18,9 @@ export const registerSchema = z
       .min(1, {
         message: "Kolom username tidak boleh kosong.",
       })
-      .max(100)
+      .max(100, {
+        message: "Kolom username tidak boleh lebih dari 100 karakter.",
+      })
       .refine((value) => !/\s/.test(value), {
         message: "Format username belum sesuai.",
       }),
@@ -27,20 +29,22 @@ export const registerSchema = z
       .min(1, {
         message: "Kolom nama lengkap tidak boleh kosong.",
       })
-      .max(255)
-      .refine((value) => /^[a-zA-Z0-9\s]*$/.test(value), {
+      .refine((value) => /^[a-zA-Z0-9\s]{0,255}$/.test(value), {
         message:
           "Format nama lengkap belum sesuai. (Tidak menggunakan special character dan maksimal 255 charackter).",
       }),
     password: z
       .string()
+      .min(1, { message: "Kolom kata sandi tidak boleh kosong." })
       .min(6, {
         message: "Kata sandi tidak boleh kurang dari 6 karakter.",
       })
-      .max(50)
+      .max(50, {
+        message: "Kolom kata sandi tidak boleh lebih dari 50 karakter.",
+      })
       .refine((value) => /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(value), {
         message:
-          "Kata sandi harus memiliki minimal 6 karakter kombinasi angka/huruf.",
+          "Kata sandi harus memiliki minimal 6 karakter kombinasi angka dan huruf.",
       }),
     retypePassword: z.string().min(1, {
       message: "Kolom Konfirmasi Kata Sandi tidak boleh kosong",
@@ -65,6 +69,8 @@ const Register = () => {
     try {
       const response = await userRegister(data);
       if (response.data.status === "OK") {
+        toast.success(response.data.message);
+        navigate("/user-management/users/signin");
         toast.success("Berhasil daftar!");
         navigate("/");
       }

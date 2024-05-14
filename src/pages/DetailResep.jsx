@@ -24,6 +24,7 @@ function DetailResep() {
   const [favoriteMessage, setFavoriteMessage] = useState("");
   const [resepData, setResepData] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [isDataEmpty, setIsDataEmpty] = useState(false);
 
   useEffect(() => {
     async function fetchDetailResep() {
@@ -36,6 +37,9 @@ function DetailResep() {
       } catch (error) {
         setIsLoading(false);
         console.log(error.message);
+        if (error.response.status === 404) {
+          setIsDataEmpty(true);
+        }
       }
     }
     fetchDetailResep();
@@ -70,7 +74,21 @@ function DetailResep() {
         setOpen={setOpenFavoriteDialog}
         message={favoriteMessage}
       />
-      {resepData ? (
+      {isDataEmpty ? (
+        <Container maxWidth="sm" sx={{ paddingBottom: 3 }}>
+          <Box display="flex" flexDirection="column" marginX="auto">
+            <img src={notFoundImage} alt="notFound" width={500} />
+            <Typography
+              sx={{
+                fontSize: "24px",
+                textAlign: "center",
+                fontWeight: "700",
+              }}>
+              Data Tidak Ditemukan
+            </Typography>
+          </Box>
+        </Container>
+      ) : resepData ? (
         <Container maxWidth="sm" sx={{ paddingBottom: 3 }}>
           <Grid
             container

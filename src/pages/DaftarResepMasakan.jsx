@@ -361,10 +361,10 @@ const DaftarResepMasakan = () => {
                               value={tempFoodLevel}
                               onChange={handleChangeFoodLevel}>
                               <MenuItem value="">ALL</MenuItem>
-                              <MenuItem value="3">Easy</MenuItem>
-                              <MenuItem value="2">Medium</MenuItem>
-                              <MenuItem value="1">Hard</MenuItem>
-                              <MenuItem value="0">Master Chef</MenuItem>
+                              <MenuItem value="4">Easy</MenuItem>
+                              <MenuItem value="3">Medium</MenuItem>
+                              <MenuItem value="2">Hard</MenuItem>
+                              <MenuItem value="1">Master Chef</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>

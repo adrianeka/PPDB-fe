@@ -1,8 +1,3 @@
-import { useEffect, useState, useCallback } from "react";
-import PropTypes from "prop-types";
-import CircularProgress from "@mui/material/CircularProgress";
-import CloseIcon from "@mui/icons-material/Close";
-import IconButton from "@mui/material/IconButton";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
 import ReactQuill from "react-quill";
@@ -13,22 +8,27 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { GlobalStyles } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import {
-  Container,
-  Grid,
-  TextField,
-  Button,
-  Typography,
-  Select,
-  MenuItem,
-  FormControl,
   Box,
-  FormHelperText,
+  Button,
+  Container,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
+  FormHelperText,
+  Grid,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
 } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import PropTypes from "prop-types";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { getCategory, getLevels, postTambahResep } from "../services/apis";
 
@@ -40,7 +40,7 @@ function TambahResep() {
   const [selectedLevel, setSelectedLevel] = useState("");
   const [recipeName, setRecipeName] = useState("");
   const [timeCook, setTimeCook] = useState("");
-  const [ingredient, setingredient] = useState("");
+  const [ingredient, setIngredient] = useState("");
   const [howToCook, setHowToCook] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
@@ -164,8 +164,8 @@ function TambahResep() {
     });
   };
 
-  const handleingredientChange = (value) => {
-    setingredient(value);
+  const handleIngredientChange = (value) => {
+    setIngredient(value);
 
     // Checking if the content is empty or just white spaces
     if (!value || value.replace(/<(.|\n)*?>/g, "").trim() === "") {
@@ -303,7 +303,7 @@ function TambahResep() {
     [errors]
   );
 
-  const { getRootProps } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: "image/jpeg, image/png, image/jpg", // specify valid MIME types here
   });
@@ -711,7 +711,8 @@ function TambahResep() {
                           ? "2px dashed #dd2727"
                           : "2px dashed gray",
                       }}>
-                      {renderDropzoneContent()}
+                      <input {...getInputProps()} />
+                    {renderDropzoneContent()}
                     </Box>
                   </label>
                   {errors.imageFile && (
@@ -752,7 +753,7 @@ function TambahResep() {
                       theme="snow"
                       placeholder="Write a description..."
                       value={ingredient}
-                      onChange={handleingredientChange}
+                      onChange={handleIngredientChange}
                       style={{
                         background: "white",
                         marginBottom: "0px",
