@@ -54,7 +54,7 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data, e) => {
+  const onSubmit = async (data, e) => {
     e.preventDefault();
     addPosts(data.username, data.password);
   };
@@ -69,6 +69,7 @@ const Login = () => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate("/daftar-resep");
+      
     } catch (error) {
       if (error.response && error.response.status === 401) {
         toast.error(error.response.data.message);

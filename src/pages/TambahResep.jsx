@@ -1,6 +1,12 @@
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import CloseIcon from "@mui/icons-material/Close";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // import styles
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { GlobalStyles } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -20,15 +26,10 @@ import {
 } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { GlobalStyles } from "@mui/system";
+import CloseIcon from "@mui/icons-material/Close";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css"; // import styles
-import { useNavigate } from "react-router-dom";
 import { getCategory, getLevels, postTambahResep } from "../services/apis";
 
 function TambahResep() {
@@ -310,6 +311,30 @@ function TambahResep() {
     accept: "image/jpeg, image/png, image/jpg", // specify valid MIME types here
   });
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (
+      file &&
+      file.size <= 1048576 &&
+      ["image/jpeg", "image/png", "image/jpg"].includes(file.type)
+    ) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      setErrors({ ...errors, imageFile: "" });
+    } else {
+      setErrors({
+        ...errors,
+        imageFile:
+          "Format gambar tidak sesuai / Gambar melebihi batas maksimal ukuran (1MB)",
+      });
+    }
+  };
+
+  const handleDeleteImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateFields()) {
@@ -461,16 +486,26 @@ function TambahResep() {
   const renderDropzoneContent = () => {
     if (imagePreview) {
       return (
-        <img
-          src={imagePreview}
-          alt="Preview"
-          style={{
-            width: "100%", // Sets the width to cover the container
-            height: "100%", // Sets the height to cover the container
-            objectFit: "contain", // Ensures the image fits within the container, resized proportionally
-            objectPosition: "center", // Centers the image within the container
-          }}
-        />
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          <img
+            src={imagePreview}
+            alt="Preview"
+            style={{
+              maxWidth: "100%", // Sets the width to cover the container
+              maxHeight: "100%", // Sets the height to cover the container
+              objectFit: "contain", // Ensures the image fits within the container, resized proportionally
+              objectPosition: "center", // Centers the image within the container
+            }}
+          />
+          <IconButton
+            style={{ position: "absolute", top: 5, right: 5 }}
+            onClick={handleDeleteImage}
+            color="error"
+            aria-label="delete image"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
       );
     } else {
       return (
@@ -481,21 +516,21 @@ function TambahResep() {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <AddPhotoAlternateOutlinedIcon
-            color="disabled"
-            style={{ fontSize: 60 }}
-          />
-          <Typography
-            sx={{
-              color: "gray",
-              textAlign: "center",
+              <AddPhotoAlternateOutlinedIcon
+                color="disabled"
+                style={{ fontSize: 60 }}
+              />
+            <Typography
+              sx={{
+                color: "gray",
+                textAlign: "center",
 
-              marginTop: "5px",
-            }}>
-            <strong>Click to upload</strong> or drag and drop
-            <br />
-            PNG, JPG, JPEG (Max 1MB)
-          </Typography>
+                marginTop: "5px",
+              }}> 
+              <strong>Click to upload</strong> or drag and drop
+              <br />
+              PNG, JPG, JPEG (Max 1MB)
+            </Typography>
         </div>
       );
     }
@@ -642,7 +677,7 @@ function TambahResep() {
                     },
                   }}
                 />
-                {/* Image Upload */}
+                
                 <Typography
                   sx={{
                     marginBottom: 1,
@@ -658,30 +693,39 @@ function TambahResep() {
                     *
                   </span>
                 </Typography>
-
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/png, image/jpeg, image/jpg"
+                  style={{ display: "none" }}
+                  onChange={handleImageUpload}
+                />
+                
                 <Box sx={{ position: "relative" }}>
-                  <Box
-                    {...getRootProps()}
-                    sx={{
-                      textAlign: "center",
-                      p: 2,
-                      my: 2,
-                      marginTop: 0,
-                      marginBottom: "4px",
-                      background: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: 150, // Adjust the height as needed
-                      cursor: "pointer",
+                  <label htmlFor="image-upload"> 
+                    <Box
+                      {...getRootProps()}
+                      sx={{
+                        textAlign: "center",
+                        p: 2,
+                        my: 2,
+                        marginTop: 0,
+                        marginBottom: "4px",
+                        background: "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: 150, // Adjust the height as needed
+                        cursor: "pointer",
 
-                      border: errors.imageFile
-                        ? "2px dashed #dd2727"
-                        : "2px dashed gray",
-                    }}>
-                    <input {...getInputProps()} />
+                        border: errors.imageFile
+                          ? "2px dashed #dd2727"
+                          : "2px dashed gray",
+                      }}>
+                      <input {...getInputProps()} />
                     {renderDropzoneContent()}
-                  </Box>
+                    </Box>
+                  </label>
                   {errors.imageFile && (
                     <Typography
                       sx={{

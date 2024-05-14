@@ -58,7 +58,7 @@ const ResepMakananCard = ({
       try {
         if (statusFavorite === false) {
           setFavoriteMessage(
-            `Berhasil Menambahkan Resep ${recipeName} ke dalam Favorit`
+            `Berhasil Menambah Resep ${recipeName} ke Daftar Favorite`
           );
         } else if (statusFavorite === true) {
           setFavoriteMessage(
@@ -336,8 +336,8 @@ const ResepMakananCard = ({
               </Box>
             </CardContent>
             <CardActions>
-              <Grid container>
-                <Grid item xs={12}>
+              <Grid container direction="row" justifyContent="center">
+                <Grid item xs>
                   <Link
                     href={`/resep-saya/detail-resep/${data.recipeId}`}
                     sx={{

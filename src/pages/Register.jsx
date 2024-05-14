@@ -71,13 +71,16 @@ const Register = () => {
       if (response.data.status === "OK") {
         toast.success(response.data.message);
         navigate("/user-management/users/signin");
+        toast.success("Berhasil daftar!");
+        navigate("/");
       }
 
       if (response.data.status === "ERROR") {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error);
+        toast.error("Terjadi kesalahan server. Silahkan coba kembali.");
+      reset();
     }
   };
 

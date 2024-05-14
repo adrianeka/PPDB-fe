@@ -41,7 +41,7 @@ const ResepMakananCard = ({
       try {
         if (statusFavorite === false) {
           setFavoriteMessage(
-            `Berhasil Menambahkan Resep ${recipeName} ke dalam Favorit`
+            `Berhasil Menambah Resep ${recipeName} ke Daftar Favorite`
           );
         } else if (statusFavorite === true) {
           setFavoriteMessage(

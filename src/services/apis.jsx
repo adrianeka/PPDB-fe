@@ -20,72 +20,69 @@ const buildUrl = (base, params) => {
 };
 
 //Register
-export const userRegister = (formData) => {
-  return instance
-    .post(apiRegister, formData)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      throw error;
-    });
+export const userRegister = async (formData) => {
+  try {
+    const response = await instance
+      .post(apiRegister, formData);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 //Login
-export const userLogin = (username, password) => {
-  return instance
-    .post(apiLogin, { username: username, password: password })
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      throw error;
-    });
+export const userLogin = async (username, password) => {
+  try {
+    const response = await instance
+      .post(apiLogin, { username: username, password: password });
+    
+    return response;
+    
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 //Get Master Category
-export const getCategory = () => {
-  return instance
-    .get("/book-recipe-masters/category-option-lists")
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      throw error;
-    });
+export const getCategory = async () => {
+  try {
+    const response = await instance
+      .get("/book-recipe-masters/category-option-lists");
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 //Get Master Level
-export const getLevels = () => {
-  return instance
-    .get("/book-recipe-masters/level-option-lists")
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.error(error);
-      throw error;
-    });
+export const getLevels = async () => {
+  try {
+    const response = await instance
+      .get("/book-recipe-masters/level-option-lists");
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 //Post Tambah Resep
-export const postTambahResep = (formData) => {
-  return instance
-    .post("/book-recipe/book-recipes", formData)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.error(error);
-      throw error;
-    });
+export const postTambahResep = async (formData) => {
+  try {
+    const response = await instance
+      .post("/book-recipe/book-recipes", formData);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 //Get Daftar Resep
-export const getDaftarResepMakanan = (
+export const getDaftarResepMakanan = async (
   userId,
   pageNumber,
   pageSize,
@@ -106,19 +103,18 @@ export const getDaftarResepMakanan = (
     sortBy,
   });
 
-  return instance
-    .get(apiUrl)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log("error getting data daftar resep makanan", error);
-      throw error;
-    });
+  try {
+    const response = await instance
+      .get(apiUrl);
+    return response;
+  } catch (error) {
+    console.log("error getting data daftar resep makanan", error);
+    throw error;
+  }
 };
 
 //Get Resep Saya
-export const getMyRecipes = (
+export const getMyRecipes = async (
   userId,
   pageNumber,
   pageSize,
@@ -139,19 +135,18 @@ export const getMyRecipes = (
     sortBy,
   });
 
-  return instance
-    .get(apiUrl)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log("error getting data daftar resep makanan", error);
-      throw error;
-    });
+  try {
+    const response = await instance
+      .get(apiUrl);
+    return response;
+  } catch (error) {
+    console.log("error getting data daftar resep makanan", error);
+    throw error;
+  }
 };
 
 //Get Daftar Resep Favorit
-export const getDaftarResepFavorit = (
+export const getDaftarResepFavorit = async (
   userId,
   pageNumber,
   pageSize,
@@ -172,30 +167,28 @@ export const getDaftarResepFavorit = (
     sortBy,
   });
 
-  return instance
-    .get(apiUrl)
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log("error getting data daftar resep makanan", error);
-      throw error;
-    });
+  try {
+    const response = await instance
+      .get(apiUrl);
+    return response;
+  } catch (error) {
+    console.log("error getting data daftar resep makanan", error);
+    throw error;
+  }
 };
 
 //Add/Remove to favorite
-export const putFavoriteResepMasakan = (recipeId, userId) => {
+export const putFavoriteResepMasakan = async (recipeId, userId) => {
   const apiUrl = `${baseUrl}/book-recipe/book-recipes/${recipeId}/favorites`;
 
-  return instance
-    .put(apiUrl, { userId: userId })
-    .then((response) => {
-      return response;
-    })
-    .catch((error) => {
-      console.log("error edit favorite resep masakan", error);
-      throw error;
-    });
+  try {
+    const response = await instance
+      .put(apiUrl, { userId: userId });
+    return response;
+  } catch (error) {
+    console.log("error edit favorite resep masakan", error);
+    throw error;
+  }
 };
 
 //Delete My Recipe
@@ -218,15 +211,14 @@ export const deleteRecipe = async (recipeId, userId) => {
 };
 
 //Get Detail Resep
-export const getDetailResep = (recipeId) => {
-  return instance
-    .get(`${apiGetDaftarResepMakanan}/${recipeId}`)
-    .then((response) => {
-      console.log("response", response);
-      return response;
-    })
-    .catch((error) => {
-      console.log(error);
-      throw error;
-    });
+export const getDetailResep = async (recipeId) => {
+  try {
+    const response = await instance
+      .get(`${apiGetDaftarResepMakanan}/${recipeId}`);
+    console.log("response", response);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };

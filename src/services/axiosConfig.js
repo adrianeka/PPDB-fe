@@ -20,7 +20,7 @@ instance.interceptors.response.use(
   },
   (error) => {
     // Do something with response error
-    console.log("error getting data daftar resep makanan", error);
+    // console.log("error getting data daftar resep makanan", error);
     return Promise.reject(error);
   }
 );
