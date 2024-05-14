@@ -27,8 +27,7 @@ export const registerSchema = z
       .min(1, {
         message: "Kolom nama lengkap tidak boleh kosong.",
       })
-      .max(255)
-      .refine((value) => /^[a-zA-Z0-9\s]*$/.test(value), {
+      .refine((value) => /^[a-zA-Z0-9\s]{0,255}$/.test(value), {
         message:
           "Format nama lengkap belum sesuai. (Tidak menggunakan special character dan maksimal 255 charackter).",
       }),
