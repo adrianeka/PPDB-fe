@@ -71,8 +71,9 @@ const Login = () => {
       navigate("/daftar-resep");
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        toast.error("Username atau Kata sandi yang anda masukkan salah");
+        toast.error(error.response.data.message);
       } else {
+        console.log(error);
         toast.error("Terjadi kesalahan server. Silahkan coba kembali.");
       }
       reset();
