@@ -57,9 +57,13 @@ const ResepMakananCard = ({
     async function putFavorite() {
       try {
         if (statusFavorite === false) {
-          setFavoriteMessage(`Berhasil Menambah Resep ${recipeName}`);
+          setFavoriteMessage(
+            `Berhasil Menambahkan Resep ${recipeName} ke dalam Favorit`
+          );
         } else if (statusFavorite === true) {
-          setFavoriteMessage(`Berhasil Menghapus Resep ${recipeName}`);
+          setFavoriteMessage(
+            `Berhasil Menghapus Resep ${recipeName} dari Favorit`
+          );
         }
 
         await putFavoriteResepMasakan(recipeId, userId);
