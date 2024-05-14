@@ -35,8 +35,8 @@ function TambahResep() {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [levels, setLevels] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("2");
+  const [selectedLevel, setSelectedLevel] = useState("4");
   const [recipeName, setRecipeName] = useState("");
   const [timeCook, setTimeCook] = useState("");
   const [ingredient, setIngredient] = useState("");
@@ -99,7 +99,7 @@ function TambahResep() {
     } else if (!value) {
       setErrors({
         ...errors,
-        recipeName: "Nama Resep Masakan tidak boleh kosong",
+        recipeName: "Kolom Nama Resep Masakan tidak boleh kosong",
       });
     } else if (!/^[A-Za-z\s]*$/.test(value)) {
       setErrors({
@@ -120,7 +120,7 @@ function TambahResep() {
     setErrors({
       ...errors,
       selectedCategory:
-        value === "" ? "Kategori Masakan tidak boleh kosong" : "",
+        value === "" ? "Kolom Kategori Masakan tidak boleh kosong" : "",
     });
   };
 
@@ -134,14 +134,14 @@ function TambahResep() {
     if (!value) {
       setErrors({
         ...errors,
-        timeCook: "Waktu tidak boleh kosong",
+        timeCook: "Kolom Waktu Memasak tidak boleh kosong",
       });
     }
     // Check if the value contains valid numbers between 1 and 999
     else if (!isValidNumber) {
       setErrors({
         ...errors,
-        timeCook: "Hanya boleh berisi angka 1-999",
+        timeCook: "Kolom Hanya boleh berisi angka 1-999",
       });
     }
     // Clear the error if the value is valid
@@ -159,7 +159,8 @@ function TambahResep() {
     // Use the actual invalid value here, for example "", null, or "0"
     setErrors({
       ...errors,
-      selectedLevel: value === "" ? "Kesulitan tidak boleh kosong" : "",
+      selectedLevel:
+        value === "" ? "Kolom Tingkat Kesulitan tidak boleh kosong" : "",
     });
   };
 
@@ -170,7 +171,7 @@ function TambahResep() {
     if (!value || value.replace(/<(.|\n)*?>/g, "").trim() === "") {
       setErrors({
         ...errors,
-        ingredient: "Bahan - Bahan tidak boleh kosong",
+        ingredient: "Kolom Bahan - Bahan tidak boleh kosong",
       });
     } else if (value.length > 255) {
       setErrors({
@@ -192,7 +193,7 @@ function TambahResep() {
     if (!value || value.replace(/<(.|\n)*?>/g, "").trim() === "") {
       setErrors({
         ...errors,
-        howToCook: "Cara Masak tidak boleh kosong",
+        howToCook: "Kolom Cara Masak tidak boleh kosong",
       });
     } else if (value.length > 255) {
       setErrors({
@@ -220,7 +221,7 @@ function TambahResep() {
         ? regexRecipeName.test(recipeName)
           ? ""
           : "Kolom tidak boleh berisi karakter khusus/angka"
-        : "Nama Resep Masakan tidak boleh kosong";
+        : "Kolom Nama Resep Masakan tidak boleh kosong";
     }
 
     // Validation for timeCook
@@ -229,14 +230,14 @@ function TambahResep() {
     tempErrors.timeCook = timeCook
       ? isValidNumber
         ? ""
-        : "Hanya boleh berisi angka 1-999"
-      : "Waktu tidak boleh kosong";
+        : "Kolom Hanya boleh berisi angka 1-999"
+      : "Kolom Waktu Memasak tidak boleh kosong";
 
     // Validation for ingredient
     const isIngredientEmpty =
       !ingredient || ingredient.replace(/<(.|\n)*?>/g, "").trim() === "";
     tempErrors.ingredient = isIngredientEmpty
-      ? "Bahan - Bahan tidak boleh kosong"
+      ? "Kolom Bahan - Bahan tidak boleh kosong"
       : ingredient.length > 255
       ? "Panjang kolom tidak boleh melebihi 255 karakter"
       : "";
@@ -245,7 +246,7 @@ function TambahResep() {
     const isHowToCookEmpty =
       !howToCook || howToCook.replace(/<(.|\n)*?>/g, "").trim() === "";
     tempErrors.howToCook = isHowToCookEmpty
-      ? "Cara Masak tidak boleh kosong"
+      ? "Kolom Cara Masak tidak boleh kosong"
       : howToCook.length > 255
       ? "Panjang kolom tidak boleh melebihi 255 karakter"
       : "";
@@ -253,15 +254,17 @@ function TambahResep() {
     // Validations for other fields
     tempErrors.selectedCategory = selectedCategory
       ? ""
-      : "Kategori Masakan tidak boleh kosong";
+      : "Kolom Kategori Masakan tidak boleh kosong";
     tempErrors.selectedLevel = selectedLevel
       ? ""
-      : "Kesulitan tidak boleh kosong";
-    tempErrors.imageFile = imageFile ? "" : "Gambar Makanan tidak boleh kosong";
+      : "Kolom Tingkat Kesulitan tidak boleh kosong";
+    tempErrors.imageFile = imageFile
+      ? ""
+      : "Kolom Gambar Makanan tidak boleh kosong";
 
     // Validation for imageFile
     if (!imageFile) {
-      tempErrors.imageFile = "Gambar Makanan tidak boleh kosong";
+      tempErrors.imageFile = "Kolom Gambar Makanan tidak boleh kosong";
     } else if (
       imageFile.size > 1048576 ||
       !["image/jpeg", "image/png", "image/jpg"].includes(imageFile.type)
@@ -630,6 +633,14 @@ function TambahResep() {
                     background: "white",
                     marginTop: 0,
                   }}
+                  FormHelperTextProps={{
+                    sx: {
+                      margin: 0,
+                      padding: 0,
+                      position: "absolute", // ensure the helper text doesn't affect the height of the TextField
+                      bottom: "-20px", // position it correctly below the TextField
+                    },
+                  }}
                 />
                 {/* Image Upload */}
                 <Typography
@@ -803,6 +814,14 @@ function TambahResep() {
                         error={!!errors.timeCook}
                         helperText={errors.timeCook}
                         type="number"
+                        FormHelperTextProps={{
+                          sx: {
+                            margin: 0,
+                            padding: 0,
+                            position: "absolute", // ensure the helper text doesn't affect the height of the TextField
+                            bottom: "-20px", // position it correctly below the TextField
+                          },
+                        }}
                       />
                     </Box>
 
@@ -843,7 +862,13 @@ function TambahResep() {
                           ))}
                         </Select>
                         {errors.selectedLevel && (
-                          <FormHelperText>
+                          <FormHelperText
+                            sx={{
+                              margin: 0,
+                              padding: 0,
+                              position: "absolute", // ensure the helper text doesn't affect the height of the TextField
+                              bottom: "-20px", // position it correctly below the TextField
+                            }}>
                             {errors.selectedLevel}
                           </FormHelperText>
                         )}
