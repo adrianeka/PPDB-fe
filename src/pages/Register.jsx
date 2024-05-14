@@ -33,6 +33,7 @@ export const registerSchema = z
       }),
     password: z
       .string()
+      .min(1, { message: "Kolom kata sandi tidak boleh kosong." })
       .min(6, {
         message: "Kata sandi tidak boleh kurang dari 6 karakter.",
       })
