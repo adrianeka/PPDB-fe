@@ -6,7 +6,7 @@ App Version 1.0
 
 ## Book Recipe - Studi Kasus Multi Teknologi
 
-### Built With
+### Built With 
 
 - Node.js 18+
 - Vite.js 5.0.11
