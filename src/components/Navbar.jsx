@@ -19,6 +19,7 @@ import daftarResepMakananIcon from "../public/svg/DaftarResepMakanan.svg";
 import resepSayaIcon from "../public/svg/ResepSaya.svg";
 import resepFavoritIcon from "../public/svg/ResepFavorit.svg";
 import signOutIcon from "../public/svg/SignOut.svg";
+import toast, { Toaster } from "react-hot-toast";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,8 +36,11 @@ const Navbar = () => {
   };
   const navigate = useNavigate();
   const handleLogout = () => {
-    navigate("/");
-    localStorage.clear();
+    toast.success("Sign out berhasil");
+    setTimeout(() => {
+      navigate("/");
+      localStorage.clear();
+    }, 100);
   };
 
   const location = useLocation();
@@ -254,6 +258,7 @@ const Navbar = () => {
           {/* End of List Menu Desktop */}
         </Box>
       </Toolbar>
+      <Toaster />
     </AppBar>
   );
 };
