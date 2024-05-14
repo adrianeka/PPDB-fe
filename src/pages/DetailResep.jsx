@@ -36,7 +36,7 @@ function DetailResep() {
   }, [id]);
 
   // handle change isFavorite
-  const handleChange = async (event, recipeId, recipeName, statusFavorite) => {
+  const handleChange = async (statusFavorite) => {
     try {
       const updatedResepData = {
         ...resepData,
@@ -45,8 +45,8 @@ function DetailResep() {
       setResepData(updatedResepData);
 
       const message = statusFavorite
-        ? `Berhasil Menghapus Resep ${resepData.recipeName}`
-        : `Berhasil Menambah Resep ${resepData.recipeName}`;
+        ? `Berhasil Menghapus Resep ${resepData.recipeName} dari daftar Favorite`
+        : `Berhasil Menambah Resep ${resepData.recipeName} ke daftar Favorite`;
 
       setFavoriteMessage(message);
       setOpenFavoriteDialog(true);
@@ -236,7 +236,7 @@ function DetailResep() {
                   marginBottom: "17px",
                 }}>
                 <div
-                  dangerouslySetInnerHTML={{ __html: resepData.ingridient }}
+                  dangerouslySetInnerHTML={{ __html: resepData.ingredient }}
                 />
               </Typography>
             </Grid>

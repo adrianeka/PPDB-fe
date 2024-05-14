@@ -75,12 +75,13 @@ const DaftarResepFavorit = () => {
   const [recipeName, setRecipeName] = useState("");
   const handleChangeRecipeName = (event) => {
     setTempRecipeName(event.target.value);
-    window.addEventListener("keypress", function (event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        handleApplySearch();
-      }
-    });
+  };
+
+  const handleEnterSearch = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleApplySearch();
+    }
   };
 
   const [foodLevel, setFoodLevel] = useState("");
@@ -276,6 +277,7 @@ const DaftarResepFavorit = () => {
                   placeholder="Cari Resep"
                   value={tempRecipeName}
                   onChange={handleChangeRecipeName}
+                  onKeyDown={handleEnterSearch}
                   InputProps={{
                     startAdornment: (
                       <IconButton onClick={handleApplySearch}>
@@ -370,10 +372,10 @@ const DaftarResepFavorit = () => {
                               value={tempFoodLevel}
                               onChange={handleChangeFoodLevel}>
                               <MenuItem value="">ALL</MenuItem>
-                              <MenuItem value="3">Easy</MenuItem>
-                              <MenuItem value="2">Medium</MenuItem>
-                              <MenuItem value="1">Hard</MenuItem>
-                              <MenuItem value="0">Master Chef</MenuItem>
+                              <MenuItem value="4">Easy</MenuItem>
+                              <MenuItem value="3">Medium</MenuItem>
+                              <MenuItem value="2">Hard</MenuItem>
+                              <MenuItem value="1">Master Chef</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -392,10 +394,10 @@ const DaftarResepFavorit = () => {
                               value={tempFoodCategory}
                               onChange={handleChangeFoodCategory}>
                               <MenuItem value="">ALL</MenuItem>
-                              <MenuItem value="1">Breakfast</MenuItem>
-                              <MenuItem value="0">Lunch</MenuItem>
-                              <MenuItem value="2">Dinner</MenuItem>
-                              <MenuItem value="3">Snack</MenuItem>
+                              <MenuItem value="2">Breakfast</MenuItem>
+                              <MenuItem value="1">Lunch</MenuItem>
+                              <MenuItem value="3">Dinner</MenuItem>
+                              <MenuItem value="4">Snack</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -564,6 +566,7 @@ const DaftarResepFavorit = () => {
             placeholder="Cari Resep"
             value={tempRecipeName}
             onChange={handleChangeRecipeName}
+            onKeyDown={handleEnterSearch}
             InputProps={{
               startAdornment: (
                 <IconButton onClick={handleApplySearch}>
@@ -649,10 +652,10 @@ const DaftarResepFavorit = () => {
                           value={tempFoodLevel}
                           onChange={handleChangeFoodLevel}>
                           <MenuItem value="">ALL</MenuItem>
-                          <MenuItem value="3">Easy</MenuItem>
-                          <MenuItem value="2">Medium</MenuItem>
-                          <MenuItem value="1">Hard</MenuItem>
-                          <MenuItem value="0">Master Chef</MenuItem>
+                          <MenuItem value="4">Easy</MenuItem>
+                          <MenuItem value="3">Medium</MenuItem>
+                          <MenuItem value="2">Hard</MenuItem>
+                          <MenuItem value="1">Master Chef</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -669,10 +672,10 @@ const DaftarResepFavorit = () => {
                           value={tempFoodCategory}
                           onChange={handleChangeFoodCategory}>
                           <MenuItem value="">ALL</MenuItem>
-                          <MenuItem value="1">Breakfast</MenuItem>
-                          <MenuItem value="0">Lunch</MenuItem>
-                          <MenuItem value="2">Dinner</MenuItem>
-                          <MenuItem value="3">Snack</MenuItem>
+                          <MenuItem value="2">Breakfast</MenuItem>
+                          <MenuItem value="1">Lunch</MenuItem>
+                          <MenuItem value="3">Dinner</MenuItem>
+                          <MenuItem value="4">Snack</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>

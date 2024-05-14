@@ -66,14 +66,15 @@ const Register = () => {
       const response = await userRegister(data);
       if (response.data.status === "OK") {
         toast.success("Berhasil daftar!");
-        navigate("/user-management/users/signin");
+        navigate("/");
       }
 
       if (response.data.status === "ERROR") {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error);
+        toast.error("Terjadi kesalahan server. Silahkan coba kembali.");
+      reset();
     }
   };
 

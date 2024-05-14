@@ -9,6 +9,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import DeleteIcon from '@mui/icons-material/Delete';
 import { GlobalStyles } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import {
@@ -39,7 +40,7 @@ function TambahResep() {
   const [selectedLevel, setSelectedLevel] = useState("");
   const [recipeName, setRecipeName] = useState("");
   const [timeCook, setTimeCook] = useState("");
-  const [ingridient, setIngridient] = useState("");
+  const [ingredient, setingredient] = useState("");
   const [howToCook, setHowToCook] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
@@ -51,7 +52,7 @@ function TambahResep() {
     selectedCategory: "",
     selectedLevel: "",
     timeCook: "",
-    ingridient: "",
+    ingredient: "",
     howToCook: "",
     imageFile: "",
   });
@@ -163,24 +164,24 @@ function TambahResep() {
     });
   };
 
-  const handleIngridientChange = (value) => {
-    setIngridient(value);
+  const handleingredientChange = (value) => {
+    setingredient(value);
 
     // Checking if the content is empty or just white spaces
     if (!value || value.replace(/<(.|\n)*?>/g, "").trim() === "") {
       setErrors({
         ...errors,
-        ingridient: "Bahan - Bahan tidak boleh kosong",
+        ingredient: "Bahan - Bahan tidak boleh kosong",
       });
     } else if (value.length > 255) {
       setErrors({
         ...errors,
-        ingridient: "Panjang kolom tidak boleh melebihi 255 karakter",
+        ingredient: "Panjang kolom tidak boleh melebihi 255 karakter",
       });
     } else {
       setErrors({
         ...errors,
-        ingridient: "",
+        ingredient: "",
       });
     }
   };
@@ -232,12 +233,12 @@ function TambahResep() {
         : "Hanya boleh berisi angka 1-999"
       : "Waktu tidak boleh kosong";
 
-    // Validation for ingridient
+    // Validation for ingredient
     const isIngredientEmpty =
-      !ingridient || ingridient.replace(/<(.|\n)*?>/g, "").trim() === "";
-    tempErrors.ingridient = isIngredientEmpty
+      !ingredient || ingredient.replace(/<(.|\n)*?>/g, "").trim() === "";
+    tempErrors.ingredient = isIngredientEmpty
       ? "Bahan - Bahan tidak boleh kosong"
-      : ingridient.length > 255
+      : ingredient.length > 255
       ? "Panjang kolom tidak boleh melebihi 255 karakter"
       : "";
 
@@ -307,6 +308,30 @@ function TambahResep() {
     accept: "image/jpeg, image/png, image/jpg", // specify valid MIME types here
   });
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (
+      file &&
+      file.size <= 1048576 &&
+      ["image/jpeg", "image/png", "image/jpg"].includes(file.type)
+    ) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      setErrors({ ...errors, imageFile: "" });
+    } else {
+      setErrors({
+        ...errors,
+        imageFile:
+          "Format gambar tidak sesuai / Gambar melebihi batas maksimal ukuran (1MB)",
+      });
+    }
+  };
+
+  const handleDeleteImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateFields()) {
@@ -327,12 +352,13 @@ function TambahResep() {
         categoryId: selectedCategory,
         categoryName: category ? category.categoryName : "", // Handle the case when category is not found
       },
+      userId: userId,
       levels: {
         levelId: selectedLevel,
         levelName: level ? level.levelName : "", // Handle the case when level is not found
       },
       timeCook: timeCook,
-      ingridient: ingridient,
+      ingredient: ingredient,
       howToCook: howToCook,
     });
 
@@ -458,16 +484,26 @@ function TambahResep() {
   const renderDropzoneContent = () => {
     if (imagePreview) {
       return (
-        <img
-          src={imagePreview}
-          alt="Preview"
-          style={{
-            width: "100%", // Sets the width to cover the container
-            height: "100%", // Sets the height to cover the container
-            objectFit: "contain", // Ensures the image fits within the container, resized proportionally
-            objectPosition: "center", // Centers the image within the container
-          }}
-        />
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          <img
+            src={imagePreview}
+            alt="Preview"
+            style={{
+              maxWidth: "100%", // Sets the width to cover the container
+              maxHeight: "100%", // Sets the height to cover the container
+              objectFit: "contain", // Ensures the image fits within the container, resized proportionally
+              objectPosition: "center", // Centers the image within the container
+            }}
+          />
+          <IconButton
+            style={{ position: "absolute", top: 5, right: 5 }}
+            onClick={handleDeleteImage}
+            color="error"
+            aria-label="delete image"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
       );
     } else {
       return (
@@ -478,21 +514,21 @@ function TambahResep() {
             alignItems: "center",
             justifyContent: "center",
           }}>
-          <AddPhotoAlternateOutlinedIcon
-            color="disabled"
-            style={{ fontSize: 60 }}
-          />
-          <Typography
-            sx={{
-              color: "gray",
-              textAlign: "center",
+              <AddPhotoAlternateOutlinedIcon
+                color="disabled"
+                style={{ fontSize: 60 }}
+              />
+            <Typography
+              sx={{
+                color: "gray",
+                textAlign: "center",
 
-              marginTop: "5px",
-            }}>
-            <strong>Click to upload</strong> or drag and drop
-            <br />
-            PNG, JPG, JPEG (Max 1MB)
-          </Typography>
+                marginTop: "5px",
+              }}> 
+              <strong>Click to upload</strong> or drag and drop
+              <br />
+              PNG, JPG, JPEG (Max 1MB)
+            </Typography>
         </div>
       );
     }
@@ -631,7 +667,7 @@ function TambahResep() {
                     marginTop: 0,
                   }}
                 />
-                {/* Image Upload */}
+                
                 <Typography
                   sx={{
                     marginBottom: 1,
@@ -647,29 +683,38 @@ function TambahResep() {
                     *
                   </span>
                 </Typography>
-
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/png, image/jpeg, image/jpg"
+                  style={{ display: "none" }}
+                  onChange={handleImageUpload}
+                />
+                
                 <Box sx={{ position: "relative" }}>
-                  <Box
-                    {...getRootProps()}
-                    sx={{
-                      textAlign: "center",
-                      p: 2,
-                      my: 2,
-                      marginTop: 0,
-                      marginBottom: "4px",
-                      background: "white",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: 150, // Adjust the height as needed
-                      cursor: "pointer",
+                  <label htmlFor="image-upload"> 
+                    <Box
+                      {...getRootProps()}
+                      sx={{
+                        textAlign: "center",
+                        p: 2,
+                        my: 2,
+                        marginTop: 0,
+                        marginBottom: "4px",
+                        background: "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: 150, // Adjust the height as needed
+                        cursor: "pointer",
 
-                      border: errors.imageFile
-                        ? "2px dashed #dd2727"
-                        : "2px dashed gray",
-                    }}>
-                    {renderDropzoneContent()}
-                  </Box>
+                        border: errors.imageFile
+                          ? "2px dashed #dd2727"
+                          : "2px dashed gray",
+                      }}>
+                      {renderDropzoneContent()}
+                    </Box>
+                  </label>
                   {errors.imageFile && (
                     <Typography
                       sx={{
@@ -698,7 +743,7 @@ function TambahResep() {
                 <div className="ingredients-editor">
                   <Box
                     sx={{
-                      border: errors.ingridient
+                      border: errors.ingredient
                         ? "1px solid #dd2727"
                         : "0px solid rgba(0, 0, 0, 0.23)", // Assuming this is your default border
                       borderRadius: "2px", // Match the border radius with TextField
@@ -707,15 +752,15 @@ function TambahResep() {
                     <ReactQuill
                       theme="snow"
                       placeholder="Write a description..."
-                      value={ingridient}
-                      onChange={handleIngridientChange}
+                      value={ingredient}
+                      onChange={handleingredientChange}
                       style={{
                         background: "white",
                         marginBottom: "0px",
                       }} // Additional styling if needed
                     />
-                    {errors.ingridient && (
-                      <QuillHelperText error={errors.ingridient} />
+                    {errors.ingredient && (
+                      <QuillHelperText error={errors.ingredient} />
                     )}
                   </Box>
                 </div>
