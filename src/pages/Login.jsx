@@ -73,7 +73,6 @@ const Login = () => {
       if (error.response && error.response.status === 401) {
         toast.error(error.response.data.message);
       } else {
-        console.log(error);
         toast.error("Terjadi kesalahan server. Silahkan coba kembali.");
       }
       reset();
