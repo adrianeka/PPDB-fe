@@ -352,7 +352,6 @@ function TambahResep() {
         categoryId: selectedCategory,
         categoryName: category ? category.categoryName : "", // Handle the case when category is not found
       },
-      userId: userId,
       levels: {
         levelId: selectedLevel,
         levelName: level ? level.levelName : "", // Handle the case when level is not found

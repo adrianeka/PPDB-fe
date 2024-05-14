@@ -57,9 +57,9 @@ const ResepMakananCard = ({
     async function putFavorite() {
       try {
         if (statusFavorite === false) {
-          setFavoriteMessage(`Berhasil Menambah Resep ${recipeName}`);
+          setFavoriteMessage(`Berhasil Menambah Resep ${recipeName} ke Daftar Favorite`);
         } else if (statusFavorite === true) {
-          setFavoriteMessage(`Berhasil Menghapus Resep ${recipeName}`);
+          setFavoriteMessage(`Berhasil Menghapus Resep ${recipeName} dari Daftar Favorite`);
         }
 
         await putFavoriteResepMasakan(recipeId, userId);
@@ -332,8 +332,8 @@ const ResepMakananCard = ({
               </Box>
             </CardContent>
             <CardActions>
-              <Grid container>
-                <Grid item xs={12}>
+              <Grid container direction="row" justifyContent="center">
+                <Grid item xs>
                   <Link
                     href={`/resep-saya/detail-resep/${data.recipeId}`}
                     sx={{

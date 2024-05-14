@@ -40,9 +40,9 @@ const ResepMakananCard = ({
     async function putFavorite() {
       try {
         if (statusFavorite === false) {
-          setFavoriteMessage(`Berhasil Menambah Resep ${recipeName}`);
+          setFavoriteMessage(`Berhasil Menambah Resep ${recipeName} ke Daftar Favorite`);
         } else if (statusFavorite === true) {
-          setFavoriteMessage(`Berhasil Menghapus Resep ${recipeName}`);
+          setFavoriteMessage(`Berhasil Menghapus Resep ${recipeName} dari Daftar Favorite`);
         }
 
         await putFavoriteResepMasakan(recipeId, userId);

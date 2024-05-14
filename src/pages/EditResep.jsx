@@ -106,7 +106,7 @@ function EditResep() {
           .then((response) => {
             const recipeData = response.data.data; // Mengakses data dari properti 'data' dalam respons
             setRecipeName(recipeData.recipeName);
-            setSelectedCategory(recipeData.categories.categoryId); // Akses categoryId dari category
+            setSelectedCategory(recipeData.categories.categoryId.toString()); // Akses categoryId dari category
             setSelectedLevel(recipeData.levels.levelId.toString()); // Akses levelId dari levels
             setTimeCook(recipeData.timeCook); // Mengubah time menjadi string
             setingredient(recipeData.ingredient); // Menggunakan 'ingredient', bukan 'ingredient'
@@ -346,8 +346,30 @@ function EditResep() {
     [errors]
   );
 
-  const { getRootProps } = useDropzone({
+  const onInput = (e) => {
+    const file = e.target.files[0];
+
+    // Check if file is not undefined, and validate size and type
+    if (
+      file &&
+      file.size <= 1048576 &&
+      ["image/jpeg", "image/png", "image/jpg"].includes(file.type)
+    ) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      setErrors({ ...errors, imageFile: "" });
+    } else {
+      setErrors({
+        ...errors,
+        imageFile:
+          "Format gambar tidak sesuai / Gambar melebihi batas maksimal ukuran (1MB)",
+      });
+    }
+  };
+
+  const { getRootProps: getPhotoRootProps, getInputProps: getPhotoInputProps } = useDropzone({
     onDrop,
+    maxFiles: 1,
     accept: "image/jpeg, image/png, image/jpg", // specify valid MIME types here
   });
 
@@ -357,54 +379,56 @@ function EditResep() {
       console.error("Validation failed");
       return;
     }
-
+    
     const formData = new FormData();
     const userId = localStorage.getItem("userId");
-
+    console.log(categories);
+    
     // Membuat objek JSON dengan data yang diinginkan oleh API
     const jsonData = {
       userId: userId,
       recipeId: parseInt(id), // Menggunakan parseInt untuk memastikan format angka
       categories: {
         categoryId: parseInt(selectedCategory),
-        categoryName: categories.find(
-          (c) => c.categoryId.toString() === selectedCategory
+        categoryName: categories.find((c) => c.categoryId.toString() === selectedCategory
         )?.categoryName,
       },
       levels: {
         levelId: parseInt(selectedLevel),
         levelName: levels.find((l) => l.levelId.toString() === selectedLevel)
-          ?.levelName,
+        ?.levelName,
       },
       recipeName: recipeName,
       timeCook: parseInt(timeCook), // Konversi ke integer
       ingredient: ingredient, // Pastikan ini mengacu pada state yang benar
       howToCook: howToCook,
     };
-
+    console.log(jsonData);
+    
     // Menambahkan objek JSON ke FormData
     formData.append(
       "request",
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
-
+    
     // Jika imageFile telah diubah, tambahkan ke FormData
     if (imageFile) {
       formData.append("file", imageFile, imageFile.name);
     }
-
+    
     setIsSubmitting(true);
-
+    
+    console.log("Form submitted:", formData);
     // Lakukan request PUT atau PATCH ke API
     http
-      .put("/book-recipe/book-recipes", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setSubmitSuccess(true); // Tampilkan dialog sukses
+    .put("/book-recipe/book-recipes", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((response) => {
+      console.log(response);
+      setSubmitSuccess(true); // Tampilkan dialog sukses
         setSubmitMessage(`Berhasil Memperbarui ${recipeName}`);
         setIsSubmitting(false);
         // navigate ke halaman lain jika diperlukan
@@ -702,7 +726,7 @@ function EditResep() {
 
                 <Box sx={{ position: "relative" }}>
                   <Box
-                    {...getRootProps()}
+                    {...getPhotoRootProps()}
                     sx={{
                       textAlign: "center",
                       p: 2,
@@ -721,6 +745,13 @@ function EditResep() {
                         : "2px dashed gray",
                     }}>
                     {renderDropzoneContent()}
+                    <input
+                      {...getPhotoInputProps()}
+                      type="file"
+                      accept="image/jpg, image/jpeg, image/png"
+                      style={{ display: 'none' }}
+                      onChange={onInput}
+                    />
                   </Box>
                   {errors.imageFile && (
                     <Typography

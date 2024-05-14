@@ -14,6 +14,7 @@ import { getDetailResep, putFavoriteResepMasakan } from "../services/apis";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import FavoritDialog from "../components/FavoritDialog";
+import notFoundImage from "../public/svg/SearchNotFound.svg";
 
 function DetailResep() {
   const { id } = useParams();
@@ -22,13 +23,18 @@ function DetailResep() {
   const [openFavoriteDialog, setOpenFavoriteDialog] = useState(false);
   const [favoriteMessage, setFavoriteMessage] = useState("");
   const [resepData, setResepData] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchDetailResep() {
       try {
         const response = await getDetailResep(id);
+
         setResepData(response.data.data);
+
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         console.log(error.message);
       }
     }
@@ -36,7 +42,7 @@ function DetailResep() {
   }, [id]);
 
   // handle change isFavorite
-  const handleChange = async (statusFavorite) => {
+  const handleChangeFavorite = async (statusFavorite) => {
     try {
       const updatedResepData = {
         ...resepData,
@@ -45,8 +51,8 @@ function DetailResep() {
       setResepData(updatedResepData);
 
       const message = statusFavorite
-        ? `Berhasil Menghapus Resep ${resepData.recipeName} dari daftar Favorite`
-        : `Berhasil Menambah Resep ${resepData.recipeName} ke daftar Favorite`;
+        ? `Resep ${resepData.recipeName} berhasil dihapus dari favorite`
+        : `Resep ${resepData.recipeName} berhasil ditambahkan ke dalam favorite`;
 
       setFavoriteMessage(message);
       setOpenFavoriteDialog(true);
@@ -73,13 +79,15 @@ function DetailResep() {
             alignItems="center"
             paddingTop={7}
             marginBottom={2}
-            wrap="nowrap">
+            wrap="nowrap"
+          >
             <Grid item sx={{ marginBottom: 3 }}>
               <Grid
                 container
                 direction="row"
                 justifyContent="space-between"
-                alignItems="center">
+                alignItems="center"
+              >
                 <Grid item>
                   <IconButton aria-label="Example" onClick={() => navigate(-1)}>
                     <ArrowBackIosNewIcon
@@ -93,7 +101,8 @@ function DetailResep() {
                     sx={{
                       fontSize: { xs: 24, md: 36 },
                       fontWeight: "600",
-                    }}>
+                    }}
+                  >
                     {resepData.recipeName}
                   </Typography>
                 </Grid>
@@ -114,25 +123,29 @@ function DetailResep() {
               borderRadius: "4px",
               padding: 2,
               marginBottom: 3,
-            }}>
+            }}
+          >
             <Grid
               spacing={2}
               container
               direction="row"
               justifyContent="space-between"
-              alignItems="center">
+              alignItems="center"
+            >
               <Grid item>
                 <Grid
                   container
                   direction="column"
                   justifyContent="center"
-                  alignItems="flex-start">
+                  alignItems="flex-start"
+                >
                   <Grid item>
                     <Typography
                       sx={{
                         Size: 14,
                         color: "#01bfbf",
-                      }}>
+                      }}
+                    >
                       Kategori
                     </Typography>
                   </Grid>
@@ -146,7 +159,8 @@ function DetailResep() {
                   container
                   direction="column"
                   justifyContent="center"
-                  alignItems="flex-start">
+                  alignItems="flex-start"
+                >
                   <Grid item>
                     <Typography sx={{ fontSize: 14, color: "#01bfbf" }}>
                       Waktu Masak
@@ -162,7 +176,8 @@ function DetailResep() {
                   container
                   direction="column"
                   justifyContent="center"
-                  alignItems="flex-start">
+                  alignItems="flex-start"
+                >
                   <Grid item>
                     <Typography sx={{ fontSize: 14, color: "#01bfbf" }}>
                       Kesulitan
@@ -183,12 +198,7 @@ function DetailResep() {
                   }
                   checked={resepData.isFavorite}
                   onChange={(event) => {
-                    handleChange(
-                      event,
-                      resepData.recipeId,
-                      resepData.recipeName,
-                      resepData.isFavorite
-                    );
+                    handleChangeFavorite(resepData.isFavorite);
                   }}
                   value="favorite"
                   label={
@@ -197,7 +207,8 @@ function DetailResep() {
                         fontSize: "12px",
                         fontWeight: "400",
                         color: "#01BFBF",
-                      }}>
+                      }}
+                    >
                       Favorit
                     </Typography>
                   }
@@ -212,7 +223,8 @@ function DetailResep() {
             justifyContent="center"
             alignItems="stretch"
             marginBottom={4}
-            paddingX={{ xs: 1, md: 0 }}>
+            paddingX={{ xs: 1, md: 0 }}
+          >
             <Grid item textAlign={"left"}>
               <Typography
                 sx={{
@@ -220,7 +232,8 @@ function DetailResep() {
                   fontWeight: 600,
                   lineHeight: "27px",
                   color: "#01bfbf",
-                }}>
+                }}
+              >
                 Bahan-Bahan
               </Typography>
             </Grid>
@@ -234,7 +247,8 @@ function DetailResep() {
                   fontWeight: 400,
                   lineHeight: "20px",
                   marginBottom: "17px",
-                }}>
+                }}
+              >
                 <div
                   dangerouslySetInnerHTML={{ __html: resepData.ingredient }}
                 />
@@ -247,7 +261,8 @@ function DetailResep() {
                   fontWeight: 600,
                   lineHeight: "27px",
                   color: "#01bfbf",
-                }}>
+                }}
+              >
                 Cara memasak
               </Typography>
             </Grid>
@@ -262,7 +277,8 @@ function DetailResep() {
                   color: "#586A84",
                   textAlign: "justify",
                   lineHeight: "20px",
-                }}>
+                }}
+              >
                 <div
                   dangerouslySetInnerHTML={{ __html: resepData.howToCook }}
                 />
@@ -270,8 +286,55 @@ function DetailResep() {
             </Grid>
           </Grid>
         </Container>
+      ) : isLoading ? (
+        <Typography>Loading...</Typography>
       ) : (
-        <Typography>Loading..</Typography>
+        <>
+          <Grid item sx={{ marginY: 3 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item>
+                <IconButton aria-label="Example" onClick={() => navigate("/daftar-resep")}>
+                  <ArrowBackIosNewIcon
+                    color="black"
+                    sx={{ fontSize: { xs: "24px", md: "32px" } }}
+                  />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <Typography
+                  sx={{
+                    fontSize: { xs: 24, md: 36 },
+                    fontWeight: "600",
+                  }}
+                >
+                  Detail Resep Makanan
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Box
+            display="flex"
+            flexDirection="column"
+            marginX="auto"
+            alignItems="center"
+          >
+            <img src={notFoundImage} alt="notFound" width={500} />
+            <Typography
+              sx={{
+                fontSize: "24px",
+                textAlign: "center",
+                fontWeight: "700",
+              }}
+            >
+              Detil Resep Masakan Tidak Tersedia
+            </Typography>
+          </Box>
+        </>
       )}
     </div>
   );
