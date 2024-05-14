@@ -797,7 +797,7 @@ const DaftarResepFavorit = () => {
                     textAlign: "center",
                     fontWeight: "700",
                   }}>
-                  Data Tidak Ditemukan
+                  Resep masakan tidak tersedia
                 </Typography>
               </Box>
             ) : resepData ? (
