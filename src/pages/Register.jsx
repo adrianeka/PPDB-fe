@@ -18,7 +18,9 @@ export const registerSchema = z
       .min(1, {
         message: "Kolom username tidak boleh kosong.",
       })
-      .max(100)
+      .max(100, {
+        message: "Kolom username tidak boleh lebih dari 100 karakter.",
+      })
       .refine((value) => !/\s/.test(value), {
         message: "Format username belum sesuai.",
       }),
@@ -37,10 +39,12 @@ export const registerSchema = z
       .min(6, {
         message: "Kata sandi tidak boleh kurang dari 6 karakter.",
       })
-      .max(50)
+      .max(50, {
+        message: "Kolom kata sandi tidak boleh lebih dari 50 karakter.",
+      })
       .refine((value) => /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(value), {
         message:
-          "Kata sandi harus memiliki minimal 6 karakter kombinasi angka/huruf.",
+          "Kata sandi harus memiliki minimal 6 karakter kombinasi angka dan huruf.",
       }),
     retypePassword: z.string().min(1, {
       message: "Kolom Konfirmasi Kata Sandi tidak boleh kosong",
