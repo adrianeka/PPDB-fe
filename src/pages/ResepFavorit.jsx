@@ -75,12 +75,6 @@ const DaftarResepFavorit = () => {
   const [recipeName, setRecipeName] = useState("");
   const handleChangeRecipeName = (event) => {
     setTempRecipeName(event.target.value);
-    window.addEventListener("keypress", function (event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        handleApplySearch();
-      }
-    });
   };
 
   const [foodLevel, setFoodLevel] = useState("");
@@ -276,6 +270,9 @@ const DaftarResepFavorit = () => {
                   placeholder="Cari Resep"
                   value={tempRecipeName}
                   onChange={handleChangeRecipeName}
+                  onKeyUp={(event) => {
+                    event.key === "Enter" && handleApplySearch();
+                  }}
                   InputProps={{
                     startAdornment: (
                       <IconButton onClick={handleApplySearch}>
@@ -564,6 +561,9 @@ const DaftarResepFavorit = () => {
             placeholder="Cari Resep"
             value={tempRecipeName}
             onChange={handleChangeRecipeName}
+            onKeyUp={(event) => {
+              event.key === "Enter" && handleApplySearch();
+            }}
             InputProps={{
               startAdornment: (
                 <IconButton onClick={handleApplySearch}>
