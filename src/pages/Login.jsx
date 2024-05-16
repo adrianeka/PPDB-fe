@@ -19,7 +19,7 @@ export const loginSchema = z.object({
       message: "Kolom username tidak boleh kosong.",
     })
     .max(100, {
-      message: "Format username belum sesuai.",
+      message: "Kolom username tidak boleh lebih dari 100 karakter.",
     })
     .refine((value) => !/\s/.test(value), {
       message: "Format username belum sesuai.",
@@ -33,7 +33,7 @@ export const loginSchema = z.object({
       message: "Kata sandi tidak boleh kurang dari 6 karakter.",
     })
     .max(50, {
-      message: "Kata sandi tidak sesuai.",
+      message: "Kolom kata sandi tidak boleh lebih dari 50 karakter.",
     })
     .refine((value) => /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(value), {
       message:
@@ -69,7 +69,6 @@ const Login = () => {
 
       await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate("/daftar-resep");
-      
     } catch (error) {
       if (error.response && error.response.status === 401) {
         toast.error(error.response.data.message);
