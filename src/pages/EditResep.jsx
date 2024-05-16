@@ -429,7 +429,7 @@ function EditResep() {
     .then((response) => {
       console.log(response);
       setSubmitSuccess(true); // Tampilkan dialog sukses
-        setSubmitMessage(`Berhasil Memperbarui ${recipeName}`);
+        setSubmitMessage(`Berhasil Memperbarui Resep ${recipeName}`);
         setIsSubmitting(false);
         // navigate ke halaman lain jika diperlukan
       })
@@ -667,6 +667,7 @@ function EditResep() {
             variant="h4"
             gutterBottom
             marginTop={6}
+            textAlign="center"
             sx={{
               fontWeight: "bold",
             }}>

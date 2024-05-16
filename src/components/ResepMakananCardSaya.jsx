@@ -218,6 +218,7 @@ const ResepMakananCard = ({
                   onClick={handleCloseDialog}
                   sx={{
                     color: "#01BFBF",
+                    marginX: 4,
                     textTransform: "capitalize",
                     backgroundColor: "white",
                     boxShadow: "none",
@@ -233,6 +234,7 @@ const ResepMakananCard = ({
                   }
                   sx={{
                     color: "white",
+                    marginX: 4,
                     textTransform: "capitalize",
                     backgroundColor: "#01BFBF",
                     boxShadow: "none",
