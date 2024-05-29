@@ -358,6 +358,7 @@ const DaftarResepMasakan = () => {
                             <Select
                               labelId="level"
                               id="level"
+                              displayEmpty
                               value={tempFoodLevel}
                               onChange={handleChangeFoodLevel}>
                               <MenuItem value="">ALL</MenuItem>
@@ -380,6 +381,7 @@ const DaftarResepMasakan = () => {
                             <Select
                               labelId="foodCategory"
                               id="foodCategory"
+                              displayEmpty
                               value={tempFoodCategory}
                               onChange={handleChangeFoodCategory}>
                               <MenuItem value="">ALL</MenuItem>
@@ -404,6 +406,7 @@ const DaftarResepMasakan = () => {
                             <Select
                               labelId="cookingTime"
                               id="cookingTime"
+                              displayEmpty
                               value={tempCookingTime}
                               onChange={handleChangeCookingTime}>
                               <MenuItem value="">ALL</MenuItem>
@@ -630,6 +633,7 @@ const DaftarResepMasakan = () => {
                         <Select
                           labelId="level"
                           id="level"
+                          displayEmpty
                           value={tempFoodLevel}
                           onChange={handleChangeFoodLevel}>
                           <MenuItem value="">ALL</MenuItem>
@@ -650,6 +654,7 @@ const DaftarResepMasakan = () => {
                         <Select
                           labelId="foodCategory"
                           id="foodCategory"
+                          displayEmpty
                           value={tempFoodCategory}
                           onChange={handleChangeFoodCategory}>
                           <MenuItem value="">ALL</MenuItem>
@@ -672,6 +677,7 @@ const DaftarResepMasakan = () => {
                         <Select
                           labelId="cookingTime"
                           id="cookingTime"
+                          displayEmpty
                           value={tempCookingTime}
                           onChange={handleChangeCookingTime}>
                           <MenuItem value="">ALL</MenuItem>
@@ -689,7 +695,7 @@ const DaftarResepMasakan = () => {
                         <Select
                           labelId="sortBy"
                           id="sortBy"
-                          value={tempSortBy}
+                          value={tempSortBy ? tempSortBy : "recipeName,asc"}
                           onChange={handleChangeSortBy}>
                           <MenuItem value="recipeName,asc">
                             Nama Resep A-Z

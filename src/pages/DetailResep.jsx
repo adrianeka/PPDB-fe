@@ -76,15 +76,48 @@ function DetailResep() {
       />
       {isDataEmpty ? (
         <Container maxWidth="sm" sx={{ paddingBottom: 3 }}>
-          <Box display="flex" flexDirection="column" marginX="auto">
+          <Grid item sx={{ marginY: 3 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Grid item>
+                <IconButton aria-label="Example" onClick={() => navigate("/daftar-resep")}>
+                  <ArrowBackIosNewIcon
+                    color="black"
+                    sx={{ fontSize: { xs: "24px", md: "32px" } }}
+                  />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <Typography
+                  sx={{
+                    fontSize: { xs: 24, md: 36 },
+                    fontWeight: "600",
+                  }}
+                >
+                  Detail Resep Makanan
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Box
+            display="flex"
+            flexDirection="column"
+            marginX="auto"
+            alignItems="center"
+          >
             <img src={notFoundImage} alt="notFound" width={500} />
             <Typography
               sx={{
                 fontSize: "24px",
                 textAlign: "center",
                 fontWeight: "700",
-              }}>
-              Data Tidak Ditemukan
+              }}
+            >
+              Data Tidak Tersedia
             </Typography>
           </Box>
         </Container>
