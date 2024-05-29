@@ -70,7 +70,7 @@ const DaftarResepMasakan = () => {
   const [tempFoodLevel, setTempFoodLevel] = useState("");
   const [tempFoodCategory, setTempFoodCategory] = useState("");
   const [tempCookingTime, setTempCookingTime] = useState("");
-  const [tempSortBy, setTempSortBy] = useState("");
+  const [tempSortBy, setTempSortBy] = useState("recipeName,asc");
 
   const [recipeName, setRecipeName] = useState("");
   const handleChangeRecipeName = (event) => {
@@ -92,7 +92,7 @@ const DaftarResepMasakan = () => {
     setTempCookingTime(event.target.value);
   };
 
-  const [sortBy, setSortBy] = useState("");
+  const [sortBy, setSortBy] = useState("recipeName,asc");
   const handleChangeSortBy = (event) => {
     setTempSortBy(event.target.value);
   };
@@ -355,6 +355,7 @@ const DaftarResepMasakan = () => {
                             sx={{ m: 1, minWidth: 120 }}
                             size="small">
                             <Select
+                              displayEmpty
                               labelId="level"
                               id="level"
                               value={tempFoodLevel}
@@ -377,6 +378,7 @@ const DaftarResepMasakan = () => {
                             sx={{ m: 1, minWidth: 120 }}
                             size="small">
                             <Select
+                              displayEmpty
                               labelId="foodCategory"
                               id="foodCategory"
                               value={tempFoodCategory}
@@ -401,6 +403,7 @@ const DaftarResepMasakan = () => {
                             sx={{ m: 1, minWidth: 120 }}
                             size="small">
                             <Select
+                              displayEmpty
                               labelId="cookingTime"
                               id="cookingTime"
                               value={tempCookingTime}
@@ -469,7 +472,6 @@ const DaftarResepMasakan = () => {
                       value={sortBy}
                       label="Sort By"
                       onChange={handleChangeSortByMobile}>
-                      <MenuItem value="">None</MenuItem>
                       <MenuItem value="recipeName,asc">Nama Resep A-Z</MenuItem>
                       <MenuItem value="recipeName,desc">
                         Nama Resep Z-A
@@ -629,6 +631,7 @@ const DaftarResepMasakan = () => {
                       </Typography>
                       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                         <Select
+                          displayEmpty
                           labelId="level"
                           id="level"
                           value={tempFoodLevel}
@@ -649,6 +652,7 @@ const DaftarResepMasakan = () => {
                       </Typography>
                       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                         <Select
+                          displayEmpty
                           labelId="foodCategory"
                           id="foodCategory"
                           value={tempFoodCategory}
@@ -671,6 +675,7 @@ const DaftarResepMasakan = () => {
                       </Typography>
                       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                         <Select
+                          displayEmpty
                           labelId="cookingTime"
                           id="cookingTime"
                           value={tempCookingTime}
