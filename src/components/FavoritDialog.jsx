@@ -21,9 +21,15 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function FavoritDialog({ open, setOpen, message }) {
+export default function FavoritDialog({
+  open,
+  setOpen,
+  message,
+  handleRefetchData,
+}) {
   const handleClose = () => {
     setOpen(false);
+    handleRefetchData();
   };
 
   return (

@@ -51,16 +51,6 @@ const ResepMakananCard = ({
 
         await putFavoriteResepMasakan(recipeId, userId);
         setOpenFavoriteDialog(true);
-        fetchDataResepMasakan(
-          userId,
-          page,
-          entries,
-          recipeNameProps,
-          foodLevel,
-          foodCategory,
-          cookingTime,
-          sortBy
-        );
       } catch (error) {
         console.log("error change favorite data", error);
         setIsPageError(true);
@@ -69,12 +59,26 @@ const ResepMakananCard = ({
     putFavorite();
   };
 
+  const handleRefetchData = () => {
+    fetchDataResepMasakan(
+      userId,
+      page,
+      entries,
+      recipeNameProps,
+      foodLevel,
+      foodCategory,
+      cookingTime,
+      sortBy
+    );
+  };
+
   return (
     <>
       <FavoritDialog
         open={openFavoriteDialog}
         setOpen={setOpenFavoriteDialog}
         message={favoriteMessage}
+        handleRefetchData={handleRefetchData}
       />
       {resepData.map((data, index) => (
         <Grid item xs={12} sm={6} md={3} key={index}>
