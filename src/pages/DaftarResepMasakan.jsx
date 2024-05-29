@@ -276,7 +276,7 @@ const DaftarResepMasakan = () => {
                     endAdornment: tempRecipeName && (
                       <IconButton
                         onClick={() => {
-                          setTempRecipeName(""), setRecipeName(""), setTempSearchError("");
+                          setTempRecipeName(""), setRecipeName("");
                         }}>
                         <ClearIcon />
                       </IconButton>
@@ -560,7 +560,7 @@ const DaftarResepMasakan = () => {
               endAdornment: tempRecipeName && (
                 <IconButton
                   onClick={() => {
-                    setTempRecipeName(""), setRecipeName(""), setTempSearchError("");
+                    setTempRecipeName(""), setRecipeName("");
                   }}>
                   <ClearIcon />
                 </IconButton>
