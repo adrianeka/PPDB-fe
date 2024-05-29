@@ -139,12 +139,12 @@ function EditResep() {
     } else if (!value) {
       setErrors({
         ...errors,
-        recipeName: "Nama Resep Masakan tidak boleh kosong",
+        recipeName: "Kolom Nama Resep Masakan tidak boleh kosong",
       });
     } else if (!/^[A-Za-z\s]*$/.test(value)) {
       setErrors({
         ...errors,
-        recipeName: "Kolom tidak boleh berisi karakter khusus/angka",
+        recipeName: "Kolom Nama Resep tidak boleh berisi karakter khusus/angka",
       });
     } else {
       setErrors({
@@ -175,14 +175,14 @@ function EditResep() {
     if (!value) {
       setErrors({
         ...errors,
-        timeCook: "Waktu tidak boleh kosong",
+        timeCook: "Kolom Waktu Memasak tidak boleh kosong",
       });
     }
     // Check if the value contains valid numbers between 1 and 999
     else if (!isValidNumber) {
       setErrors({
         ...errors,
-        timeCook: "Hanya boleh berisi angka 1-999",
+        timeCook: "Kolom waktu memasak Hanya boleh berisi angka 1-999",
       });
     }
     // Clear the error if the value is valid
@@ -211,12 +211,7 @@ function EditResep() {
     if (!value || value.replace(/<(.|\n)*?>/g, "").trim() === "") {
       setErrors({
         ...errors,
-        ingredient: "Bahan - Bahan tidak boleh kosong",
-      });
-    } else if (value.length > 255) {
-      setErrors({
-        ...errors,
-        ingredient: "Panjang kolom tidak boleh melebihi 255 karakter",
+        ingredient: "Kolom Bahan - Bahan tidak boleh kosong",
       });
     } else {
       setErrors({
@@ -233,7 +228,7 @@ function EditResep() {
     if (!value || value.replace(/<(.|\n)*?>/g, "").trim() === "") {
       setErrors({
         ...errors,
-        howToCook: "Cara Masak tidak boleh kosong",
+        howToCook: "Kolom Cara Masak tidak boleh kosong",
       });
     } else if (value.length > 255) {
       setErrors({
@@ -260,8 +255,8 @@ function EditResep() {
       tempErrors.recipeName = recipeName
         ? regexRecipeName.test(recipeName)
           ? ""
-          : "Kolom tidak boleh berisi karakter khusus/angka"
-        : "Nama Resep Masakan tidak boleh kosong";
+          : "Kolom Nama Resep Makanan tidak boleh berisi karakter khusus/angka"
+        : "Kolom Nama Resep Masakan tidak boleh kosong";
     }
 
     // Validation for timeCook
@@ -271,13 +266,13 @@ function EditResep() {
       ? isValidNumber
         ? ""
         : "Hanya boleh berisi angka 1-999"
-      : "Waktu tidak boleh kosong";
+      : "Kolom Waktu Memasak tidak boleh kosong";
 
     // Validation for ingredient
     const isIngredientEmpty =
       !ingredient || ingredient.replace(/<(.|\n)*?>/g, "").trim() === "";
     tempErrors.ingredient = isIngredientEmpty
-      ? "Bahan - Bahan tidak boleh kosong"
+      ? "Kolom Bahan - Bahan tidak boleh kosong"
       : ingredient.length > 255
       ? "Panjang kolom tidak boleh melebihi 255 karakter"
       : "";
@@ -286,7 +281,7 @@ function EditResep() {
     const isHowToCookEmpty =
       !howToCook || howToCook.replace(/<(.|\n)*?>/g, "").trim() === "";
     tempErrors.howToCook = isHowToCookEmpty
-      ? "Cara Masak tidak boleh kosong"
+      ? "Kolom Cara Masak tidak boleh kosong"
       : howToCook.length > 255
       ? "Panjang kolom tidak boleh melebihi 255 karakter"
       : "";
@@ -715,7 +710,7 @@ function EditResep() {
                     color: "gray",
                   }}
                 >
-                  Gambar Makanan{" "}
+                  Gambar Masakan{" "}
                   <span
                     style={{
                       color: "red",
