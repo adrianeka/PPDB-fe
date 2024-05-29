@@ -70,7 +70,7 @@ const DaftarResepFavorit = () => {
   const [tempFoodLevel, setTempFoodLevel] = useState("");
   const [tempFoodCategory, setTempFoodCategory] = useState("");
   const [tempCookingTime, setTempCookingTime] = useState("");
-  const [tempSortBy, setTempSortBy] = useState("");
+  const [tempSortBy, setTempSortBy] = useState("recipeName,asc");
 
   const [recipeName, setRecipeName] = useState("");
   const handleChangeRecipeName = (event) => {
@@ -94,7 +94,7 @@ const DaftarResepFavorit = () => {
     setTempCookingTime(event.target.value);
   };
 
-  const [sortBy, setSortBy] = useState("");
+  const [sortBy, setSortBy] = useState("recipeName,asc");
   const handleChangeSortBy = (event) => {
     setTempSortBy(event.target.value);
   };
@@ -362,6 +362,7 @@ const DaftarResepFavorit = () => {
                             sx={{ m: 1, minWidth: 120 }}
                             size="small">
                             <Select
+                              displayEmpty
                               labelId="level"
                               id="level"
                               value={tempFoodLevel}
@@ -384,6 +385,7 @@ const DaftarResepFavorit = () => {
                             sx={{ m: 1, minWidth: 120 }}
                             size="small">
                             <Select
+                              displayEmpty
                               labelId="foodCategory"
                               id="foodCategory"
                               value={tempFoodCategory}
@@ -408,15 +410,15 @@ const DaftarResepFavorit = () => {
                             sx={{ m: 1, minWidth: 120 }}
                             size="small">
                             <Select
+                              displayEmpty
                               labelId="cookingTime"
                               id="cookingTime"
                               value={tempCookingTime}
                               onChange={handleChangeCookingTime}>
-                              <MenuItem value="">
-                                <em>None</em>
-                              </MenuItem>
-                              <MenuItem value={30}>0-30 Menit</MenuItem>
-                              <MenuItem value={60}>30-60 Menit</MenuItem>
+                              <MenuItem value="">ALL</MenuItem>
+                              <MenuItem value="30">0-30 Menit</MenuItem>
+                              <MenuItem value="60">30-60 Menit</MenuItem>
+                              <MenuItem value="90">{">"}60 Menit</MenuItem>
                             </Select>
                           </FormControl>
                         </Stack>
@@ -477,9 +479,6 @@ const DaftarResepFavorit = () => {
                       value={sortBy}
                       label="Sort By"
                       onChange={handleChangeSortByMobile}>
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
                       <MenuItem value="recipeName,asc">Nama Resep A-Z</MenuItem>
                       <MenuItem value="recipeName,desc">
                         Nama Resep Z-A
@@ -644,6 +643,7 @@ const DaftarResepFavorit = () => {
                       </Typography>
                       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                         <Select
+                          displayEmpty
                           labelId="level"
                           id="level"
                           value={tempFoodLevel}
@@ -664,6 +664,7 @@ const DaftarResepFavorit = () => {
                       </Typography>
                       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                         <Select
+                          displayEmpty
                           labelId="foodCategory"
                           id="foodCategory"
                           value={tempFoodCategory}
@@ -686,15 +687,15 @@ const DaftarResepFavorit = () => {
                       </Typography>
                       <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                         <Select
+                          displayEmpty
                           labelId="cookingTime"
                           id="cookingTime"
                           value={tempCookingTime}
                           onChange={handleChangeCookingTime}>
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={30}>0-30 Menit</MenuItem>
-                          <MenuItem value={60}>30-60 Menit</MenuItem>
+                          <MenuItem value="">ALL</MenuItem>
+                          <MenuItem value="30">0-30 Menit</MenuItem>
+                          <MenuItem value="60">30-60 Menit</MenuItem>
+                          <MenuItem value="90">{">"}60 Menit</MenuItem>
                         </Select>
                       </FormControl>
                     </Stack>
@@ -708,9 +709,6 @@ const DaftarResepFavorit = () => {
                           id="sortBy"
                           value={tempSortBy}
                           onChange={handleChangeSortBy}>
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
                           <MenuItem value="recipeName,asc">
                             Nama Resep A-Z
                           </MenuItem>

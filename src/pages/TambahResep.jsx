@@ -4,7 +4,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // import styles
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import { GlobalStyles } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import {
@@ -501,8 +501,7 @@ function TambahResep() {
             style={{ position: "absolute", top: 5, right: 5 }}
             onClick={handleDeleteImage}
             color="error"
-            aria-label="delete image"
-          >
+            aria-label="delete image">
             <DeleteIcon />
           </IconButton>
         </div>
@@ -516,21 +515,21 @@ function TambahResep() {
             alignItems: "center",
             justifyContent: "center",
           }}>
-              <AddPhotoAlternateOutlinedIcon
-                color="disabled"
-                style={{ fontSize: 60 }}
-              />
-            <Typography
-              sx={{
-                color: "gray",
-                textAlign: "center",
+          <AddPhotoAlternateOutlinedIcon
+            color="disabled"
+            style={{ fontSize: 60 }}
+          />
+          <Typography
+            sx={{
+              color: "gray",
+              textAlign: "center",
 
-                marginTop: "5px",
-              }}> 
-              <strong>Click to upload</strong> or drag and drop
-              <br />
-              PNG, JPG, JPEG (Max 1MB)
-            </Typography>
+              marginTop: "5px",
+            }}>
+            <strong>Click to upload</strong> or drag and drop
+            <br />
+            PNG, JPG, JPEG (Max 1MB)
+          </Typography>
         </div>
       );
     }
@@ -677,7 +676,7 @@ function TambahResep() {
                     },
                   }}
                 />
-                
+
                 <Typography
                   sx={{
                     marginBottom: 1,
@@ -685,7 +684,7 @@ function TambahResep() {
                     textAlign: "left",
                     color: "gray",
                   }}>
-                  Gambar Makanan{" "}
+                  Gambar Masakan{" "}
                   <span
                     style={{
                       color: "red",
@@ -700,9 +699,9 @@ function TambahResep() {
                   style={{ display: "none" }}
                   onChange={handleImageUpload}
                 />
-                
+
                 <Box sx={{ position: "relative" }}>
-                  <label htmlFor="image-upload"> 
+                  <label htmlFor="image-upload">
                     <Box
                       {...getRootProps()}
                       sx={{
@@ -723,7 +722,7 @@ function TambahResep() {
                           : "2px dashed gray",
                       }}>
                       <input {...getInputProps()} />
-                    {renderDropzoneContent()}
+                      {renderDropzoneContent()}
                     </Box>
                   </label>
                   {errors.imageFile && (
