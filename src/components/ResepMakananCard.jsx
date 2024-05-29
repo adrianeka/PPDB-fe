@@ -51,22 +51,22 @@ const ResepMakananCard = ({
 
         await putFavoriteResepMasakan(recipeId, userId);
         setOpenFavoriteDialog(true);
+        fetchDataResepMasakan(
+          userId,
+          page,
+          entries,
+          recipeNameProps,
+          foodLevel,
+          foodCategory,
+          cookingTime,
+          sortBy
+        );
       } catch (error) {
         console.log("error change favorite data", error);
         setIsPageError(true);
       }
     }
     putFavorite();
-    fetchDataResepMasakan(
-      userId,
-      page,
-      entries,
-      recipeNameProps,
-      foodLevel,
-      foodCategory,
-      cookingTime,
-      sortBy
-    );
   };
 
   return (

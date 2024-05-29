@@ -105,7 +105,7 @@ function TambahResep() {
     } else if (!/^[A-Za-z\s]*$/.test(value)) {
       setErrors({
         ...errors,
-        recipeName: "Kolom tidak boleh berisi karakter khusus/angka",
+        recipeName: "Kolom tidak boleh berisi special character/angka",
       });
     } else {
       setErrors({
@@ -221,7 +221,7 @@ function TambahResep() {
       tempErrors.recipeName = recipeName
         ? regexRecipeName.test(recipeName)
           ? ""
-          : "Kolom tidak boleh berisi karakter khusus/angka"
+          : "Kolom tidak boleh berisi special character/angka"
         : "Kolom Nama Resep Masakan tidak boleh kosong";
     }
 
@@ -1020,9 +1020,9 @@ function TambahResep() {
 
 TambahResep.propTypes = {
   // other propTypes definitions,
-  error: PropTypes.string.isRequired,
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
 };
 
 export default TambahResep;

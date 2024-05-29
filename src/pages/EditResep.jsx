@@ -362,11 +362,12 @@ function EditResep() {
     }
   };
 
-  const { getRootProps: getPhotoRootProps, getInputProps: getPhotoInputProps } = useDropzone({
-    onDrop,
-    maxFiles: 1,
-    accept: "image/jpeg, image/png, image/jpg", // specify valid MIME types here
-  });
+  const { getRootProps: getPhotoRootProps, getInputProps: getPhotoInputProps } =
+    useDropzone({
+      onDrop,
+      maxFiles: 1,
+      accept: "image/jpeg, image/png, image/jpg", // specify valid MIME types here
+    });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -374,24 +375,25 @@ function EditResep() {
       console.error("Validation failed");
       return;
     }
-    
+
     const formData = new FormData();
     const userId = localStorage.getItem("userId");
     console.log(categories);
-    
+
     // Membuat objek JSON dengan data yang diinginkan oleh API
     const jsonData = {
       userId: userId,
       recipeId: parseInt(id), // Menggunakan parseInt untuk memastikan format angka
       categories: {
         categoryId: parseInt(selectedCategory),
-        categoryName: categories.find((c) => c.categoryId.toString() === selectedCategory
+        categoryName: categories.find(
+          (c) => c.categoryId.toString() === selectedCategory
         )?.categoryName,
       },
       levels: {
         levelId: parseInt(selectedLevel),
         levelName: levels.find((l) => l.levelId.toString() === selectedLevel)
-        ?.levelName,
+          ?.levelName,
       },
       recipeName: recipeName,
       timeCook: parseInt(timeCook), // Konversi ke integer
@@ -399,31 +401,31 @@ function EditResep() {
       howToCook: howToCook,
     };
     console.log(jsonData);
-    
+
     // Menambahkan objek JSON ke FormData
     formData.append(
       "request",
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
-    
+
     // Jika imageFile telah diubah, tambahkan ke FormData
     if (imageFile) {
       formData.append("file", imageFile, imageFile.name);
     }
-    
+
     setIsSubmitting(true);
-    
+
     console.log("Form submitted:", formData);
     // Lakukan request PUT atau PATCH ke API
     http
-    .put("/book-recipe/book-recipes", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-    .then((response) => {
-      console.log(response);
-      setSubmitSuccess(true); // Tampilkan dialog sukses
+      .put("/book-recipe/book-recipes", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        setSubmitSuccess(true); // Tampilkan dialog sukses
         setSubmitMessage(`Berhasil Memperbarui Resep ${recipeName}`);
         setIsSubmitting(false);
         // navigate ke halaman lain jika diperlukan
@@ -708,14 +710,12 @@ function EditResep() {
                     marginTop: 2,
                     textAlign: "left",
                     color: "gray",
-                  }}
-                >
+                  }}>
                   Gambar Masakan{" "}
                   <span
                     style={{
                       color: "red",
-                    }}
-                  >
+                    }}>
                     *
                   </span>
                 </Typography>
@@ -745,7 +745,7 @@ function EditResep() {
                       {...getPhotoInputProps()}
                       type="file"
                       accept="image/jpg, image/jpeg, image/png"
-                      style={{ display: 'none' }}
+                      style={{ display: "none" }}
                       onChange={onInput}
                     />
                   </Box>
@@ -1030,9 +1030,9 @@ function EditResep() {
 
 EditResep.propTypes = {
   // other propTypes definitions,
-  error: PropTypes.string.isRequired,
-  open: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
 };
 
 export default EditResep;
