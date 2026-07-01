@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  ppdb-fe:
+    image: ghcr.io/adrianeka/ppdb-fe:latest
+    container_name: ppdb-fe
+    restart: always
+    ports:
+      - "127.0.0.1:3000:8080"
+    networks:
+      - ppdb-network
+
+networks:
+  ppdb-network:
+    external: true
