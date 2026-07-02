@@ -1,90 +1,141 @@
-import { AppBar, Button, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, TextField, Typography } from '@mui/material'
-import { Container } from '@mui/system'
-import React, { useEffect, useState } from 'react'
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import React, { useState } from 'react';
+import { Container, Grid, Paper, Typography, Box, Alert } from '@mui/material';
 import logo from '../../assets/logo.png';
-import '../style/custom.css';
-import {Link, useNavigate} from 'react-router-dom';
-import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import apiClient from '../../http-common';
+import Button from '../common/Button';
+import InputField from '../common/InputField';
 
+/**
+ * Modernized Login screen styled using design system theme.
+ */
 const Login = () => {
-    // Show/hide password di form
-    const [showPassword, setShowPassword] = React.useState(false);
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-    // Mengambil data dari text field
-    const [username, setUserame] = useState('')
-    const [password, setPassword] = useState('')
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        const user = {username, password}
-        console.log(user)
-        axios.post('http://localhost:8080/api/auth/signin',
-                    {username, password})
-                    .then((res) => {
-                        localStorage.setItem("token", res.data.token);
-                        localStorage.setItem("idUser", res.data.id);
-                        console.log(res.data);
-                        navigate("/daftar-resep");
-                    })                
-                    .catch((err) => console.log(err))                    
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!username || !password) {
+      setErrorMsg('Username dan Password wajib diisi');
+      return;
     }
 
-    return (
-        <div>
-            <Container maxWidth="sm">
-            <Grid container spacing={2} direction="column" justifyContent="center" style={{minHeight: "100vh"}}>
-                <Grid item marginBottom={6}>
-                <h2>Buku Resep 79</h2>
-                <img src={logo} alt="logo" className='logo'/>
-                </Grid>
-                <Grid item>
-                <AppBar position="static" style={{ background: '#f49881' }}>
-                    <Typography variant="h6" color="inherit" component="div" marginTop={1} marginBottom={1}>
-                        Login
-                    </Typography>
-                </AppBar>
-                <Paper elevation={4} sx={{paddingLeft: 12, paddingRight: 12, paddingTop: 5, paddingBottom: 5}}>
-                    <Grid container direction="column" spacing={3}>
-                        <Grid item>
-                            <TextField type="username" label="Username" variant="outlined" placeholder='Masukkan Username Anda' fullWidth size="small" value={username} onChange={(e) => setUserame(e.target.value)}/>
-                        </Grid>
-                        <Grid item>
-                        <TextField id="outlined-password-input" label="Password" type="password" autoComplete="current-password" fullWidth size="small" value={password} onChange={(e) => setPassword (e.target.value)}/>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained" fullWidth style={{ background: '#f49881' }} onClick={handleSubmit}>Login</Button>
-                        </Grid>
-                        <Grid item>
-                            <p>Belum punya akun? <Link to={'signup'}>Daftar disini</Link></p>
-                        </Grid>
-                        <Grid container direction="row" spacing={3} paddingLeft={2} paddingTop={2}>
-                            <Grid item xs={6}>
-                                <Link to="#">
-                                    About
-                                </Link>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Link to="#">
-                                    Contact
-                                </Link>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Paper>
-                </Grid>
-                
-            </Grid>               
-            </Container>
-        </div>
-    )
-}
+    setLoading(true);
+    setErrorMsg('');
 
-export default Login
+    apiClient
+      .post('/auth/signin', { username, password })
+      .then((res) => {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('idUser', res.data.id);
+        navigate('/dashboard');
+      })
+      .catch((err) => {
+        console.error(err);
+        setErrorMsg(err.message || 'Login gagal, silakan periksa kembali akun Anda.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
+        py: 4,
+      }}
+    >
+      <Container maxWidth="xs">
+        <Paper
+          elevation={4}
+          sx={{
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            borderRadius: 4,
+          }}
+        >
+          {logo && (
+            <Box sx={{ mb: 2, height: 60, display: 'flex', alignItems: 'center' }}>
+              <img src={logo} alt="PPDB Logo" style={{ maxHeight: '100%', objectFit: 'contain' }} />
+            </Box>
+          )}
+
+          <Typography
+            variant="h4"
+            component="h1"
+            align="center"
+            gutterBottom
+            sx={{ fontWeight: 800 }}
+          >
+            PPDB OCR
+          </Typography>
+          <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 3 }}>
+            Penerimaan Peserta Didik Baru
+          </Typography>
+
+          {errorMsg && (
+            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+              {errorMsg}
+            </Alert>
+          )}
+
+          <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
+            <InputField
+              label="Username"
+              placeholder="Masukkan Username Anda"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
+              autoFocus
+            />
+            <InputField
+              label="Password"
+              type="password"
+              placeholder="Masukkan Password Anda"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              loading={loading}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Masuk ke Akun
+            </Button>
+
+            <Grid container justifyContent="space-between" sx={{ mt: 1 }}>
+              <Grid item>
+                <Typography variant="body2" color="text.secondary">
+                  Belum punya akun?{' '}
+                  <Link
+                    to="/signup"
+                    style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}
+                  >
+                    Daftar di sini
+                  </Link>
+                </Typography>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
+  );
+};
+
+export default Login;

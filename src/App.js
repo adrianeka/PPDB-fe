@@ -1,46 +1,34 @@
-import './App.css';
-import './components/style/custom.css';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+import theme from './theme';
 import Login from './components/Auth/Login';
 import SignUp from './components/Auth/SignUp';
-import { Avatar, Grid } from '@mui/material';
-import { margin } from '@mui/system';
-import logo from './assets/logo.jpg';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import NavigationBar from './components/NavigationBar'
-import Navigation from './components/Navigation'
-import DaftarResep from './components/DaftarResep'
-import ResepSaya from './components/ResepSaya'
-import DetailResep from './components/DetailResep'
-import TambahResep from './components/TambahResep'
-import EditResep from './components/EditResep'
-import ResepFavorit from './components/ResepFavorit'
 
+import './App.css';
+
+/**
+ * Main App component.
+ * Configures the MUI ThemeProvider, CssBaseline reset, and routing tree.
+ */
 function App() {
-  // const clickMe = () => {
-  //   console.log('Clicked');
-  // }
-  const clickMe = (parameterNama) => {
-    console.log('Clicked by :' + parameterNama);
-  }
-
   return (
-    <Router>
-      <div className='myBackground'>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
         <Routes>
-          <Route path='/' element={<Login/>}/>
-          <Route path='signup' element={<SignUp/>}/>
-          <Route path='daftar-resep' element={<DaftarResep/>}/>
-          <Route path='daftar-resep/detail-resep/:id' element={<DetailResep/>}/>
-          <Route path='resep-saya' element={<ResepSaya/>}/>
-          <Route path='resep-saya/detail-resep/:id' element={<DetailResep/>}/>
-          <Route path='tambah-resep' element={<TambahResep/>}/>
-          <Route path='resep-saya/edit-resep/:id' element={<EditResep/>}/>
-          <Route path='resep-favorit' element={<ResepFavorit/>}/>
-          <Route path='resep-favorit/edit-resep/:id' element={<EditResep/>}/>
+          {/* Public Routes */}
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+
+          {/* Unknown routes redirect back to login */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
-// resep-saya/id user
+
 export default App;

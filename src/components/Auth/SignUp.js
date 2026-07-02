@@ -1,76 +1,158 @@
-import { AppBar, Button, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, Paper, TextField, Typography } from '@mui/material'
-import { Container } from '@mui/system'
-import React, { useState } from 'react'
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import React, { useState } from 'react';
+import { Container, Paper, Typography, Box, Alert } from '@mui/material';
 import logo from '../../assets/logo.png';
-import '../style/custom.css';
-import {Link, useNavigate} from 'react-router-dom';
-import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import apiClient from '../../http-common';
+import Button from '../common/Button';
+import InputField from '../common/InputField';
 
-const Login = () => {
-    // Show/hide password di form
-    const [showPassword, setShowPassword] = React.useState(false);
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
+/**
+ * Modernized SignUp (registration) screen.
+ */
+const SignUp = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
-    // Mengambil data dari text field
-    const [username, setUserame] = useState('')
-    const [password, setPassword] = useState('')
-    const navigate = useNavigate();
-    // Saat button ditekan
-    const handleClick = (e) => {
-        e.preventDefault()
-        const user = {username, password}
-        console.log(user)
-        axios.post('http://localhost:8080/api/auth/signup',
-                    {username, password}).
-                    then((data) => console.log(data))
-                    navigate("/");
+  const navigate = useNavigate();
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (!username || !password) {
+      setErrorMsg('Semua field wajib diisi');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setErrorMsg('Konfirmasi password tidak cocok');
+      return;
     }
 
-    return (
-        <div>
-            <Container maxWidth="sm">
-            <Grid container spacing={2} direction="column" justifyContent="center" style={{minHeight: "100vh"}}>
-                <Grid item marginBottom={6}>
-                <h2>Buku Resep 79</h2>
-                <img src={logo} alt="logo" className='logo'/>
-                </Grid>
-                <Grid item>
-                <AppBar position="static" style={{ background: '#f49881' }}>
-                    <Typography variant="h6" color="inherit" component="div" marginTop={1} marginBottom={1}>
-                        SignUp
-                    </Typography>
-                </AppBar>
-                <Paper elevation={4} sx={{paddingLeft: 12, paddingRight: 12, paddingTop: 5, paddingBottom: 3}}>
-                    <Grid container direction="column" spacing={3}>                                                 
-                        <Grid item>
-                            <TextField type="username" label="Username" variant="outlined" placeholder='Masukkan Username Anda' fullWidth size="small" value={username} onChange={(e) => setUserame(e.target.value)}/>
-                        </Grid>
-                        <Grid item>
-                            <TextField id="outlined-password-input" label="Password" type="password" autoComplete="current-password" fullWidth size="small" value={password} onChange={(e) => setPassword (e.target.value)}/>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="contained" fullWidth style={{ background: '#01bfbf' }} onClick={handleClick}>Daftar</Button>
-                        </Grid>
-                        <Grid item>
-                            <Link to={'/'}>
-                                <Typography>
-                                    Batal, Kembali ke Halaman Login
-                                </Typography>                                
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </Paper>
-                </Grid>
-                
-            </Grid>               
-            </Container>
-        </div>
-    )
-}
+    setLoading(true);
+    setErrorMsg('');
+    setSuccessMsg('');
 
-export default Login
+    apiClient
+      .post('/auth/signup', { username, password })
+      .then(() => {
+        setSuccessMsg('Pendaftaran berhasil! Mengalihkan ke halaman login...');
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+      })
+      .catch((err) => {
+        console.error(err);
+        setErrorMsg(err.message || 'Registrasi gagal, silakan coba lagi.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  return (
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
+        py: 4,
+      }}
+    >
+      <Container maxWidth="xs">
+        <Paper
+          elevation={4}
+          sx={{
+            p: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            borderRadius: 4,
+          }}
+        >
+          {logo && (
+            <Box sx={{ mb: 2, height: 60, display: 'flex', alignItems: 'center' }}>
+              <img src={logo} alt="PPDB Logo" style={{ maxHeight: '100%', objectFit: 'contain' }} />
+            </Box>
+          )}
+
+          <Typography
+            variant="h4"
+            component="h1"
+            align="center"
+            gutterBottom
+            sx={{ fontWeight: 800 }}
+          >
+            Daftar Akun
+          </Typography>
+          <Typography variant="body2" color="text.secondary" align="center" sx={{ mb: 3 }}>
+            Silakan lengkapi formulir di bawah ini untuk membuat akun baru.
+          </Typography>
+
+          {errorMsg && (
+            <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+              {errorMsg}
+            </Alert>
+          )}
+
+          {successMsg && (
+            <Alert severity="success" sx={{ width: '100%', mb: 2 }}>
+              {successMsg}
+            </Alert>
+          )}
+
+          <Box component="form" onSubmit={handleRegister} sx={{ width: '100%' }}>
+            <InputField
+              label="Username"
+              placeholder="Masukkan Username Baru"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              disabled={loading}
+              autoFocus
+            />
+            <InputField
+              label="Password"
+              type="password"
+              placeholder="Masukkan Password Baru"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading}
+            />
+            <InputField
+              label="Konfirmasi Password"
+              type="password"
+              placeholder="Ulangi Password Baru"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              disabled={loading}
+            />
+
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              loading={loading}
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Daftar Sekarang
+            </Button>
+
+            <Box sx={{ textAlign: 'center', mt: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Sudah punya akun?{' '}
+                <Link to="/" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
+                  Masuk di sini
+                </Link>
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
+  );
+};
+
+export default SignUp;
