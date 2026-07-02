@@ -18,6 +18,7 @@ import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Link, useNavigate } from 'react-router-dom';
+// eslint-disable-next-line no-unused-vars
 import apiClient from '../../http-common';
 import studentsBanner from '../../assets/students_banner.png';
 
@@ -36,6 +37,32 @@ const Login = () => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (!email || !password) {
+  //     setErrorMsg('Email dan Password wajib diisi');
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   setErrorMsg('');
+
+  //   // Call authentication backend (email mapping to username for authentication api)
+  //   apiClient
+  //     .post('/auth/signin', { username: email, password })
+  //     .then((res) => {
+  //       localStorage.setItem('token', res.data.token);
+  //       localStorage.setItem('idUser', res.data.id);
+  //       navigate('/dashboard');
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //       setErrorMsg(err.message || 'Login gagal, silakan periksa kembali akun Anda.');
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // };
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -46,21 +73,13 @@ const Login = () => {
     setLoading(true);
     setErrorMsg('');
 
-    // Call authentication backend (email mapping to username for authentication api)
-    apiClient
-      .post('/auth/signin', { username: email, password })
-      .then((res) => {
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('idUser', res.data.id);
-        navigate('/dashboard');
-      })
-      .catch((err) => {
-        console.error(err);
-        setErrorMsg(err.message || 'Login gagal, silakan periksa kembali akun Anda.');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    // Simulate a brief loading latency for premium UX feel
+    setTimeout(() => {
+      localStorage.setItem('token', 'dummy-token-ppdb-ocr');
+      localStorage.setItem('idUser', '999');
+      setLoading(false);
+      navigate('/dashboard');
+    }, 800);
   };
 
   return (

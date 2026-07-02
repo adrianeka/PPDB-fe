@@ -6,6 +6,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import theme from './theme';
 import Login from './components/Auth/Login';
 import SignUp from './components/Auth/SignUp';
+import PrivateRoute from './components/common/PrivateRoute';
+import MainLayout from './components/common/MainLayout';
+import Dashboard from './components/Dashboard';
 
 import './App.css';
 
@@ -22,6 +25,13 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+
+          {/* Protected Routes (Authenticated only) */}
+          <Route element={<PrivateRoute />}>
+            <Route element={<MainLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Route>
+          </Route>
 
           {/* Unknown routes redirect back to login */}
           <Route path="*" element={<Navigate to="/" replace />} />
