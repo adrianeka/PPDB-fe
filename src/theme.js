@@ -35,7 +35,8 @@ const theme = createTheme({
     divider: '#e2e8f0',
   },
   typography: {
-    fontFamily: '"Outfit", "Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily:
+      '"Roboto", "SF Compact Rounded", "Outfit", "Inter", "Helvetica", "Arial", sans-serif',
     h1: {
       fontWeight: 700,
       fontSize: '2.5rem',
